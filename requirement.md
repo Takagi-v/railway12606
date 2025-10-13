@@ -1186,21 +1186,74 @@
 ## 九、技术实现建议
 
 ### 9.1 前端技术栈
-- **框架**：Vue 3 / React 18
-- **UI组件库**：Element Plus / Ant Design
-- **状态管理**：Pinia / Redux
-- **路由**：Vue Router / React Router
-- **HTTP客户端**：Axios
-- **日期处理**：Day.js
-- **表单验证**：Vuelidate / Formik + Yup
+
+#### 9.1.1 核心框架
+- **Vue 3.3+**
+  - Composition API
+  - `<script setup>` 语法
+  - 响应式系统
+
+#### 9.1.2 UI组件库
+- **Ant Design Vue 4.x**
+  - 丰富的组件库
+  - 统一的设计语言
+  - 完善的文档
+
+#### 9.1.3 状态管理
+- **Pinia 2.x**
+  - Vue 3官方推荐
+  - 更简洁的API
+  - 完整的TypeScript支持
+
+#### 9.1.4 路由管理
+- **Vue Router 4.x**
+  - 路由守卫
+  - 动态路由
+  - 路由懒加载
+
+#### 9.1.5 工具库
+- **Axios**：HTTP客户端
+- **Day.js**：日期处理
+- **js-cookie**：Cookie管理
+- **@vueuse/core**：Vue组合式工具集
+
+#### 9.1.6 开发工具
+- **Vite 5.x**：构建工具
+- **ESLint + Prettier**：代码规范
+- **TypeScript（可选）**：类型检查
 
 ### 9.2 后端技术栈
-- **语言**：Java / Python / Node.js
-- **框架**：Spring Boot / Flask / Express
-- **数据库**：MySQL 8.0+
-- **ORM**：MyBatis / SQLAlchemy / Sequelize
-- **认证**：JWT Token
-- **密码加密**：BCrypt
+
+#### 9.2.1 核心框架
+- **Python 3.10+**
+- **FastAPI 0.100+**
+  - 高性能异步框架
+  - 自动生成API文档（Swagger UI）
+  - 数据验证（Pydantic）
+  - 类型提示支持
+
+#### 9.2.2 数据库相关
+- **MySQL 8.0+**：主数据库
+- **SQLAlchemy 2.0+**：ORM框架
+- **PyMySQL / mysqlclient**：MySQL驱动
+- **Alembic**：数据库迁移工具
+
+#### 9.2.3 认证与安全
+- **python-jose**：JWT Token生成
+- **passlib[bcrypt]**：密码加密
+- **python-multipart**：文件上传支持
+
+#### 9.2.4 其他依赖
+- **Pydantic**：数据验证
+- **uvicorn**：ASGI服务器
+- **python-dotenv**：环境变量管理
+- **loguru**：日志处理
+
+### 9.3 数据库
+- **MySQL 8.0+**
+  - InnoDB存储引擎
+  - UTF8MB4字符集
+  - 事务支持
 
 ### 9.3 开发工具
 - **版本控制**：Git
