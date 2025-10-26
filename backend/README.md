@@ -66,7 +66,7 @@ pip install -r requirements.txt
 ### 3. 配置环境变量
 
 ```bash
-cp .env.example .env
+.env
 # 编辑 .env 文件，配置数据库连接等信息
 ```
 
@@ -206,8 +206,4 @@ alembic history
 alembic downgrade base
 alembic upgrade head
 ```
-
-## 联系方式
-
-如有问题，请提交 Issue 或联系团队成员。
 
