@@ -5,7 +5,7 @@ Order Models
 from sqlalchemy import Column, Integer, String, Date, DateTime, Numeric, ForeignKey, func, Enum as SAEnum, Index, CheckConstraint
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
-from app.models.enums import OrderStatus, RefundStatus, SeatType
+from app.models.enums import OrderStatus, RefundStatus, SeatType, PassengerType
 
 
 class Order(Base):
@@ -19,7 +19,12 @@ class Order(Base):
     travel_date = Column(Date, nullable=False, comment="乘车日期")
     total_price = Column(Numeric(10, 2), nullable=False, comment="订单总价")
     status = Column(
-        SAEnum(OrderStatus, values_callable=lambda x: [e.value for e in x], name="order_status_enum"),
+        SAEnum(
+            OrderStatus,
+            values_callable=lambda x: [e.value for e in x],
+            name="order_status_enum",
+            validate_strings=True
+        ),
         nullable=False,
         comment="订单状态"
     )
@@ -46,15 +51,34 @@ class OrderPassenger(Base):
     order_id = Column(Integer, ForeignKey("orders.id", ondelete="CASCADE"), nullable=False, index=True, comment="订单ID")
     passenger_id = Column(Integer, ForeignKey("passengers.id"), nullable=False, comment="乘客ID")
     seat_id = Column(Integer, ForeignKey("seats.id"), nullable=False, comment="座位ID")
-    ticket_type = Column(String(20), nullable=False, comment="票种（成人票/学生票/儿童票）")
+    ticket_type = Column(
+        SAEnum(
+            PassengerType,
+            values_callable=lambda x: [e.value for e in x],
+            name="passenger_type_enum",
+            validate_strings=True
+        ),
+        nullable=False,
+        comment="票种（成人票/学生票/儿童票）"
+    )
     seat_type = Column(
-        SAEnum(SeatType, values_callable=lambda x: [e.value for e in x], name="seat_type_enum"),
+        SAEnum(
+            SeatType,
+            values_callable=lambda x: [e.value for e in x],
+            name="seat_type_enum",
+            validate_strings=True
+        ),
         nullable=False,
         comment="席别（一等座/二等座/软卧/硬卧）"
     )
     price = Column(Numeric(10, 2), nullable=False, comment="票价")
     refund_status = Column(
-        SAEnum(RefundStatus, values_callable=lambda x: [e.value for e in x], name="refund_status_enum"),
+        SAEnum(
+            RefundStatus,
+            values_callable=lambda x: [e.value for e in x],
+            name="refund_status_enum",
+            validate_strings=True
+        ),
         default="未退票",
         comment="退票状态（未退票/已退票）"
     )

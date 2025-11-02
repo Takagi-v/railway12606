@@ -16,14 +16,24 @@ class Passenger(Base):
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True, comment="关联用户ID")
     name = Column(String(50), nullable=False, comment="姓名")
     id_type = Column(
-        SAEnum(IdType, values_callable=lambda x: [e.value for e in x], name="id_type_enum"),
+        SAEnum(
+            IdType,
+            values_callable=lambda x: [e.value for e in x],
+            name="id_type_enum",
+            validate_strings=True
+        ),
         nullable=False,
         comment="证件类型"
     )
     id_number = Column(String(50), nullable=False, comment="证件号码")
     phone = Column(String(11), nullable=False, comment="手机号")
     passenger_type = Column(
-        SAEnum(PassengerType, values_callable=lambda x: [e.value for e in x], name="passenger_type_enum"),
+        SAEnum(
+            PassengerType,
+            values_callable=lambda x: [e.value for e in x],
+            name="passenger_type_enum",
+            validate_strings=True
+        ),
         nullable=False,
         comment="旅客类型（成人/学生/儿童）"
     )

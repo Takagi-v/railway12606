@@ -16,13 +16,23 @@ class Seat(Base):
     train_id = Column(Integer, ForeignKey("trains.id", ondelete="CASCADE"), nullable=False, comment="车次ID")
     travel_date = Column(Date, nullable=False, comment="乘车日期")
     seat_type = Column(
-        SAEnum(SeatType, values_callable=lambda x: [e.value for e in x], name="seat_type_enum"),
+        SAEnum(
+            SeatType,
+            values_callable=lambda x: [e.value for e in x],
+            name="seat_type_enum",
+            validate_strings=True
+        ),
         nullable=False,
         comment="座位类型（一等座/二等座/软卧/硬卧）"
     )
     seat_number = Column(String(10), nullable=False, comment="座位号（如1车01A）")
     status = Column(
-        SAEnum(SeatStatus, values_callable=lambda x: [e.value for e in x], name="seat_status_enum"),
+        SAEnum(
+            SeatStatus,
+            values_callable=lambda x: [e.value for e in x],
+            name="seat_status_enum",
+            validate_strings=True
+        ),
         nullable=False,
         default="可售",
         comment="状态（可售/已售/已锁定）"

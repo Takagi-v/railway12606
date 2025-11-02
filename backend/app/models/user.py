@@ -17,7 +17,12 @@ class User(Base):
     password = Column(String(255), nullable=False, comment="密码（加密）")
     real_name = Column(String(50), nullable=False, comment="真实姓名")
     id_type = Column(
-        SAEnum(IdType, values_callable=lambda x: [e.value for e in x], name="id_type_enum"),
+        SAEnum(
+            IdType,
+            values_callable=lambda x: [e.value for e in x],
+            name="id_type_enum",
+            validate_strings=True
+        ),
         nullable=False,
         comment="证件类型"
     )
@@ -25,7 +30,12 @@ class User(Base):
     phone = Column(String(11), unique=True, nullable=False, index=True, comment="手机号")
     email = Column(String(100), unique=True, nullable=True, comment="邮箱")
     user_type = Column(
-        SAEnum(UserType, values_callable=lambda x: [e.value for e in x], name="user_type_enum"),
+        SAEnum(
+            UserType,
+            values_callable=lambda x: [e.value for e in x],
+            name="user_type_enum",
+            validate_strings=True
+        ),
         nullable=False,
         comment="用户类型（成人/学生）"
     )
