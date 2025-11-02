@@ -38,4 +38,3 @@ const router = useRouter()
   margin: 0 auto;
 }
 </style>
-

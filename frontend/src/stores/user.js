@@ -14,22 +14,22 @@ export const useUserStore = defineStore('user', () => {
   const isAuthenticated = ref(!!token.value)
 
   // Actions
-  const login = async (credentials) => {
+  const login = async credentials => {
     const response = await apiLogin(credentials)
     if (response.code === 200) {
       token.value = response.data.access_token
       Cookies.set('token', token.value, { expires: 7 })
       isAuthenticated.value = true
-      
+
       // Fetch user profile
       await fetchUserProfile()
-      
+
       return response
     }
     throw new Error(response.message || '登录失败')
   }
 
-  const register = async (userData) => {
+  const register = async userData => {
     const response = await apiRegister(userData)
     if (response.code === 200) {
       return response
@@ -70,4 +70,3 @@ export const useUserStore = defineStore('user', () => {
     fetchUserProfile
   }
 })
-

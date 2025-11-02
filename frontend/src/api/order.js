@@ -7,7 +7,7 @@ import request from './request'
 /**
  * 创建订单
  */
-export const createOrder = (data) => {
+export const createOrder = data => {
   return request({
     url: '/orders/create',
     method: 'post',
@@ -18,7 +18,7 @@ export const createOrder = (data) => {
 /**
  * 获取订单列表
  */
-export const getOrders = (params) => {
+export const getOrders = params => {
   return request({
     url: '/orders',
     method: 'get',
@@ -29,7 +29,7 @@ export const getOrders = (params) => {
 /**
  * 获取订单详情
  */
-export const getOrderDetail = (orderId) => {
+export const getOrderDetail = orderId => {
   return request({
     url: `/orders/${orderId}`,
     method: 'get'
@@ -39,7 +39,7 @@ export const getOrderDetail = (orderId) => {
 /**
  * 支付订单
  */
-export const payOrder = (orderId) => {
+export const payOrder = orderId => {
   return request({
     url: `/orders/${orderId}/pay`,
     method: 'post'
@@ -49,7 +49,7 @@ export const payOrder = (orderId) => {
 /**
  * 取消订单
  */
-export const cancelOrder = (orderId) => {
+export const cancelOrder = orderId => {
   return request({
     url: `/orders/${orderId}/cancel`,
     method: 'post'
@@ -66,4 +66,3 @@ export const refundOrder = (orderId, data) => {
     data
   })
 }
-

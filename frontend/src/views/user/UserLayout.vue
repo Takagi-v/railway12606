@@ -5,19 +5,18 @@
       <div class="content-wrapper">
         <a-layout>
           <a-layout-sider width="200" theme="light">
-            <a-menu
-              v-model:selected-keys="selectedKeys"
-              mode="inline"
-              style="height: 100%"
-            >
+            <a-menu v-model:selected-keys="selectedKeys" mode="inline" style="height: 100%">
               <a-menu-item key="profile" @click="router.push('/user/profile')">
-                <UserOutlined /> 个人信息
+                <UserOutlined />
+                个人信息
               </a-menu-item>
               <a-menu-item key="passengers" @click="router.push('/user/passengers')">
-                <TeamOutlined /> 乘客管理
+                <TeamOutlined />
+                乘客管理
               </a-menu-item>
               <a-menu-item key="orders" @click="router.push('/user/orders')">
-                <FileTextOutlined /> 订单管理
+                <FileTextOutlined />
+                订单管理
               </a-menu-item>
             </a-menu>
           </a-layout-sider>
@@ -45,7 +44,7 @@ const selectedKeys = ref(['profile'])
 
 watch(
   () => route.path,
-  (path) => {
+  path => {
     if (path.includes('/user/profile')) {
       selectedKeys.value = ['profile']
     } else if (path.includes('/user/passengers')) {
@@ -81,4 +80,3 @@ watch(
   background: white;
 }
 </style>
-

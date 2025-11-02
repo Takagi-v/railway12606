@@ -10,16 +10,14 @@
             <a-button type="link" @click="router.push('/')">修改查询</a-button>
           </div>
         </a-card>
-        
+
         <a-card class="train-list-card">
           <a-empty v-if="!loading && trains.length === 0" description="暂无车次数据，请稍后再试">
             <a-button type="primary" @click="router.push('/')">返回首页</a-button>
           </a-empty>
-          
+
           <a-spin :spinning="loading">
-            <div class="placeholder-text" v-if="trains.length === 0 && loading">
-              加载中...
-            </div>
+            <div class="placeholder-text" v-if="trains.length === 0 && loading">加载中...</div>
             <div class="placeholder-text" v-else-if="trains.length === 0">
               TODO: 车次查询功能待实现
               <br />
@@ -96,4 +94,3 @@ onMounted(() => {
   line-height: 2;
 }
 </style>
-

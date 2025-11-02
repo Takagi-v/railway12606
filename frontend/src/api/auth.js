@@ -7,7 +7,7 @@ import request from './request'
 /**
  * 用户登录
  */
-export const login = (data) => {
+export const login = data => {
   return request({
     url: '/auth/login',
     method: 'post',
@@ -18,7 +18,7 @@ export const login = (data) => {
 /**
  * 用户注册
  */
-export const register = (data) => {
+export const register = data => {
   return request({
     url: '/auth/register',
     method: 'post',
@@ -39,7 +39,7 @@ export const getUserProfile = () => {
 /**
  * 更新用户信息
  */
-export const updateUserProfile = (data) => {
+export const updateUserProfile = data => {
   return request({
     url: '/user/profile',
     method: 'put',
@@ -56,4 +56,3 @@ export const logout = () => {
     method: 'post'
   })
 }
-

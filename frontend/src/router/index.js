@@ -74,6 +74,12 @@ const router = createRouter({
       ]
     },
     {
+      path: '/env-test',
+      name: 'env-test',
+      component: () => import('@/views/test/EnvTest.vue'),
+      meta: { title: '环境变量测试' }
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('@/views/NotFound.vue'),
@@ -85,9 +91,7 @@ const router = createRouter({
 // Navigation Guard
 router.beforeEach((to, from, next) => {
   // Set page title
-  document.title = to.meta.title
-    ? `${to.meta.title} - 中国铁路12306`
-    : '中国铁路12306'
+  document.title = to.meta.title ? `${to.meta.title} - 中国铁路12306` : '中国铁路12306'
 
   // Check authentication
   const token = Cookies.get('token')
@@ -108,4 +112,3 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router
-

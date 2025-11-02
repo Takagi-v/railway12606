@@ -4,22 +4,16 @@
       <div class="logo" @click="router.push('/')">
         <span class="logo-text">中国铁路12306</span>
       </div>
-      
+
       <div class="nav-menu">
-        <a-menu
-          mode="horizontal"
-          :selected-keys="selectedKeys"
-          class="header-menu"
-        >
-          <a-menu-item key="home" @click="router.push('/')">
-            首页
-          </a-menu-item>
+        <a-menu mode="horizontal" :selected-keys="selectedKeys" class="header-menu">
+          <a-menu-item key="home" @click="router.push('/')">首页</a-menu-item>
           <a-menu-item key="orders" @click="router.push('/user/orders')" v-if="isAuthenticated">
             我的订单
           </a-menu-item>
         </a-menu>
       </div>
-      
+
       <div class="user-section">
         <template v-if="isAuthenticated">
           <a-dropdown>
@@ -31,14 +25,17 @@
             <template #overlay>
               <a-menu>
                 <a-menu-item @click="router.push('/user/profile')">
-                  <UserOutlined /> 个人中心
+                  <UserOutlined />
+                  个人中心
                 </a-menu-item>
                 <a-menu-item @click="router.push('/user/passengers')">
-                  <TeamOutlined /> 乘客管理
+                  <TeamOutlined />
+                  乘客管理
                 </a-menu-item>
                 <a-menu-divider />
                 <a-menu-item @click="handleLogout">
-                  <LogoutOutlined /> 退出登录
+                  <LogoutOutlined />
+                  退出登录
                 </a-menu-item>
               </a-menu>
             </template>
@@ -133,4 +130,3 @@ const handleLogout = () => {
   height: 40px;
 }
 </style>
-
