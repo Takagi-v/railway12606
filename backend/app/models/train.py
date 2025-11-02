@@ -2,9 +2,10 @@
 Train Model
 车次表模型
 """
-from sqlalchemy import Column, Integer, String, Time, Numeric, ForeignKey
+from sqlalchemy import Column, Integer, String, Time, Numeric, ForeignKey, Enum as SAEnum, Index
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
+from app.models.enums import TrainType
 
 
 class Train(Base):
@@ -13,7 +14,11 @@ class Train(Base):
     
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     train_number = Column(String(10), unique=True, nullable=False, index=True, comment="车次号（如G1234）")
-    train_type = Column(String(10), nullable=False, comment="车次类型（高铁/动车/直达）")
+    train_type = Column(
+        SAEnum(TrainType, values_callable=lambda x: [e.value for e in x], name="train_type_enum"),
+        nullable=False,
+        comment="车次类型（高铁/动车/直达）"
+    )
     departure_station_id = Column(Integer, ForeignKey("stations.id"), nullable=False, comment="出发站ID")
     arrival_station_id = Column(Integer, ForeignKey("stations.id"), nullable=False, comment="到达站ID")
     departure_time = Column(Time, nullable=False, comment="出发时间")
@@ -37,4 +42,8 @@ class Train(Base):
     arrival_station = relationship("Station", foreign_keys=[arrival_station_id], back_populates="arriving_trains")
     seats = relationship("Seat", back_populates="train", cascade="all, delete-orphan")
     orders = relationship("Order", back_populates="train")
+
+    __table_args__ = (
+        Index('ix_train_route', 'departure_station_id', 'arrival_station_id'),
+    )
 
