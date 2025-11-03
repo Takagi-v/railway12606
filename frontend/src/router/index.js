@@ -45,6 +45,90 @@ const router = createRouter({
       meta: { title: '订单详情', requiresAuth: true }
     },
     {
+      path: '/order/inquiry',
+      name: 'order-inquiry',
+      component: () => import('@/views/order/OrderInquiry.vue'),
+      meta: { title: '订单查询', requiresAuth: true }
+    },
+    {
+      path: '/ticket/schedule',
+      name: 'ticket-schedule',
+      component: () => import('@/views/ticket/SchedulePage.vue'),
+      meta: { title: '时刻表查询' }
+    },
+    {
+      path: '/service/special-passenger',
+      name: 'special-passenger',
+      component: () => import('@/views/service/SpecialPassengerPage.vue'),
+      meta: { title: '重点旅客预约', requiresAuth: true }
+    },
+    {
+      path: '/service/lost-items',
+      name: 'lost-items',
+      component: () => import('@/views/service/LostItemsPage.vue'),
+      meta: { title: '遗失物品查找', requiresAuth: true }
+    },
+    {
+      path: '/service/car-booking',
+      name: 'car-booking',
+      component: () => import('@/views/service/CarServicePage.vue'),
+      meta: { title: '约车服务', requiresAuth: true }
+    },
+    {
+      path: '/service/shipping',
+      name: 'shipping',
+      component: () => import('@/views/service/ConvenientShippingPage.vue'),
+      meta: { title: '便民托运', requiresAuth: true }
+    },
+    {
+      path: '/service/station-guide',
+      name: 'station-guide',
+      component: () => import('@/views/service/StationGuidePage.vue'),
+      meta: { title: '车站引导', requiresAuth: true }
+    },
+    {
+      path: '/service/showcase',
+      name: 'service-showcase',
+      component: () => import('@/views/service/StationServicePage.vue'),
+      meta: { title: '站车风采', requiresAuth: true }
+    },
+    {
+      path: '/service/feedback',
+      name: 'user-feedback',
+      component: () => import('@/views/service/UserFeedbackPage.vue'),
+      meta: { title: '用户反馈', requiresAuth: true }
+    },
+    {
+      path: '/service/railway-pass',
+      name: 'railway-pass',
+      component: () => import('@/views/service/RailwayPassPage.vue'),
+      meta: { title: '铁路畅行', requiresAuth: true }
+    },
+    {
+      path: '/service/waitlist',
+      name: 'waitlist-ticket',
+      component: () => import('@/views/service/WaitlistPage.vue'),
+      meta: { title: '候补购票', requiresAuth: true }
+    },
+    {
+      path: '/announcement',
+      name: 'announcement',
+      component: () => import('@/views/info/AnnouncementPage.vue'),
+      meta: { title: '公告信息' }
+    },
+    {
+      path: '/faq',
+      name: 'faq',
+      component: () => import('@/views/info/FAQPage.vue'),
+      meta: { title: '常见问题' }
+    },
+    {
+      path: '/credit',
+      name: 'credit',
+      component: () => import('@/views/info/CreditPage.vue'),
+      meta: { title: '信用信息' }
+    },
+    {
       path: '/user',
       component: () => import('@/views/user/UserLayout.vue'),
       meta: { requiresAuth: true },
@@ -78,6 +162,12 @@ const router = createRouter({
       name: 'env-test',
       component: () => import('@/views/test/EnvTest.vue'),
       meta: { title: '环境变量测试' }
+    },
+    {
+      path: '/form-demo',
+      name: 'form-demo',
+      component: () => import('@/views/FormDemo.vue'),
+      meta: { title: '表单组件演示' }
     },
     {
       path: '/:pathMatch(.*)*',

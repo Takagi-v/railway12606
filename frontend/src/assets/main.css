@@ -1,16 +1,56 @@
-/* Global Styles */
+/* Global Styles - 12306 Railway Theme */
 
 :root {
-  --primary-color: #1890ff;
+  /* 主色调 - 12306蓝色系 */
+  --primary-color: #4A90E2;
+  --primary-color-hover: #357ABD;
+  --primary-color-active: #2E6BA8;
+  --primary-gradient: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+  
+  /* 辅助色 - 12306橙色系 */
+  --accent-color: #FF6600;
+  --accent-color-hover: #E55A00;
+  --accent-color-active: #CC5000;
+  
+  /* 功能色 */
   --success-color: #52c41a;
   --warning-color: #faad14;
   --error-color: #f5222d;
-  --heading-color: rgba(0, 0, 0, 0.85);
-  --text-color: rgba(0, 0, 0, 0.65);
-  --text-color-secondary: rgba(0, 0, 0, 0.45);
+  
+  /* 文字颜色 */
+  --heading-color: #333333;
+  --text-color: #666666;
+  --text-color-secondary: #999999;
   --disabled-color: rgba(0, 0, 0, 0.25);
+  --text-color-inverse: #FFFFFF;
+  
+  /* 背景色 */
+  --background-color: #F5F7FA;
+  --background-color-light: #FFFFFF;
+  --background-color-dark: #E8F4FD;
+  
+  /* 边框色 */
   --border-color: #d9d9d9;
-  --background-color: #f0f2f5;
+  --border-color-light: #E8E8E8;
+  --border-color-dark: #BFBFBF;
+  
+  /* 阴影 */
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.15);
+  
+  /* 圆角 */
+  --border-radius-small: 4px;
+  --border-radius-medium: 6px;
+  --border-radius-large: 8px;
+  
+  /* 间距 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
 }
 
 html,

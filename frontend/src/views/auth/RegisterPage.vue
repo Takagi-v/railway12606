@@ -4,8 +4,8 @@
     <a-layout-content class="register-content">
       <a-card class="register-card" title="用户注册">
         <a-form :model="registerForm" :rules="rules" @finish="handleRegister" layout="vertical">
-          <a-form-item label="用户类型" name="userType">
-            <a-radio-group v-model:value="registerForm.userType">
+          <a-form-item label="用户类型" name="user_type">
+            <a-radio-group v-model:value="registerForm.user_type">
               <a-radio value="成人">成人</a-radio>
               <a-radio value="学生">学生</a-radio>
             </a-radio-group>
@@ -15,19 +15,19 @@
             <a-input v-model:value="registerForm.username" placeholder="6-30位字母或数字" />
           </a-form-item>
 
-          <a-form-item label="真实姓名" name="realName">
-            <a-input v-model:value="registerForm.realName" placeholder="请输入真实姓名" />
+          <a-form-item label="真实姓名" name="real_name">
+            <a-input v-model:value="registerForm.real_name" placeholder="请输入真实姓名" />
           </a-form-item>
 
-          <a-form-item label="证件类型" name="idType">
-            <a-select v-model:value="registerForm.idType">
+          <a-form-item label="证件类型" name="id_type">
+            <a-select v-model:value="registerForm.id_type">
               <a-select-option value="居民身份证">居民身份证</a-select-option>
               <a-select-option value="护照">护照</a-select-option>
             </a-select>
           </a-form-item>
 
-          <a-form-item label="证件号码" name="idNumber">
-            <a-input v-model:value="registerForm.idNumber" placeholder="请输入证件号码" />
+          <a-form-item label="证件号码" name="id_number">
+            <a-input v-model:value="registerForm.id_number" placeholder="请输入证件号码" />
           </a-form-item>
 
           <a-form-item label="手机号" name="phone">
@@ -82,14 +82,14 @@ const userStore = useUserStore()
 
 const registerForm = ref({
   username: '',
-  realName: '',
-  idType: '居民身份证',
-  idNumber: '',
+  real_name: '',
+  id_type: '居民身份证',
+  id_number: '',
   phone: '',
   email: '',
   password: '',
   confirmPassword: '',
-  userType: '成人'
+  user_type: '成人'
 })
 
 const loading = ref(false)
@@ -132,13 +132,7 @@ const handleRegister = async () => {
   loading.value = true
   try {
     const { confirmPassword, ...data } = registerForm.value
-    await userStore.register({
-      ...data,
-      real_name: data.realName,
-      id_type: data.idType,
-      id_number: data.idNumber,
-      user_type: data.userType
-    })
+    await userStore.register(data)
 
     message.success('注册成功，请登录')
     router.push('/login')
