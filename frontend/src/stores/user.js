@@ -4,21 +4,19 @@
  */
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import Cookies from 'js-cookie'
 import { login as apiLogin, register as apiRegister, getUserProfile } from '@/api/auth'
 
 export const useUserStore = defineStore('user', () => {
   // State
   const user = ref(null)
-  const token = ref(Cookies.get('token') || null)
-  const isAuthenticated = ref(!!token.value)
+  const token = ref(null)
+  const isAuthenticated = ref(false)
 
   // Actions
   const login = async credentials => {
     const response = await apiLogin(credentials)
     if (response.code === 200) {
       token.value = response.data.access_token
-      Cookies.set('token', token.value, { expires: 7 })
       isAuthenticated.value = true
 
       // Fetch user profile
@@ -52,7 +50,6 @@ export const useUserStore = defineStore('user', () => {
     user.value = null
     token.value = null
     isAuthenticated.value = false
-    Cookies.remove('token')
   }
 
   // Initialize user if token exists
@@ -68,5 +65,11 @@ export const useUserStore = defineStore('user', () => {
     register,
     logout,
     fetchUserProfile
+  }
+}, {
+  persist: {
+    key: 'railway-user',
+    storage: localStorage,
+    paths: ['user', 'token', 'isAuthenticated']
   }
 })

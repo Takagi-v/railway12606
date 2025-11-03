@@ -3,7 +3,7 @@
  */
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import Cookies from 'js-cookie'
+import { canAccessRoute, PERMISSIONS } from '@/utils/permission'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,19 +36,31 @@ const router = createRouter({
       path: '/order/create',
       name: 'order-create',
       component: () => import('@/views/order/OrderCreate.vue'),
-      meta: { title: '订单填写', requiresAuth: true }
+      meta: { 
+        title: '订单填写', 
+        requiresAuth: true,
+        permissions: [PERMISSIONS.CREATE_ORDER]
+      }
     },
     {
       path: '/order/:orderId',
       name: 'order-detail',
       component: () => import('@/views/order/OrderDetail.vue'),
-      meta: { title: '订单详情', requiresAuth: true }
+      meta: { 
+        title: '订单详情', 
+        requiresAuth: true,
+        permissions: [PERMISSIONS.VIEW_ORDER]
+      }
     },
     {
       path: '/order/inquiry',
       name: 'order-inquiry',
       component: () => import('@/views/order/OrderInquiry.vue'),
-      meta: { title: '订单查询', requiresAuth: true }
+      meta: { 
+        title: '订单查询', 
+        requiresAuth: true,
+        permissions: [PERMISSIONS.VIEW_ORDER]
+      }
     },
     {
       path: '/ticket/schedule',
@@ -131,7 +143,10 @@ const router = createRouter({
     {
       path: '/user',
       component: () => import('@/views/user/UserLayout.vue'),
-      meta: { requiresAuth: true },
+      meta: { 
+        requiresAuth: true,
+        permissions: [PERMISSIONS.VIEW_PROFILE]
+      },
       children: [
         {
           path: '',
@@ -141,19 +156,28 @@ const router = createRouter({
           path: 'profile',
           name: 'user-profile',
           component: () => import('@/views/user/ProfilePage.vue'),
-          meta: { title: '个人信息' }
+          meta: { 
+            title: '个人信息',
+            permissions: [PERMISSIONS.VIEW_PROFILE]
+          }
         },
         {
           path: 'passengers',
           name: 'user-passengers',
           component: () => import('@/views/user/PassengerPage.vue'),
-          meta: { title: '乘客管理' }
+          meta: { 
+            title: '乘客管理',
+            permissions: [PERMISSIONS.MANAGE_PASSENGERS]
+          }
         },
         {
           path: 'orders',
           name: 'user-orders',
           component: () => import('@/views/user/OrderPage.vue'),
-          meta: { title: '订单管理' }
+          meta: { 
+            title: '订单管理',
+            permissions: [PERMISSIONS.VIEW_ORDER]
+          }
         }
       ]
     },
@@ -162,6 +186,18 @@ const router = createRouter({
       name: 'env-test',
       component: () => import('@/views/test/EnvTest.vue'),
       meta: { title: '环境变量测试' }
+    },
+    {
+      path: '/test/architecture',
+      name: 'test-architecture',
+      component: () => import('@/views/test/ArchitectureTest.vue'),
+      meta: { title: '架构测试' }
+    },
+    {
+      path: '/test/permission',
+      name: 'test-permission',
+      component: () => import('@/views/test/PermissionTest.vue'),
+      meta: { title: '权限控制测试' }
     },
     {
       path: '/form-demo',
@@ -183,22 +219,48 @@ router.beforeEach((to, from, next) => {
   // Set page title
   document.title = to.meta.title ? `${to.meta.title} - 中国铁路12306` : '中国铁路12306'
 
-  // Check authentication
-  const token = Cookies.get('token')
+  // Get user store
+  const userStore = useUserStore()
+  const user = userStore.user
+  const isAuthenticated = userStore.isAuthenticated
+
+  // Check if route requires authentication
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
-  if (requiresAuth && !token) {
+  if (requiresAuth && !isAuthenticated) {
     // Redirect to login if authentication is required
     next({
       name: 'login',
       query: { redirect: to.fullPath }
     })
-  } else if ((to.name === 'login' || to.name === 'register') && token) {
-    // Redirect to home if already logged in
-    next({ name: 'home' })
-  } else {
-    next()
+    return
   }
+
+  // Redirect authenticated users away from auth pages
+  if ((to.name === 'login' || to.name === 'register') && isAuthenticated) {
+    next({ name: 'home' })
+    return
+  }
+
+  // Check route permissions
+  if (!canAccessRoute(to, user)) {
+    // If user is not authenticated, redirect to login
+    if (!isAuthenticated) {
+      next({
+        name: 'login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      // If authenticated but no permission, redirect to home with error
+      next({
+        name: 'home',
+        query: { error: 'no_permission' }
+      })
+    }
+    return
+  }
+
+  next()
 })
 
 export default router
