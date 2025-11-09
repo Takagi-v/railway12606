@@ -1,0 +1,343 @@
+{
+  "info": {
+    "name": "Railway 12306 Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Docs",
+      "item": [
+        {
+          "name": "Swagger UI (/api/docs)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/docs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "docs"]
+            }
+          }
+        },
+        {
+          "name": "ReDoc (/api/redoc)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/redoc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "redoc"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"Passw0rd\",\n  \"email\": \"test@example.com\",\n  \"real_name\": \"张三\",\n  \"id_type\": \"身份证\",\n  \"id_number\": \"123456789012345678\",\n  \"phone\": \"13800138000\",\n  \"user_type\": \"成人\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"Passw0rd\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.data && json.data.access_token) {",
+                  "  pm.environment.set('token', json.data.access_token);",
+                  "}",
+                  "pm.test('Login status code is 200', function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Passengers",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/passengers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "passengers"]
+            }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"张三\",\n  \"id_type\": \"身份证\",\n  \"id_number\": \"123456789012345678\",\n  \"phone\": \"13800138000\",\n  \"passenger_type\": \"成人\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/passengers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "passengers"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.data && json.data.id) {",
+                  "  pm.environment.set('passenger_id', json.data.id);",
+                  "}",
+                  "pm.test('Create passenger status code is 200', function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"李四\",\n  \"id_type\": \"身份证\",\n  \"id_number\": \"123456789012345678\",\n  \"phone\": \"13800138001\",\n  \"passenger_type\": \"成人\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/passengers/{{passenger_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "passengers", "{{passenger_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/passengers/{{passenger_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "passengers", "{{passenger_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trains",
+      "item": [
+        {
+          "name": "Search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/trains/search?departure_city={{departure_city}}&arrival_city={{arrival_city}}&travel_date={{travel_date}}&train_type={{train_type}}&min_departure_time={{min_departure_time}}&max_departure_time={{max_departure_time}}&min_duration_minutes={{min_duration_minutes}}&max_duration_minutes={{max_duration_minutes}}&max_price={{max_price}}&sort_by={{sort_by}}&sort_order={{sort_order}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "trains", "search"],
+              "query": [
+                {"key": "departure_city", "value": "{{departure_city}}", "description": "出发地（城市/车站/拼音）"},
+                {"key": "arrival_city", "value": "{{arrival_city}}", "description": "到达地（城市/车站/拼音）"},
+                {"key": "travel_date", "value": "{{travel_date}}", "description": "出发日期 YYYY-MM-DD"},
+                {"key": "train_type", "value": "{{train_type}}", "description": "车次类型 高铁/动车/直达"},
+                {"key": "min_departure_time", "value": "{{min_departure_time}}", "description": "最早出发 HH:MM"},
+                {"key": "max_departure_time", "value": "{{max_departure_time}}", "description": "最晚出发 HH:MM"},
+                {"key": "min_duration_minutes", "value": "{{min_duration_minutes}}", "description": "最短历时（分钟）"},
+                {"key": "max_duration_minutes", "value": "{{max_duration_minutes}}", "description": "最长历时（分钟）"},
+                {"key": "max_price", "value": "{{max_price}}", "description": "最高票价（最低价）"},
+                {"key": "sort_by", "value": "{{sort_by}}", "description": "departure_time/duration/price"},
+                {"key": "sort_order", "value": "{{sort_order}}", "description": "asc/desc"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/trains/{{train_number}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "trains", "{{train_number}}"]
+            }
+          }
+        }
+        ,
+        {
+          "name": "Availability",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/trains/{{train_number}}/availability?date={{travel_date}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "trains", "{{train_number}}", "availability"],
+              "query": [
+                {"key": "date", "value": "{{travel_date}}", "description": "乘车日期 YYYY-MM-DD"}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create (501 placeholder)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"train_id\": 1,\n  \"travel_date\": \"2025-11-15\",\n  \"passengers\": [\n    { \n      \"passenger_id\": {{passenger_id}},\n      \"ticket_type\": \"成人\",\n      \"seat_type\": \"一等座\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/create",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders", "create"]
+            }
+          }
+        },
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders"],
+              "query": [
+                {"key": "status", "value": "{{order_status}}"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/{{order_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders", "{{order_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Pay (501 placeholder)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/{{order_id}}/pay",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders", "{{order_id}}", "pay"]
+            }
+          }
+        },
+        {
+          "name": "Cancel (501 placeholder)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/{{order_id}}/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders", "{{order_id}}", "cancel"]
+            }
+          }
+        },
+        {
+          "name": "Refund (501 placeholder)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"passenger_ids\": []\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/{{order_id}}/refund",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders", "{{order_id}}", "refund"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
