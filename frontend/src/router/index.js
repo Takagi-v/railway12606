@@ -2,8 +2,7 @@
  * Vue Router Configuration
  */
 import { createRouter, createWebHistory } from 'vue-router'
-import { useUserStore } from '@/stores/user'
-import Cookies from 'js-cookie'
+import { permissionGuard, adminGuard, superAdminGuard } from './guards'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,10 +26,22 @@ const router = createRouter({
       meta: { title: '注册' }
     },
     {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: () => import('@/views/auth/ForgotPasswordPage.vue'),
+      meta: { title: '找回密码' }
+    },
+    {
       path: '/trains',
       name: 'trains',
       component: () => import('@/views/train/TrainList.vue'),
       meta: { title: '车次列表' }
+    },
+    {
+      path: '/permission-test',
+      name: 'permission-test',
+      component: () => import('@/views/PermissionTest.vue'),
+      meta: { title: '权限测试', requiresAuth: true }
     },
     {
       path: '/order/create',
@@ -63,13 +74,90 @@ const router = createRouter({
           path: 'passengers',
           name: 'user-passengers',
           component: () => import('@/views/user/PassengerPage.vue'),
-          meta: { title: '乘客管理' }
+          meta: { title: '乘客管理', permissions: 'passenger:read' }
         },
         {
           path: 'orders',
           name: 'user-orders',
           component: () => import('@/views/user/OrderPage.vue'),
-          meta: { title: '订单管理' }
+          meta: { title: '订单管理', permissions: 'order:read' }
+        }
+      ]
+    },
+    {
+      path: '/admin',
+      component: () => import('@/views/admin/AdminLayout.vue'),
+      meta: { 
+        requiresAuth: true, 
+        roles: ['admin', 'super_admin'],
+        title: '管理后台'
+      },
+      beforeEnter: adminGuard,
+      children: [
+        {
+          path: '',
+          redirect: '/admin/dashboard'
+        },
+        {
+          path: 'dashboard',
+          name: 'admin-dashboard',
+          component: () => import('@/views/admin/Dashboard.vue'),
+          meta: { title: '管理面板' }
+        },
+        {
+          path: 'users',
+          name: 'admin-users',
+          component: () => import('@/views/admin/UserManagement.vue'),
+          meta: { 
+            title: '用户管理',
+            permissions: 'user:read'
+          }
+        },
+        {
+          path: 'roles',
+          name: 'admin-roles',
+          component: () => import('@/views/admin/RoleManagement.vue'),
+          meta: { 
+            title: '角色管理',
+            permissions: 'role:read'
+          }
+        },
+        {
+          path: 'permissions',
+          name: 'admin-permissions',
+          component: () => import('@/views/admin/PermissionManagement.vue'),
+          meta: { 
+            title: '权限管理',
+            permissions: 'permission:read'
+          }
+        },
+        {
+          path: 'trains',
+          name: 'admin-trains',
+          component: () => import('@/views/admin/TrainManagement.vue'),
+          meta: { 
+            title: '车次管理',
+            permissions: 'train:read'
+          }
+        },
+        {
+          path: 'orders',
+          name: 'admin-orders',
+          component: () => import('@/views/admin/OrderManagement.vue'),
+          meta: { 
+            title: '订单管理',
+            permissions: 'order:read'
+          }
+        },
+        {
+          path: 'system',
+          name: 'admin-system',
+          component: () => import('@/views/admin/SystemSettings.vue'),
+          meta: { 
+            title: '系统设置',
+            roles: 'super_admin'
+          },
+          beforeEnter: superAdminGuard
         }
       ]
     },
@@ -83,29 +171,7 @@ const router = createRouter({
 })
 
 // Navigation Guard
-router.beforeEach((to, from, next) => {
-  // Set page title
-  document.title = to.meta.title
-    ? `${to.meta.title} - 中国铁路12306`
-    : '中国铁路12306'
-
-  // Check authentication
-  const token = Cookies.get('token')
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-
-  if (requiresAuth && !token) {
-    // Redirect to login if authentication is required
-    next({
-      name: 'login',
-      query: { redirect: to.fullPath }
-    })
-  } else if ((to.name === 'login' || to.name === 'register') && token) {
-    // Redirect to home if already logged in
-    next({ name: 'home' })
-  } else {
-    next()
-  }
-})
+router.beforeEach(permissionGuard)
 
 export default router
 
