@@ -9,7 +9,8 @@ from app.db.session import get_db
 from app.schemas.user import UserResponse, UserUpdate
 from app.schemas.common import Response
 from app.models.user import User
-from app.core.security import get_current_user
+from app.api.deps import get_current_user
+from app.core.exceptions import ValidationException, NotFoundException
 
 router = APIRouter()
 
@@ -46,19 +47,13 @@ async def update_profile(
     # Check if phone is being changed and already exists
     if user_update.phone and user_update.phone != current_user.phone:
         if db.query(User).filter(User.phone == user_update.phone).first():
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="手机号已被使用"
-            )
+            raise ValidationException("手机号已被使用")
         current_user.phone = user_update.phone
     
     # Check if email is being changed and already exists
     if user_update.email and user_update.email != current_user.email:
         if db.query(User).filter(User.email == user_update.email).first():
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="邮箱已被使用"
-            )
+            raise ValidationException("邮箱已被使用")
         current_user.email = user_update.email
     
     # Update real_name if provided

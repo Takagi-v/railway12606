@@ -3,7 +3,7 @@ Passenger Endpoints
 乘客管理相关API
 """
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Path
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
@@ -11,7 +11,9 @@ from app.schemas.passenger import PassengerCreate, PassengerUpdate, PassengerRes
 from app.schemas.common import Response
 from app.models.user import User
 from app.models.passenger import Passenger
-from app.core.security import get_current_user
+from app.api.deps import get_current_user
+from app.core.exceptions import ValidationException, NotFoundException, BusinessException
+from app.core.validators import UserValidator
 
 router = APIRouter()
 
@@ -50,6 +52,11 @@ async def create_passenger(
     - **phone**: 手机号
     - **passenger_type**: 旅客类型（成人/学生/儿童）
     """
+    # 验证乘客数据
+    UserValidator.validate_real_name(passenger_data.name)
+    UserValidator.validate_phone(passenger_data.phone)
+    UserValidator.validate_id_number(passenger_data.id_number)
+    
     # Check if passenger with same id_number already exists for this user
     existing = db.query(Passenger).filter(
         Passenger.user_id == current_user.id,
@@ -57,10 +64,7 @@ async def create_passenger(
     ).first()
     
     if existing:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="该证件号的乘客已存在"
-        )
+        raise ValidationException("该证件号的乘客已存在")
     
     # Create new passenger
     new_passenger = Passenger(
@@ -81,24 +85,29 @@ async def create_passenger(
 
 @router.put("/{passenger_id}", response_model=Response[PassengerResponse])
 async def update_passenger(
-    passenger_id: int,
     passenger_data: PassengerUpdate,
+    passenger_id: int = Path(..., gt=0, description="乘客ID"),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
     编辑乘客信息
     """
+    # 验证更新的乘客数据
+    if passenger_data.name:
+        UserValidator.validate_real_name(passenger_data.name)
+    if passenger_data.phone:
+        UserValidator.validate_phone(passenger_data.phone)
+    if passenger_data.id_number:
+        UserValidator.validate_id_number(passenger_data.id_number)
+    
     passenger = db.query(Passenger).filter(
         Passenger.id == passenger_id,
         Passenger.user_id == current_user.id
     ).first()
     
     if not passenger:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="乘客不存在"
-        )
+        raise NotFoundException("乘客不存在")
     
     # Update passenger fields
     for field, value in passenger_data.model_dump().items():
@@ -116,7 +125,7 @@ async def update_passenger(
 
 @router.delete("/{passenger_id}", response_model=Response)
 async def delete_passenger(
-    passenger_id: int,
+    passenger_id: int = Path(..., gt=0, description="乘客ID"),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -129,10 +138,7 @@ async def delete_passenger(
     ).first()
     
     if not passenger:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="乘客不存在"
-        )
+        raise NotFoundException("乘客不存在")
     
     # TODO: Check if passenger has uncompleted orders
     # For now, just delete

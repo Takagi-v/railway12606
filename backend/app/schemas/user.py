@@ -51,14 +51,33 @@ class UserLogin(BaseModel):
 
 class UserUpdate(BaseModel):
     """User update schema"""
-    real_name: Optional[str] = None
-    phone: Optional[str] = None
+    real_name: Optional[str] = Field(None, min_length=2, max_length=50)
+    phone: Optional[str] = Field(None, min_length=11, max_length=11)
     email: Optional[EmailStr] = None
+    
+    @validator('phone')
+    def phone_valid(cls, v):
+        if v and not re.match(r'^1\d{10}$', v):
+            raise ValueError('请输入有效的手机号')
+        return v
+    
+    @validator('real_name')
+    def real_name_valid(cls, v):
+        if v and not re.match(r'^[\u4e00-\u9fa5a-zA-Z\s]+$', v):
+            raise ValueError('姓名只能包含中文、英文字母和空格')
+        return v
 
 
-class UserResponse(UserBase):
+class UserResponse(BaseModel):
     """User response schema"""
     id: int
+    username: str  # 移除长度限制，因为响应时不需要验证
+    email: EmailStr
+    real_name: str
+    id_type: str
+    id_number: str
+    phone: str
+    user_type: str
     create_time: datetime
     
     class Config:
@@ -69,6 +88,8 @@ class TokenResponse(BaseModel):
     """Token response schema"""
     access_token: str
     token_type: str = "bearer"
+    refresh_token: Optional[str] = None
+    expires_in: int = 3600  # Token expiry in seconds (default 1 hour)
     user_id: int
     username: str
 

@@ -2,9 +2,10 @@
 Application Configuration
 Loads environment variables and provides settings
 """
-from typing import List
+from typing import List, Union
 from pydantic_settings import BaseSettings
-from pydantic import AnyHttpUrl
+from pydantic import AnyHttpUrl, field_validator
+import json
 
 
 class Settings(BaseSettings):
@@ -29,10 +30,23 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 10080  # 7 days
     
     # CORS
-    CORS_ORIGINS: List[AnyHttpUrl] = [
+    CORS_ORIGINS: Union[List[str], str] = [
         "http://localhost:5173",
         "http://localhost:3000"
     ]
+    
+    @field_validator('CORS_ORIGINS', mode='before')
+    @classmethod
+    def parse_cors_origins(cls, v):
+        """解析CORS origins，支持字符串和列表格式"""
+        if isinstance(v, str):
+            try:
+                # 尝试解析JSON格式的字符串
+                return json.loads(v)
+            except json.JSONDecodeError:
+                # 如果不是JSON格式，按逗号分割
+                return [origin.strip() for origin in v.split(',')]
+        return v
     
     class Config:
         env_file = ".env"

@@ -1,15 +1,19 @@
-"""
-Authentication Endpoints
+"""Authentication Endpoints
 用户认证相关API
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from datetime import timedelta
 
 from app.db.session import get_db
-from app.schemas.user import UserRegister, UserLogin, TokenResponse, UserResponse
+from app.schemas.user import UserRegister, UserLogin, UserResponse, TokenResponse
 from app.schemas.common import Response
 from app.models.user import User
-from app.core.security import verify_password, get_password_hash, create_access_token
+from app.core.security import verify_password, get_password_hash, create_access_token, create_refresh_token
+from app.core.config import settings
+from app.api.deps import get_current_user
+from app.core.exceptions import ValidationException, AuthenticationException
+from app.core.validators import UserValidator
 
 router = APIRouter()
 
@@ -28,33 +32,29 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     - **email**: 邮箱
     - **user_type**: 用户类型（成人/学生）
     """
+    # Validate user data using validators
+    UserValidator.validate_username(user_data.username)
+    UserValidator.validate_password(user_data.password)
+    UserValidator.validate_phone(user_data.phone)
+    UserValidator.validate_email(user_data.email)
+    UserValidator.validate_real_name(user_data.real_name)
+    UserValidator.validate_id_number(user_data.id_number, user_data.id_type)
+    
     # Check if username exists
     if db.query(User).filter(User.username == user_data.username).first():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="用户名已存在"
-        )
+        raise ValidationException("用户名已存在")
     
     # Check if email exists
     if db.query(User).filter(User.email == user_data.email).first():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="邮箱已注册"
-        )
+        raise ValidationException("邮箱已注册")
     
     # Check if phone exists
     if db.query(User).filter(User.phone == user_data.phone).first():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="手机号已注册"
-        )
+        raise ValidationException("手机号已注册")
     
     # Check if id_number exists
     if db.query(User).filter(User.id_number == user_data.id_number).first():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="证件号码已注册"
-        )
+        raise ValidationException("证件号码已注册")
     
     # Create new user
     hashed_password = get_password_hash(user_data.password)
@@ -96,25 +96,22 @@ async def login(login_data: UserLogin, db: Session = Depends(get_db)):
     ).first()
     
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="用户名或密码错误"
-        )
+        raise AuthenticationException("用户名或密码错误")
     
     if not verify_password(login_data.password, user.password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="用户名或密码错误"
-        )
+        raise AuthenticationException("用户名或密码错误")
     
-    # Create access token
-    access_token = create_access_token(data={"sub": user.id})
+    # Create access token and refresh token
+    access_token = create_access_token(data={"sub": str(user.id)})
+    refresh_token = create_refresh_token(data={"sub": str(user.id)})
     
     return Response(
         code=200,
         message="登录成功",
         data=TokenResponse(
             access_token=access_token,
+            refresh_token=refresh_token,
+            expires_in=3600,  # 1 hour in seconds
             user_id=user.id,
             username=user.username
         )
@@ -128,4 +125,39 @@ async def logout():
     注意: JWT是无状态的，客户端需要删除本地token
     """
     return Response(code=200, message="退出成功")
+
+
+@router.get("/test-token", response_model=Response[UserResponse])
+async def test_token(current_user: User = Depends(get_current_user)):
+    """
+    测试令牌有效性
+    
+    验证当前用户的JWT令牌是否有效，并返回用户信息
+    """
+    return Response(
+        code=200,
+        message="令牌有效",
+        data=UserResponse.model_validate(current_user)
+    )
+
+
+@router.post("/refresh", response_model=Response[TokenResponse])
+async def refresh_token(current_user: User = Depends(get_current_user)):
+    """
+    刷新访问令牌
+    
+    使用当前有效的令牌获取新的访问令牌
+    """
+    # 创建新的访问令牌
+    new_access_token = create_access_token(data={"sub": str(current_user.id)})
+    
+    return Response(
+        code=200,
+        message="令牌刷新成功",
+        data=TokenResponse(
+            access_token=new_access_token,
+            user_id=current_user.id,
+            username=current_user.username
+        )
+    )
 
