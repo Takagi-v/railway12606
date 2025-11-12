@@ -97,30 +97,58 @@ END $$;
 
     # Users: replace unique index on id_number with composite unique constraint (id_type, id_number)
     op.execute("DROP INDEX IF EXISTS ix_users_id_number;")
-    op.execute("ALTER TABLE users ADD CONSTRAINT IF NOT EXISTS uix_user_idtype_idnumber UNIQUE (id_type, id_number);")
+    op.create_unique_constraint(
+        'uix_user_idtype_idnumber',
+        'users',
+        ['id_type', 'id_number']
+    )
     # Recreate non-unique index on id_number for lookup efficiency
     op.execute("CREATE INDEX IF NOT EXISTS ix_users_id_number ON users (id_number);")
 
     # Passenger: update unique constraint to include id_type
     op.execute("ALTER TABLE passengers DROP CONSTRAINT IF EXISTS uix_user_passenger;")
-    op.execute("ALTER TABLE passengers ADD CONSTRAINT IF NOT EXISTS uix_user_passenger UNIQUE (user_id, id_type, id_number);")
+    op.create_unique_constraint(
+        'uix_user_passenger',
+        'passengers',
+        ['user_id', 'id_type', 'id_number']
+    )
 
     # Seat: enforce uniqueness of seat per train/date/type/number
-    op.execute("ALTER TABLE seats ADD CONSTRAINT IF NOT EXISTS uix_seat_unique UNIQUE (train_id, travel_date, seat_type, seat_number);")
+    op.create_unique_constraint(
+        'uix_seat_unique',
+        'seats',
+        ['train_id', 'travel_date', 'seat_type', 'seat_number']
+    )
 
     # Train: route index for departure/arrival
     op.execute("CREATE INDEX IF NOT EXISTS ix_train_route ON trains (departure_station_id, arrival_station_id);")
 
     # Orders: composite index and non-negative total price constraint
     op.execute("CREATE INDEX IF NOT EXISTS ix_orders_user_status_date ON orders (user_id, status, create_time);")
-    op.execute("ALTER TABLE orders ADD CONSTRAINT IF NOT EXISTS ck_order_total_price_nonnegative CHECK (total_price >= 0);")
+    op.create_check_constraint(
+        'ck_order_total_price_nonnegative',
+        'orders',
+        'total_price >= 0'
+    )
 
     # OrderPassengers: non-negative price constraint
-    op.execute("ALTER TABLE order_passengers ADD CONSTRAINT IF NOT EXISTS ck_order_passenger_price_nonnegative CHECK (price >= 0);")
+    op.create_check_constraint(
+        'ck_order_passenger_price_nonnegative',
+        'order_passengers',
+        'price >= 0'
+    )
 
     # Stations: unique aliases for search determinism
-    op.execute("ALTER TABLE stations ADD CONSTRAINT IF NOT EXISTS uix_station_pinyin UNIQUE (pinyin);")
-    op.execute("ALTER TABLE stations ADD CONSTRAINT IF NOT EXISTS uix_station_short_pinyin UNIQUE (short_pinyin);")
+    op.create_unique_constraint(
+        'uix_station_pinyin',
+        'stations',
+        ['pinyin']
+    )
+    op.create_unique_constraint(
+        'uix_station_short_pinyin',
+        'stations',
+        ['short_pinyin']
+    )
 
 
 def downgrade() -> None:

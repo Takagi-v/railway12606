@@ -86,10 +86,3 @@ class OrderDetailResponse(BaseModel):
 class RefundRequest(BaseModel):
     """Refund request schema"""
     passenger_ids: List[int] = []  # Empty list means refund all
-    @field_validator('total_price')
-    @classmethod
-    def total_price_nonnegative(cls, v: Decimal):
-        if v < 0:
-            raise ValueError('订单总价必须为非负数')
-        return v
-
