@@ -45,6 +45,7 @@ class User(Base):
     # Relationships
     passengers = relationship("Passenger", back_populates="user", cascade="all, delete-orphan")
     orders = relationship("Order", back_populates="user", cascade="all, delete-orphan")
+    roles = relationship("Role", secondary="user_roles", back_populates="users")
     
     # Composite uniqueness: 同类型证件下证件号码唯一
     __table_args__ = (

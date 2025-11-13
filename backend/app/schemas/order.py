@@ -5,8 +5,9 @@ Order Schemas
 from datetime import datetime, date
 from typing import List, Optional
 from decimal import Decimal
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, Field, validator
 from app.models.enums import PassengerType, SeatType, OrderStatus, RefundStatus
+from app.core.exceptions import ValidationException
 
 
 class OrderPassengerCreate(BaseModel):
@@ -22,7 +23,7 @@ class OrderCreate(BaseModel):
     travel_date: date = Field(..., description="乘车日期")
     passengers: List[OrderPassengerCreate] = Field(..., min_items=1, max_items=6, description="乘客列表，最多6人")
     
-    @validator('travel_date')
+    @field_validator('travel_date')
     def validate_travel_date(cls, v):
         """验证乘车日期"""
         from datetime import date, timedelta
@@ -35,7 +36,7 @@ class OrderCreate(BaseModel):
             raise ValidationException("最多只能提前30天购票")
         return v
     
-    @validator('passengers')
+    @field_validator('passengers')
     def validate_passengers(cls, v):
         """验证乘客列表"""
         if not v:

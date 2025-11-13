@@ -2,7 +2,7 @@
 Train Endpoints
 车次查询相关API
 """
-from typing import List, Dict
+from typing import List, Dict, Optional
 from datetime import date, datetime
 from fastapi import APIRouter, Depends, Query, HTTPException, status
 from sqlalchemy.orm import Session
@@ -58,15 +58,15 @@ async def search_trains(
     arrival_city: str = Query(..., description="到达地（城市或车站名/拼音）"),
     travel_date: date = Query(..., description="出发日期"),
     # 筛选项
-    train_type: str | None = Query(None, description="车次类型：高铁/动车/直达"),
-    min_departure_time: str | None = Query(None, description="最早出发时间 HH:MM"),
-    max_departure_time: str | None = Query(None, description="最晚出发时间 HH:MM"),
-    min_duration_minutes: int | None = Query(None, description="最短历时（分钟）"),
-    max_duration_minutes: int | None = Query(None, description="最长历时（分钟）"),
-    max_price: float | None = Query(None, description="最高票价（按二等座或最低价格）"),
+    train_type: Optional[str] = Query(None, description="车次类型：高铁/动车/直达"),
+    min_departure_time: Optional[str] = Query(None, description="最早出发时间 HH:MM"),
+    max_departure_time: Optional[str] = Query(None, description="最晚出发时间 HH:MM"),
+    min_duration_minutes: Optional[int] = Query(None, description="最短历时（分钟）"),
+    max_duration_minutes: Optional[int] = Query(None, description="最长历时（分钟）"),
+    max_price: Optional[float] = Query(None, description="最高票价（按二等座或最低价格）"),
     # 排序项：departure_time/duration/price，asc/desc
-    sort_by: str | None = Query(None, description="排序字段：departure_time/duration/price"),
-    sort_order: str | None = Query("asc", description="排序方向：asc/desc"),
+    sort_by: Optional[str] = Query(None, description="排序字段：departure_time/duration/price"),
+    sort_order: Optional[str] = Query("asc", description="排序方向：asc/desc"),
     db: Session = Depends(get_db),
 ):
     """

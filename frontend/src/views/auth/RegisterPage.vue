@@ -131,10 +131,10 @@
                     size="large"
                     class="form-input"
                   >
-                    <a-select-option value="居民身份证">居民身份证</a-select-option>
+                    <a-select-option value="身份证">身份证</a-select-option>
                     <a-select-option value="护照">护照</a-select-option>
-                    <a-select-option value="港澳居民来往内地通行证">港澳居民来往内地通行证</a-select-option>
-                    <a-select-option value="台湾居民来往大陆通行证">台湾居民来往大陆通行证</a-select-option>
+                    <a-select-option value="港澳通行证">港澳通行证</a-select-option>
+                    <a-select-option value="台胞证">台胞证</a-select-option>
                   </a-select>
                 </a-form-item>
 
@@ -342,7 +342,7 @@ const registerForm = reactive({
   username: '',
   password: '',
   confirmPassword: '',
-  idType: '居民身份证',
+  idType: '身份证',
   realName: '',
   idNumber: '',
   userType: '成人',
@@ -446,7 +446,7 @@ const rules = {
     { required: true, message: '请输入证件号码', trigger: 'blur' },
     {
       validator: (rule, value) => {
-        if (registerForm.idType === '居民身份证') {
+        if (registerForm.idType === '身份证') {
           const idPattern = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
           if (!idPattern.test(value)) {
             return Promise.reject('请输入正确的身份证号码')
