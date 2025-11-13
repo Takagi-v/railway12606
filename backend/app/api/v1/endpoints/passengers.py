@@ -5,6 +5,7 @@ Passenger Endpoints
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status, Path
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from app.db.session import get_db
 from app.schemas.passenger import PassengerCreate, PassengerUpdate, PassengerResponse
@@ -52,14 +53,10 @@ async def create_passenger(
     - **phone**: 手机号
     - **passenger_type**: 旅客类型（成人/学生/儿童）
     """
-    # 验证乘客数据
-    UserValidator.validate_real_name(passenger_data.name)
-    UserValidator.validate_phone(passenger_data.phone)
-    UserValidator.validate_id_number(passenger_data.id_number)
-    
-    # Check if passenger with same id_number already exists for this user
+    # Check if passenger with same (id_type, id_number) already exists for this user
     existing = db.query(Passenger).filter(
         Passenger.user_id == current_user.id,
+        Passenger.id_type == passenger_data.id_type,
         Passenger.id_number == passenger_data.id_number
     ).first()
     
@@ -73,7 +70,14 @@ async def create_passenger(
     )
     
     db.add(new_passenger)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="该证件已存在"
+        )
     db.refresh(new_passenger)
     
     return Response(
@@ -113,7 +117,14 @@ async def update_passenger(
     for field, value in passenger_data.model_dump().items():
         setattr(passenger, field, value)
     
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="该证件已存在"
+        )
     db.refresh(passenger)
     
     return Response(

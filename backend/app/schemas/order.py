@@ -5,31 +5,15 @@ Order Schemas
 from datetime import datetime, date
 from typing import List, Optional
 from decimal import Decimal
-from pydantic import BaseModel, Field, validator
-from app.core.exceptions import ValidationException
+from pydantic import BaseModel, field_validator
+from app.models.enums import PassengerType, SeatType, OrderStatus, RefundStatus
 
 
 class OrderPassengerCreate(BaseModel):
     """Order passenger create schema"""
-    passenger_id: int = Field(..., gt=0, description="乘客ID必须大于0")
-    ticket_type: str = Field(..., min_length=1, max_length=20, description="票种类型")
-    seat_type: str = Field(..., min_length=1, max_length=20, description="座位类型")
-    
-    @validator('ticket_type')
-    def validate_ticket_type(cls, v):
-        """验证票种类型"""
-        valid_types = ['成人票', '学生票', '儿童票']
-        if v not in valid_types:
-            raise ValidationException(f"票种类型必须是: {', '.join(valid_types)}")
-        return v
-    
-    @validator('seat_type')
-    def validate_seat_type(cls, v):
-        """验证座位类型"""
-        valid_types = ['一等座', '二等座', '商务座', '软卧', '硬卧', '硬座']
-        if v not in valid_types:
-            raise ValidationException(f"座位类型必须是: {', '.join(valid_types)}")
-        return v
+    passenger_id: int
+    ticket_type: PassengerType
+    seat_type: SeatType
 
 
 class OrderCreate(BaseModel):
@@ -69,11 +53,18 @@ class OrderPassengerResponse(BaseModel):
     """Order passenger response"""
     name: str
     id_number: str
-    seat_type: str
+    seat_type: SeatType
     seat_number: Optional[str]
-    ticket_type: str
+    ticket_type: PassengerType
     price: Decimal
-    refund_status: str
+    refund_status: RefundStatus
+
+    @field_validator('price')
+    @classmethod
+    def price_nonnegative(cls, v: Decimal):
+        if v < 0:
+            raise ValueError('票价必须为非负数')
+        return v
     
     class Config:
         from_attributes = True
@@ -89,7 +80,7 @@ class OrderResponse(BaseModel):
     travel_date: date
     departure_time: str
     total_price: Decimal
-    status: str
+    status: OrderStatus
     passenger_count: int
     create_time: datetime
     
@@ -109,7 +100,7 @@ class OrderDetailResponse(BaseModel):
     travel_date: date
     passengers: List[OrderPassengerResponse]
     total_price: Decimal
-    status: str
+    status: OrderStatus
     create_time: datetime
     pay_time: Optional[datetime]
     cancel_time: Optional[datetime]
@@ -120,22 +111,4 @@ class OrderDetailResponse(BaseModel):
 
 class RefundRequest(BaseModel):
     """Refund request schema"""
-    passenger_ids: List[int] = Field(default=[], description="要退票的乘客ID列表，空列表表示全部退票")
-    
-    @validator('passenger_ids')
-    def validate_passenger_ids(cls, v):
-        """验证乘客ID列表"""
-        if v is None:
-            return []
-        
-        # 检查ID是否都大于0
-        for passenger_id in v:
-            if passenger_id <= 0:
-                raise ValidationException("乘客ID必须大于0")
-        
-        # 检查是否有重复ID
-        if len(v) != len(set(v)):
-            raise ValidationException("乘客ID不能重复")
-        
-        return v
-
+    passenger_ids: List[int] = []  # Empty list means refund all

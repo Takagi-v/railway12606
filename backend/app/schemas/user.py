@@ -6,6 +6,7 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field, validator
 import re
+from app.models.enums import IdType, UserType
 
 
 class UserBase(BaseModel):
@@ -13,10 +14,10 @@ class UserBase(BaseModel):
     username: str = Field(..., min_length=6, max_length=30)
     email: EmailStr
     real_name: str = Field(..., min_length=2, max_length=50)
-    id_type: str
+    id_type: IdType
     id_number: str
     phone: str = Field(..., min_length=11, max_length=11)
-    user_type: str
+    user_type: UserType
 
 
 class UserRegister(UserBase):

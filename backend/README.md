@@ -129,7 +129,9 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
 - `DELETE /{passenger_id}` - 删除乘客
 
 ### 车次查询 (`/api/trains`)
-- `GET /search` - 查询车次
+- `GET /search` - 查询车次（支持筛选与排序：`train_type`、`min_departure_time`、`max_departure_time`、`min_duration_minutes`、`max_duration_minutes`、`max_price`、`sort_by`、`sort_order`）
+- `GET /{train_number}` - 车次详情
+- `GET /{train_number}/availability` - 指定日期余票与价格
 
 ### 订单管理 (`/api/orders`)
 - `POST /create` - 创建订单
@@ -175,15 +177,27 @@ alembic history
 
 以下功能已搭建好框架，需要实现具体业务逻辑：
 
-- [ ] 车次查询功能实现
+- [x] 车次查询功能实现（含筛选与排序）
+- [x] 余票独立接口
 - [ ] 订单创建逻辑（座位锁定、价格计算）
 - [ ] 订单支付逻辑
 - [ ] 订单取消逻辑
 - [ ] 退票逻辑
 - [ ] 订单超时自动取消（定时任务）
-- [ ] 数据生成脚本（车站、车次、座位）
+- [x] 数据生成脚本（车站、车次、座位）
 - [ ] 验证码生成
 - [ ] 单元测试
+
+### 演示数据
+
+运行脚本快速生成演示数据用于联调：
+
+```bash
+cd backend
+source .venv/bin/activate
+python scripts/generate_demo_data.py --days 14
+```
+
 
 ## 注意事项
 

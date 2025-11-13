@@ -52,9 +52,15 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     if db.query(User).filter(User.phone == user_data.phone).first():
         raise ValidationException("手机号已注册")
     
-    # Check if id_number exists
-    if db.query(User).filter(User.id_number == user_data.id_number).first():
-        raise ValidationException("证件号码已注册")
+    # Check if id_type + id_number exists
+    if db.query(User).filter(
+        User.id_type == user_data.id_type,
+        User.id_number == user_data.id_number
+    ).first():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="证件号码已注册"
+        )
     
     # Create new user
     hashed_password = get_password_hash(user_data.password)

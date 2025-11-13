@@ -10,9 +10,8 @@ from app.db.session import get_db
 from app.schemas.order import OrderCreate, OrderResponse, OrderDetailResponse, RefundRequest
 from app.schemas.common import Response
 from app.models.user import User
-from app.api.deps import get_current_user
-from app.core.exceptions import ValidationException, NotFoundException, BusinessException
-from app.core.validators import OrderValidator
+from app.core.security import get_current_user
+from app.models.enums import OrderStatus
 
 router = APIRouter()
 
@@ -73,14 +72,14 @@ async def create_order(
 
 @router.get("", response_model=Response[List[OrderResponse]])
 async def get_orders(
-    status: Optional[str] = Query(None, description="订单状态筛选"),
+    status: Optional[OrderStatus] = Query(None, description="订单状态筛选"),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
     查询订单列表
     
-    - **status**: 订单状态（可选）- 待支付/已支付/已取消/已退票
+    - **status**: 订单状态（可选）- 待支付/已支付/已取消/已退票（枚举）
     
     TODO: 实现订单列表查询
     """
