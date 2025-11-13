@@ -2,7 +2,7 @@
  * Permission Management API
  * 权限管理API接口
  */
-import request from './request'
+import request from '@/utils/request'
 
 // 权限管理API
 export const permissionApi = {

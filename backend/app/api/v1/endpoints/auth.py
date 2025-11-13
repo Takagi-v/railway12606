@@ -9,6 +9,7 @@ from app.db.session import get_db
 from app.schemas.user import UserRegister, UserLogin, UserResponse, TokenResponse
 from app.schemas.common import Response
 from app.models.user import User
+from app.models.role import Role
 from app.core.security import verify_password, get_password_hash, create_access_token, create_refresh_token
 from app.core.config import settings
 from app.api.deps import get_current_user
@@ -78,6 +79,11 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+    # 默认分配普通用户角色
+    default_role = db.query(Role).filter(Role.name == "user", Role.is_active == 1).first()
+    if default_role:
+        new_user.roles.append(default_role)
+        db.commit()
     
     return Response(
         code=200,

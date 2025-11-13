@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import PermissionWrapper from '@/components/PermissionWrapper.vue'
+import PermissionWrapper from '@/components/Permission/PermissionWrapper.vue'
 </script>
 
 <style scoped>

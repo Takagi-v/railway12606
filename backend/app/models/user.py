@@ -39,6 +39,7 @@ class User(Base):
         nullable=False,
         comment="用户类型（成人/学生）"
     )
+    is_active = Column(Integer, default=1)
     create_time = Column(DateTime(timezone=True), server_default=func.now(), comment="创建时间")
     update_time = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), comment="更新时间")
     
@@ -51,4 +52,18 @@ class User(Base):
     __table_args__ = (
         UniqueConstraint('id_type', 'id_number', name='uix_user_idtype_idnumber'),
     )
+
+    def has_role(self, role_name: str) -> bool:
+        for role in self.roles:
+            if role.name == role_name and role.is_active == 1:
+                return True
+        return False
+
+    def has_permission(self, permission_code: str) -> bool:
+        for role in self.roles:
+            if role.is_active == 1:
+                for permission in role.permissions:
+                    if permission.code == permission_code and permission.is_active == 1:
+                        return True
+        return False
 

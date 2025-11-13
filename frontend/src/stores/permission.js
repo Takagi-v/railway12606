@@ -52,11 +52,11 @@ export const usePermissionStore = defineStore('permission', () => {
 
     try {
       loading.value = true
-      const response = await userRoleApi.getUserPermissions(targetUserId)
-      
-      if (response.code === 200) {
-        userPermissions.value = response.data.permissions || []
-        userRoles.value = response.data.roles || []
+      const res = await userRoleApi.getUserPermissions(targetUserId)
+      const data = res && res.data !== undefined ? res.data : res
+      if (data) {
+        userPermissions.value = data.permissions || []
+        userRoles.value = data.roles || []
         permissionsLoaded.value = true
         rolesLoaded.value = true
       }
@@ -80,10 +80,10 @@ export const usePermissionStore = defineStore('permission', () => {
 
     try {
       loading.value = true
-      const response = await userRoleApi.getUserRoles(targetUserId)
-      
-      if (response.code === 200) {
-        userRoles.value = response.data.roles || []
+      const res = await userRoleApi.getUserRoles(targetUserId)
+      const data = res && res.data !== undefined ? res.data : res
+      if (data && data.roles) {
+        userRoles.value = data.roles || []
         rolesLoaded.value = true
       }
     } catch (error) {
@@ -227,8 +227,9 @@ export const usePermissionStore = defineStore('permission', () => {
     if (!targetUserId) return false
 
     try {
-      const response = await userRoleApi.checkUserPermission(targetUserId, permissionCode)
-      return response.code === 200 && response.data.has_permission
+      const res = await userRoleApi.checkUserPermission(targetUserId, permissionCode)
+      const data = res && res.data !== undefined ? res.data : res
+      return !!(data && data.has_permission)
     } catch (error) {
       console.error('远程权限检查失败:', error)
       return false
@@ -243,8 +244,9 @@ export const usePermissionStore = defineStore('permission', () => {
     if (!targetUserId) return false
 
     try {
-      const response = await userRoleApi.checkUserRole(targetUserId, roleName)
-      return response.code === 200 && response.data.has_role
+      const res = await userRoleApi.checkUserRole(targetUserId, roleName)
+      const data = res && res.data !== undefined ? res.data : res
+      return !!(data && data.has_role)
     } catch (error) {
       console.error('远程角色检查失败:', error)
       return false

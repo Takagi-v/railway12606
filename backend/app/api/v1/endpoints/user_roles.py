@@ -15,7 +15,8 @@ from app.schemas.role import (
     UserRoleAssign,
     UserRoleResponse,
     UserPermissionCheck,
-    RoleResponse
+    RoleResponse,
+    PermissionResponse
 )
 
 router = APIRouter()
@@ -25,7 +26,7 @@ router = APIRouter()
 async def get_user_roles(
     user_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_permissions(Permissions.USER_READ))
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     获取用户的角色列表
@@ -49,6 +50,14 @@ async def get_user_roles(
             detail="用户不存在"
         )
     
+    # 仅允许访问自己的角色，除非具有用户查看权限
+    if user.id != current_user.id:
+        if Permissions.USER_READ not in PermissionValidator.get_user_permissions(current_user):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="权限不足"
+            )
+
     return UserRoleResponse(
         user_id=user.id,
         username=user.username,
@@ -192,7 +201,7 @@ async def remove_role_from_user(
 async def get_user_permissions(
     user_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_permissions(Permissions.USER_READ))
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     获取用户的所有权限
@@ -216,14 +225,31 @@ async def get_user_permissions(
             detail="用户不存在"
         )
     
-    permissions = PermissionValidator.get_user_permissions(user)
-    roles = PermissionValidator.get_user_roles(user)
-    
+    # 仅允许访问自己的权限，除非具有用户查看权限
+    if user.id != current_user.id:
+        if Permissions.USER_READ not in PermissionValidator.get_user_permissions(current_user):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="权限不足"
+            )
+
+    # 返回完整的角色对象和权限对象
+    # 去重权限
+    seen_perm_ids = set()
+    permission_objs = []
+    for role in user.roles:
+        for perm in role.permissions:
+            if perm.is_active == 1 and perm.id not in seen_perm_ids:
+                seen_perm_ids.add(perm.id)
+                permission_objs.append(PermissionResponse.model_validate(perm))
+
+    role_objs = [RoleResponse.model_validate(r) for r in user.roles]
+
     return {
         "user_id": user.id,
         "username": user.username,
-        "roles": roles,
-        "permissions": permissions
+        "roles": role_objs,
+        "permissions": permission_objs
     }
 
 
@@ -232,7 +258,7 @@ async def check_user_permission(
     user_id: int,
     request: UserPermissionCheck,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_permissions(Permissions.USER_READ))
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     检查用户是否具有指定权限
@@ -257,6 +283,14 @@ async def check_user_permission(
             detail="用户不存在"
         )
     
+    # 允许自查，否则需要查看用户权限的权限
+    if user.id != current_user.id:
+        if Permissions.USER_READ not in PermissionValidator.get_user_permissions(current_user):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="权限不足"
+            )
+
     has_permission = PermissionValidator.validate_user_permission(user, request.permission_code)
     
     return {
@@ -272,7 +306,7 @@ async def check_user_role(
     user_id: int,
     role_name: str,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_permissions(Permissions.USER_READ))
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     检查用户是否具有指定角色
@@ -297,6 +331,14 @@ async def check_user_role(
             detail="用户不存在"
         )
     
+    # 允许自查，否则需要查看用户权限的权限
+    if user.id != current_user.id:
+        if Permissions.USER_READ not in PermissionValidator.get_user_permissions(current_user):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="权限不足"
+            )
+
     has_role = PermissionValidator.validate_user_role(user, role_name)
     
     return {

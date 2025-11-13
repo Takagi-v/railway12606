@@ -8,4 +8,5 @@ from app.models.station import Station
 from app.models.train import Train
 from app.models.seat import Seat
 from app.models.order import Order, OrderPassenger
+from app.models.role import Role, Permission, user_roles, role_permissions
 
