@@ -1,117 +1,7 @@
 <template>
   <div class="railway-homepage">
-    <!-- 顶部导航栏 -->
-    <header class="header">
-      <div class="header-container">
-        <!-- Logo和搜索区域 -->
-        <div class="header-top">
-          <div class="logo-section">
-            <h1 class="logo">
-              <router-link to="/" class="logo-link">中国铁路12306</router-link>
-            </h1>
-          </div>
-          
-          <div class="search-section">
-            <div class="search-box">
-              <input 
-                type="text" 
-                placeholder="搜索车票、餐饮、常旅客、相关规章"
-                class="search-input"
-                v-model="searchKeyword"
-              />
-              <button class="search-btn" @click="handleGlobalSearch">
-                <SearchOutlined />
-              </button>
-            </div>
-          </div>
-          
-          <!-- 顶部右侧导航 -->
-          <nav class="top-nav">
-            <a href="#" class="nav-link">无障碍</a>
-            <span class="nav-separator">|</span>
-            <a href="#" class="nav-link">敬老版</a>
-            <span class="nav-separator">|</span>
-            <div class="nav-dropdown">
-              <a href="#" class="nav-link dropdown-trigger">
-                English
-                <DownOutlined class="dropdown-icon" />
-              </a>
-            </div>
-            <span class="nav-separator">|</span>
-            <div class="nav-dropdown">
-              <a href="#" @click.prevent="handleMyAccount" class="nav-link dropdown-trigger">
-                我的12306
-                <DownOutlined class="dropdown-icon" />
-              </a>
-            </div>
-            <span class="nav-separator">|</span>
-            <div class="auth-links">
-              <a href="#" @click.prevent="handleLogin" class="nav-link">登录</a>
-              <a href="#" @click.prevent="handleRegister" class="nav-link">注册</a>
-            </div>
-          </nav>
-        </div>
-        
-        <!-- 主导航菜单 -->
-        <nav class="main-nav">
-          <ul class="nav-menu">
-            <li class="nav-item active">
-              <router-link to="/" class="nav-link" @click="handleMainNavClick('首页')">首页</router-link>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="#" @click.prevent="handleMainNavClick('车票')" class="nav-link dropdown-trigger">
-                车票
-                <DownOutlined class="dropdown-icon" />
-              </a>
-              <div class="dropdown-menu">
-                <a href="#" class="dropdown-item">购买</a>
-                <a href="#" class="dropdown-item">变更</a>
-                <a href="#" class="dropdown-item">更多</a>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="#" @click.prevent="handleMainNavClick('团购服务')" class="nav-link dropdown-trigger">
-                团购服务
-                <DownOutlined class="dropdown-icon" />
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="#" @click.prevent="handleMainNavClick('会员服务')" class="nav-link dropdown-trigger">
-                会员服务
-                <DownOutlined class="dropdown-icon" />
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="#" @click.prevent="handleMainNavClick('站车服务')" class="nav-link dropdown-trigger">
-                站车服务
-                <DownOutlined class="dropdown-icon" />
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="#" @click.prevent="handleMainNavClick('商旅服务')" class="nav-link dropdown-trigger">
-                商旅服务
-                <DownOutlined class="dropdown-icon" />
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="#" @click.prevent="handleMainNavClick('出行指南')" class="nav-link dropdown-trigger">
-                出行指南
-                <DownOutlined class="dropdown-icon" />
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="#" @click.prevent="handleMainNavClick('信息查询')" class="nav-link dropdown-trigger">
-                信息查询
-                <DownOutlined class="dropdown-icon" />
-              </a>
-              <div class="dropdown-menu">
-                <a href="#" class="dropdown-item">常用查询</a>
-              </div>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+    <!-- 顶部导航栏（组件化） -->
+    <Header12306 />
 
     <!-- 主内容区域 -->
     <main class="main-content">
@@ -447,6 +337,7 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
+import Header12306 from '../components/Header12306.vue'
 import {
   SearchOutlined,
   DownOutlined,

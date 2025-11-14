@@ -64,8 +64,7 @@ async def startup_event():
     """Application startup event"""
     logger.info("Starting Railway 12306 API Server...")
     # Initialize database tables
-    # Uncomment the following line after setting up database
-    # init_db()
+    init_db()
 
 
 @app.on_event("shutdown")

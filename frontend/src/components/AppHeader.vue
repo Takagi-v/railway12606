@@ -6,11 +6,6 @@
       </div>
 
       <div class="nav-menu">
-<<<<<<< HEAD
-        <a-menu mode="horizontal" :selected-keys="selectedKeys" class="header-menu">
-          <a-menu-item key="home" @click="router.push('/')">首页</a-menu-item>
-          <a-menu-item key="orders" @click="router.push('/user/orders')" v-if="isAuthenticated">
-=======
         <a-menu
           mode="horizontal"
           :selected-keys="selectedKeys"
@@ -22,7 +17,6 @@
             key="orders"
             @click="router.push('/user/orders')"
           >
->>>>>>> origin/feature/user-authentication
             我的订单
           </a-menu-item>
         </a-menu>
