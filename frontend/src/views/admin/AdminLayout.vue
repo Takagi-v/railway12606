@@ -36,8 +36,8 @@
         </router-link>
       </div>
       <div class="nav-user">
-        <span>{{ userStore.user?.real_name || '管理员' }}</span>
-        <button @click="logout" class="logout-btn">退出</button>
+        <span>{{ userStore.user?.real_name || "管理员" }}</span>
+        <button class="logout-btn" @click="logout">退出</button>
       </div>
     </nav>
 
@@ -49,16 +49,16 @@
 </template>
 
 <script setup>
-import { useUserStore } from '@/stores/user'
-import { useRouter } from 'vue-router'
+import { useUserStore } from "@/stores/user";
+import { useRouter } from "vue-router";
 
-const userStore = useUserStore()
-const router = useRouter()
+const userStore = useUserStore();
+const router = useRouter();
 
 const logout = () => {
-  userStore.logout()
-  router.push('/login')
-}
+  userStore.logout();
+  router.push("/login");
+};
 </script>
 
 <style scoped>
@@ -150,13 +150,27 @@ const logout = () => {
   height: 16px;
 }
 
-.icon-dashboard::before { content: '📊'; }
-.icon-users::before { content: '👥'; }
-.icon-roles::before { content: '🎭'; }
-.icon-permissions::before { content: '🔐'; }
-.icon-train::before { content: '🚄'; }
-.icon-orders::before { content: '📋'; }
-.icon-settings::before { content: '⚙️'; }
+.icon-dashboard::before {
+  content: "📊";
+}
+.icon-users::before {
+  content: "👥";
+}
+.icon-roles::before {
+  content: "🎭";
+}
+.icon-permissions::before {
+  content: "🔐";
+}
+.icon-train::before {
+  content: "🚄";
+}
+.icon-orders::before {
+  content: "📋";
+}
+.icon-settings::before {
+  content: "⚙️";
+}
 
 @media (max-width: 768px) {
   .admin-nav {
@@ -164,13 +178,13 @@ const logout = () => {
     gap: 1rem;
     padding: 1rem;
   }
-  
+
   .nav-links {
     flex-wrap: wrap;
     justify-content: center;
     gap: 1rem;
   }
-  
+
   .admin-main {
     padding: 1rem;
   }

@@ -9,19 +9,23 @@
       <div class="content-card">
         <h2>订单列表</h2>
         <p>这里将显示订单列表和管理功能</p>
-        
+
         <!-- 权限测试区域 -->
         <div class="permission-test">
           <h3>权限测试</h3>
-          
+
           <PermissionWrapper :permissions="['order:create']">
-            <button class="btn btn-primary">创建订单 (需要 order:create 权限)</button>
+            <button class="btn btn-primary">
+              创建订单 (需要 order:create 权限)
+            </button>
           </PermissionWrapper>
-          
+
           <PermissionWrapper :permissions="['order:delete']">
-            <button class="btn btn-danger">删除订单 (需要 order:delete 权限)</button>
+            <button class="btn btn-danger">
+              删除订单 (需要 order:delete 权限)
+            </button>
           </PermissionWrapper>
-          
+
           <button v-permission="'order:update'" class="btn btn-secondary">
             编辑订单 (需要 order:update 权限)
           </button>
@@ -32,7 +36,7 @@
 </template>
 
 <script setup>
-import PermissionWrapper from '@/components/Permission/PermissionWrapper.vue'
+import PermissionWrapper from "@/components/Permission/PermissionWrapper.vue";
 </script>
 
 <style scoped>

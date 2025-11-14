@@ -2,28 +2,28 @@
  * Passenger API
  * 乘客管理API
  */
-import request from '@/utils/request'
+import request from "@/utils/request";
 
 /**
  * 获取乘客列表
  */
 export const getPassengers = () => {
   return request({
-    url: '/passengers',
-    method: 'get'
-  })
-}
+    url: "/passengers",
+    method: "get",
+  });
+};
 
 /**
  * 添加乘客
  */
 export const createPassenger = (data) => {
   return request({
-    url: '/passengers',
-    method: 'post',
-    data
-  })
-}
+    url: "/passengers",
+    method: "post",
+    data,
+  });
+};
 
 /**
  * 编辑乘客
@@ -31,10 +31,10 @@ export const createPassenger = (data) => {
 export const updatePassenger = (id, data) => {
   return request({
     url: `/passengers/${id}`,
-    method: 'put',
-    data
-  })
-}
+    method: "put",
+    data,
+  });
+};
 
 /**
  * 删除乘客
@@ -42,7 +42,6 @@ export const updatePassenger = (id, data) => {
 export const deletePassenger = (id) => {
   return request({
     url: `/passengers/${id}`,
-    method: 'delete'
-  })
-}
-
+    method: "delete",
+  });
+};

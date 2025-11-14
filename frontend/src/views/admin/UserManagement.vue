@@ -9,25 +9,29 @@
       <div class="content-card">
         <h2>用户列表</h2>
         <p>这里将显示用户列表和管理功能</p>
-        
+
         <!-- 权限测试区域 -->
         <div class="permission-test">
           <h3>权限测试</h3>
-          
+
           <!-- 使用权限组件 -->
           <PermissionWrapper :permissions="['user:create']">
-            <button class="btn btn-primary">创建用户 (需要 user:create 权限)</button>
+            <button class="btn btn-primary">
+              创建用户 (需要 user:create 权限)
+            </button>
           </PermissionWrapper>
-          
+
           <PermissionWrapper :permissions="['user:delete']">
-            <button class="btn btn-danger">删除用户 (需要 user:delete 权限)</button>
+            <button class="btn btn-danger">
+              删除用户 (需要 user:delete 权限)
+            </button>
           </PermissionWrapper>
-          
+
           <!-- 使用权限指令 -->
           <button v-permission="'user:update'" class="btn btn-secondary">
             编辑用户 (需要 user:update 权限)
           </button>
-          
+
           <button v-role="'admin'" class="btn btn-info">
             管理员功能 (需要 admin 角色)
           </button>
@@ -38,7 +42,7 @@
 </template>
 
 <script setup>
-import PermissionWrapper from '@/components/Permission/PermissionWrapper.vue'
+import PermissionWrapper from "@/components/Permission/PermissionWrapper.vue";
 </script>
 
 <style scoped>

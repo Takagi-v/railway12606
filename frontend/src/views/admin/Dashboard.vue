@@ -2,7 +2,7 @@
   <div class="dashboard">
     <div class="dashboard-header">
       <h1>管理员仪表板</h1>
-      <p>欢迎回来，{{ userStore.user?.real_name || '管理员' }}！</p>
+      <p>欢迎回来，{{ userStore.user?.real_name || "管理员" }}！</p>
     </div>
 
     <div class="stats-grid">
@@ -13,7 +13,7 @@
           <p class="stat-number">1,234</p>
         </div>
       </div>
-      
+
       <div class="stat-card">
         <div class="stat-icon">🚄</div>
         <div class="stat-content">
@@ -21,7 +21,7 @@
           <p class="stat-number">56</p>
         </div>
       </div>
-      
+
       <div class="stat-card">
         <div class="stat-icon">📋</div>
         <div class="stat-content">
@@ -29,7 +29,7 @@
           <p class="stat-number">89</p>
         </div>
       </div>
-      
+
       <div class="stat-card">
         <div class="stat-icon">💰</div>
         <div class="stat-content">
@@ -84,9 +84,9 @@
 </template>
 
 <script setup>
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from "@/stores/user";
 
-const userStore = useUserStore()
+const userStore = useUserStore();
 </script>
 
 <style scoped>
@@ -241,11 +241,11 @@ const userStore = useUserStore()
   .dashboard-content {
     grid-template-columns: 1fr;
   }
-  
+
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .quick-actions {
     grid-template-columns: repeat(2, 1fr);
   }

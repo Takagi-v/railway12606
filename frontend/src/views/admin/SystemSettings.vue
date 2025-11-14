@@ -9,19 +9,23 @@
       <div class="content-card">
         <h2>系统配置</h2>
         <p>这里将显示系统设置和配置选项</p>
-        
+
         <!-- 权限测试区域 -->
         <div class="permission-test">
           <h3>权限测试</h3>
-          
+
           <PermissionWrapper :permissions="['system:manage']">
-            <button class="btn btn-primary">系统管理 (需要 system:manage 权限)</button>
+            <button class="btn btn-primary">
+              系统管理 (需要 system:manage 权限)
+            </button>
           </PermissionWrapper>
-          
+
           <PermissionWrapper :permissions="['system:admin']">
-            <button class="btn btn-danger">系统管理员 (需要 system:admin 权限)</button>
+            <button class="btn btn-danger">
+              系统管理员 (需要 system:admin 权限)
+            </button>
           </PermissionWrapper>
-          
+
           <button v-role="'super_admin'" class="btn btn-warning">
             超级管理员功能 (需要 super_admin 角色)
           </button>
@@ -32,7 +36,7 @@
 </template>
 
 <script setup>
-import PermissionWrapper from '@/components/Permission/PermissionWrapper.vue'
+import PermissionWrapper from "@/components/Permission/PermissionWrapper.vue";
 </script>
 
 <style scoped>

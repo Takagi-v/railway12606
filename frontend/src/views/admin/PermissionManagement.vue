@@ -9,19 +9,23 @@
       <div class="content-card">
         <h2>权限列表</h2>
         <p>这里将显示权限列表和管理功能</p>
-        
+
         <!-- 权限测试区域 -->
         <div class="permission-test">
           <h3>权限测试</h3>
-          
+
           <PermissionWrapper :permissions="['permission:create']">
-            <button class="btn btn-primary">创建权限 (需要 permission:create 权限)</button>
+            <button class="btn btn-primary">
+              创建权限 (需要 permission:create 权限)
+            </button>
           </PermissionWrapper>
-          
+
           <PermissionWrapper :permissions="['permission:delete']">
-            <button class="btn btn-danger">删除权限 (需要 permission:delete 权限)</button>
+            <button class="btn btn-danger">
+              删除权限 (需要 permission:delete 权限)
+            </button>
           </PermissionWrapper>
-          
+
           <button v-permission="'permission:update'" class="btn btn-secondary">
             编辑权限 (需要 permission:update 权限)
           </button>
@@ -32,7 +36,7 @@
 </template>
 
 <script setup>
-import PermissionWrapper from '@/components/Permission/PermissionWrapper.vue'
+import PermissionWrapper from "@/components/Permission/PermissionWrapper.vue";
 </script>
 
 <style scoped>

@@ -5,72 +5,51 @@
       <div class="header-content">
         <div class="logo-section">
           <div class="logo">
-            <div class="logo-icon">🚄</div>
-            <span class="logo-text">中国铁路12306</span>
+            <img :src="logoImage" alt="中国铁路12306" class="logo-image" />
+            <span class="logo-welcome">欢迎登录 12306</span>
           </div>
-          <span class="welcome-text">欢迎登录12306</span>
         </div>
       </div>
     </header>
 
     <!-- 主体区域 Main Section -->
     <main class="login-main">
-      <div class="main-content">
-        <!-- 左侧宣传区 -->
-        <div class="promo-section">
-          <div class="promo-content">
-            <h1 class="main-title">铁路12306 - 中国铁路官方APP</h1>
-            <h2 class="sub-title">尽享<span class="highlight">精彩出行服务</span></h2>
-            
-            <div class="features-list">
-              <div class="feature-item">
-                <span class="check-icon">✅</span>
-                <span>个人行程提醒</span>
-              </div>
-              <div class="feature-item">
-                <span class="check-icon">✅</span>
-                <span>积分兑换</span>
-              </div>
-              <div class="feature-item">
-                <span class="check-icon">✅</span>
-                <span>餐饮·特产</span>
-              </div>
-              <div class="feature-item">
-                <span class="check-icon">✅</span>
-                <span>车站大屏</span>
-              </div>
-            </div>
-
-            <div class="qr-section">
-              <div class="qr-code">
-                <div class="qr-placeholder">
-                  <div class="qr-grid">
-                    <div v-for="i in 25" :key="i" class="qr-dot"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="qr-text">
-                <p>扫描左侧二维码</p>
-                <p>安装铁路12306</p>
-              </div>
-            </div>
-          </div>
+      <div class="bg-slider">
+        <div
+          class="bg-track"
+          :style="{
+            width: `${bgImages.length * 100}%`,
+            transform: `translateX(-${(currentSlide / bgImages.length) * 100}%)`,
+          }"
+        >
+          <div
+            v-for="(img, idx) in bgImages"
+            :key="idx"
+            class="bg-slide"
+            :style="{
+              backgroundImage: `url('${img}')`,
+              width: `${100 / bgImages.length}%`,
+            }"
+          ></div>
         </div>
+      </div>
+      <div class="main-content">
+        <div class="promo-section"></div>
 
         <!-- 右侧登录框 -->
         <div class="login-section">
           <div class="login-card">
             <!-- Tab 切换 -->
             <div class="login-tabs">
-              <div 
-                class="tab-item" 
+              <div
+                class="tab-item"
                 :class="{ active: activeTab === 'account' }"
                 @click="activeTab = 'account'"
               >
                 账号登录
               </div>
-              <div 
-                class="tab-item" 
+              <div
+                class="tab-item"
                 :class="{ active: activeTab === 'qr' }"
                 @click="activeTab = 'qr'"
               >
@@ -83,9 +62,9 @@
               <a-form
                 :model="loginForm"
                 :rules="rules"
-                @finish="handleLogin"
                 layout="vertical"
                 class="login-form"
+                @finish="handleLogin"
               >
                 <a-form-item name="username">
                   <a-input
@@ -95,7 +74,7 @@
                     class="login-input"
                   />
                 </a-form-item>
-                
+
                 <a-form-item name="password">
                   <a-input-password
                     v-model:value="loginForm.password"
@@ -104,13 +83,13 @@
                     class="login-input"
                   />
                 </a-form-item>
-                
+
                 <a-form-item>
-                  <a-button 
-                    type="primary" 
-                    html-type="submit" 
-                    size="large" 
-                    block 
+                  <a-button
+                    type="primary"
+                    html-type="submit"
+                    size="large"
+                    block
                     :loading="loading"
                     class="login-button"
                   >
@@ -120,10 +99,18 @@
               </a-form>
 
               <div class="login-links">
-                <a-button type="link" @click="router.push('/register')" class="register-link">
+                <a-button
+                  type="link"
+                  class="register-link"
+                  @click="router.push('/register')"
+                >
                   注册新用户
                 </a-button>
-                <a-button type="link" class="forgot-link" @click="router.push('/forgot-password')">
+                <a-button
+                  type="link"
+                  class="forgot-link"
+                  @click="router.push('/forgot-password')"
+                >
                   忘记密码？
                 </a-button>
               </div>
@@ -145,44 +132,60 @@
 
             <!-- 服务时间提示 -->
             <div class="service-time">
-              <p>铁路12306每日5:00至次日1:00（周二为5:00至24:00）为您提供服务</p>
+              <p>
+                铁路12306每日5:00至次日1:00（周二为5:00至24:00）为您提供服务
+              </p>
             </div>
           </div>
         </div>
       </div>
+      <div class="slider-dots">
+        <span
+          v-for="(img, idx) in bgImages"
+          :key="'dot' + idx"
+          class="dot"
+          :class="{ active: currentSlide === idx }"
+          @click="setSlide(idx)"
+        ></span>
+      </div>
     </main>
 
-    <!-- 页脚 Footer -->
     <footer class="login-footer">
       <div class="footer-content">
-        <div class="partner-links">
-          <h4>友情链接</h4>
-          <div class="partner-logos">
-            <div class="partner-item">中国铁路集团公司</div>
-            <div class="partner-item">中国铁路95306网</div>
-            <div class="partner-item">CRE中国铁路装备</div>
-          </div>
-        </div>
-        
-        <div class="official-qr">
-          <div class="qr-group">
-            <div class="qr-item">
-              <div class="qr-mini"></div>
-              <span>中国铁路官方微信</span>
+        <div class="footer-columns">
+          <section class="partner-links">
+            <h4>友情链接</h4>
+            <div class="partner-grid">
+              <img :src="link02" alt="中国国家铁路集团有限公司" class="partner-image" />
+              <img :src="link03" alt="中国铁路投资有限公司" class="partner-image" />
+              <img :src="link04" alt="中国铁路95306网" class="partner-image" />
+              <img :src="link05" alt="CRE中国铁路装备" class="partner-image" />
             </div>
-            <div class="qr-item">
-              <div class="qr-mini"></div>
-              <span>中国铁路官方微博</span>
-            </div>
-            <div class="qr-item">
-              <div class="qr-mini"></div>
-              <span>12306公众号</span>
-            </div>
-            <div class="qr-item">
-              <div class="qr-mini"></div>
-              <span>铁路12306</span>
-            </div>
-          </div>
+          </section>
+
+          <section class="qr-block">
+            <h4>中国铁路官方微信</h4>
+            <img :src="imgWeChat" alt="中国铁路官方微信" class="qr-img" />
+          </section>
+
+          <section class="qr-block">
+            <h4>中国铁路官方微博</h4>
+            <img :src="imgWeibo" alt="中国铁路官方微博" class="qr-img" />
+          </section>
+
+          <section class="qr-block">
+            <h4>12306 公众号</h4>
+            <img :src="imgPublic" alt="12306 公众号" class="qr-img" />
+          </section>
+
+          <section class="app-download">
+            <h4>铁路12306</h4>
+            <img :src="imgDownload" alt="铁路12306 官方APP下载" class="download-image" />
+          </section>
+
+          <section class="app-note">
+            <p>官方APP下载，目前铁路未授权其他网站或APP开展类似服务内容，敬请广大用户注意。</p>
+          </section>
         </div>
       </div>
     </footer>
@@ -190,400 +193,422 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useUserStore } from '@/stores/user'
-import { message } from 'ant-design-vue'
+import { ref, reactive, computed, onMounted, onUnmounted, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useUserStore } from "@/stores/user";
+import { message } from "ant-design-vue";
 
-const router = useRouter()
-const route = useRoute()
-const userStore = useUserStore()
+const router = useRouter();
+const route = useRoute();
+const userStore = useUserStore();
 
 // 响应式数据
-const activeTab = ref('account')
-const loading = ref(false)
-const loginFormRef = ref()
-const errorMessage = ref('')
-const loginAttempts = ref(0)
-const maxAttempts = 5
+const activeTab = ref("account");
+const loading = ref(false);
+const loginFormRef = ref();
+const errorMessage = ref("");
+const loginAttempts = ref(0);
+const maxAttempts = 5;
+
+const bgImages = [
+  new URL("../../../pics/banner-login-20200629.jpg", import.meta.url).href,
+  new URL("../../../pics/banner-login-20200924.jpg", import.meta.url).href,
+];
+const logoImage = new URL("../../../pics/logo@2x.png", import.meta.url).href;
+const link02 = new URL("../../../pics/link02.png", import.meta.url).href;
+const link03 = new URL("../../../pics/link03.png", import.meta.url).href;
+const link04 = new URL("../../../pics/link04.png", import.meta.url).href;
+const link05 = new URL("../../../pics/link05.png", import.meta.url).href;
+const imgWeChat = new URL("../../../pics/zgtlwx.png", import.meta.url).href;
+const imgWeibo = new URL("../../../pics/zgtlwb.png", import.meta.url).href;
+const imgPublic = new URL("../../../pics/public.png", import.meta.url).href;
+const imgDownload = new URL("../../../pics/download.png", import.meta.url).href;
+const currentSlide = ref(0);
+const setSlide = (i) => {
+  currentSlide.value = i;
+};
 
 // 验证码相关
-const showCaptcha = ref(false)
-const captchaImage = ref('')
-const captchaToken = ref('')
-const captchaLoading = ref(false)
+const showCaptcha = ref(false);
+const captchaImage = ref("");
+const captchaToken = ref("");
+const captchaLoading = ref(false);
 
 // 二维码登录相关
-const qrStatus = ref('loading') // loading, active, scanned, expired, error
-const qrImage = ref('')
-const qrToken = ref('')
-const qrTimeLeft = ref(120)
-const qrTimer = ref(null)
-const qrCheckTimer = ref(null)
+const qrStatus = ref("loading"); // loading, active, scanned, expired, error
+const qrImage = ref("");
+const qrToken = ref("");
+const qrTimeLeft = ref(120);
+const qrTimer = ref(null);
+const qrCheckTimer = ref(null);
 
 // 忘记密码相关
-const forgotPasswordVisible = ref(false)
-const forgotLoading = ref(false)
-const forgotCaptchaImage = ref('')
-const forgotCaptchaToken = ref('')
+const forgotPasswordVisible = ref(false);
+const forgotLoading = ref(false);
+const forgotCaptchaImage = ref("");
+const forgotCaptchaToken = ref("");
 
 // 登录表单数据
 const loginForm = reactive({
-  username: '',
-  password: '',
-  captcha: '',
-  remember: false
-})
+  username: "",
+  password: "",
+  captcha: "",
+  remember: false,
+});
 
 // 忘记密码表单
 const forgotForm = reactive({
-  identifier: '',
-  captcha: ''
-})
+  identifier: "",
+  captcha: "",
+});
 
 // 表单验证规则
 const rules = {
   username: [
-    { required: true, message: '请输入用户名/邮箱/手机号', trigger: 'blur' },
-    { 
-      validator: (rule, value) => {
-        if (!value) return Promise.resolve()
-        
-        // 手机号验证
-        const phoneRegex = /^1[3-9]\d{9}$/
-        // 用户名验证（字母、数字、下划线，4-20位）
-        const usernameRegex = /^[a-zA-Z0-9_]{4,20}$/
-        // 邮箱验证
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        
-        if (!phoneRegex.test(value) && !usernameRegex.test(value) && !emailRegex.test(value)) {
-          return Promise.reject('请输入正确的手机号、用户名或邮箱')
-        }
-        return Promise.resolve()
-      },
-      trigger: 'blur'
-    }
-  ],
-  password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, max: 20, message: '密码长度为6-20位', trigger: 'blur' },
+    { required: true, message: "请输入用户名/邮箱/手机号", trigger: "blur" },
     {
       validator: (rule, value) => {
-        if (!value) return Promise.resolve()
-        
-        // 密码强度验证：至少包含字母和数字
-        const hasLetter = /[a-zA-Z]/.test(value)
-        const hasNumber = /\d/.test(value)
-        
-        if (!hasLetter || !hasNumber) {
-          return Promise.reject('密码必须包含字母和数字')
+        if (!value) return Promise.resolve();
+
+        // 手机号验证
+        const phoneRegex = /^1[3-9]\d{9}$/;
+        // 用户名验证（字母、数字、下划线，4-20位）
+        const usernameRegex = /^[a-zA-Z0-9_]{4,20}$/;
+        // 邮箱验证
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (
+          !phoneRegex.test(value) &&
+          !usernameRegex.test(value) &&
+          !emailRegex.test(value)
+        ) {
+          return Promise.reject("请输入正确的手机号、用户名或邮箱");
         }
-        return Promise.resolve()
+        return Promise.resolve();
       },
-      trigger: 'blur'
-    }
+      trigger: "blur",
+    },
+  ],
+  password: [
+    { required: true, message: "请输入密码", trigger: "blur" },
+    { min: 6, max: 20, message: "密码长度为6-20位", trigger: "blur" },
+    {
+      validator: (rule, value) => {
+        if (!value) return Promise.resolve();
+
+        // 密码强度验证：至少包含字母和数字
+        const hasLetter = /[a-zA-Z]/.test(value);
+        const hasNumber = /\d/.test(value);
+
+        if (!hasLetter || !hasNumber) {
+          return Promise.reject("密码必须包含字母和数字");
+        }
+        return Promise.resolve();
+      },
+      trigger: "blur",
+    },
   ],
   captcha: [
-    { 
-      required: true, 
-      message: '请输入验证码', 
-      trigger: 'blur',
+    {
+      required: true,
+      message: "请输入验证码",
+      trigger: "blur",
       validator: (rule, value) => {
         if (showCaptcha.value && !value) {
-          return Promise.reject('请输入验证码')
+          return Promise.reject("请输入验证码");
         }
         if (showCaptcha.value && value && value.length !== 4) {
-          return Promise.reject('验证码为4位')
+          return Promise.reject("验证码为4位");
         }
-        return Promise.resolve()
-      }
-    }
-  ]
-}
+        return Promise.resolve();
+      },
+    },
+  ],
+};
 
 // 忘记密码验证规则
 const forgotRules = {
   identifier: [
-    { required: true, message: '请输入手机号或邮箱', trigger: 'blur' },
+    { required: true, message: "请输入手机号或邮箱", trigger: "blur" },
     {
       validator: (rule, value) => {
-        if (!value) return Promise.resolve()
-        
-        const phoneRegex = /^1[3-9]\d{9}$/
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        
+        if (!value) return Promise.resolve();
+
+        const phoneRegex = /^1[3-9]\d{9}$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
         if (!phoneRegex.test(value) && !emailRegex.test(value)) {
-          return Promise.reject('请输入正确的手机号或邮箱')
+          return Promise.reject("请输入正确的手机号或邮箱");
         }
-        return Promise.resolve()
+        return Promise.resolve();
       },
-      trigger: 'blur'
-    }
+      trigger: "blur",
+    },
   ],
-  captcha: [
-    { required: true, message: '请输入验证码', trigger: 'blur' }
-  ]
-}
+  captcha: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+};
 
 // 计算属性
 const isFormValid = computed(() => {
-  const hasUsername = loginForm.username.trim().length > 0
-  const hasPassword = loginForm.password.trim().length >= 6
-  const hasCaptcha = !showCaptcha.value || loginForm.captcha.trim().length === 4
-  
-  return hasUsername && hasPassword && hasCaptcha && !loading.value
-})
+  const hasUsername = loginForm.username.trim().length > 0;
+  const hasPassword = loginForm.password.trim().length >= 6;
+  const hasCaptcha =
+    !showCaptcha.value || loginForm.captcha.trim().length === 4;
+
+  return hasUsername && hasPassword && hasCaptcha && !loading.value;
+});
 
 // 方法
 const clearErrors = () => {
-  errorMessage.value = ''
+  errorMessage.value = "";
   if (loginFormRef.value) {
-    loginFormRef.value.clearValidate()
+    loginFormRef.value.clearValidate();
   }
-}
+};
 
 const clearFieldError = (field) => {
   if (loginFormRef.value) {
-    loginFormRef.value.clearValidate(field)
+    loginFormRef.value.clearValidate(field);
   }
   if (errorMessage.value) {
-    errorMessage.value = ''
+    errorMessage.value = "";
   }
-}
+};
 
 const validateUsername = () => {
   if (loginFormRef.value) {
-    loginFormRef.value.validateFields(['username'])
+    loginFormRef.value.validateFields(["username"]);
   }
-}
+};
 
 // 获取验证码
 const getCaptchaImage = async () => {
   try {
-    captchaLoading.value = true
+    captchaLoading.value = true;
     // 模拟API调用
-    await new Promise(resolve => setTimeout(resolve, 500))
-    captchaImage.value = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
-    captchaToken.value = 'mock-token-' + Date.now()
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    captchaImage.value =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+    captchaToken.value = "mock-token-" + Date.now();
   } catch (error) {
-    console.error('获取验证码失败:', error)
-    message.error('获取验证码失败')
+    console.error("获取验证码失败:", error);
+    message.error("获取验证码失败");
   } finally {
-    captchaLoading.value = false
+    captchaLoading.value = false;
   }
-}
+};
 
 const refreshCaptcha = () => {
-  loginForm.captcha = ''
-  getCaptchaImage()
-}
+  loginForm.captcha = "";
+  getCaptchaImage();
+};
 
 // 生成二维码
 const generateQrCode = async () => {
   try {
-    qrStatus.value = 'loading'
+    qrStatus.value = "loading";
     // 模拟API调用
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    qrImage.value = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
-    qrToken.value = 'qr-token-' + Date.now()
-    qrStatus.value = 'active'
-    qrTimeLeft.value = 120
-    startQrTimer()
-    startQrPolling()
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    qrImage.value =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+    qrToken.value = "qr-token-" + Date.now();
+    qrStatus.value = "active";
+    qrTimeLeft.value = 120;
+    startQrTimer();
+    startQrPolling();
   } catch (error) {
-    console.error('生成二维码失败:', error)
-    qrStatus.value = 'error'
+    console.error("生成二维码失败:", error);
+    qrStatus.value = "error";
   }
-}
+};
 
 // 二维码倒计时
 const startQrTimer = () => {
   if (qrTimer.value) {
-    clearInterval(qrTimer.value)
+    clearInterval(qrTimer.value);
   }
-  
+
   qrTimer.value = setInterval(() => {
-    qrTimeLeft.value--
+    qrTimeLeft.value--;
     if (qrTimeLeft.value <= 0) {
-      qrStatus.value = 'expired'
-      stopQrPolling()
-      clearInterval(qrTimer.value)
+      qrStatus.value = "expired";
+      stopQrPolling();
+      clearInterval(qrTimer.value);
     }
-  }, 1000)
-}
+  }, 1000);
+};
 
 // 轮询二维码状态
 const startQrPolling = () => {
   if (qrCheckTimer.value) {
-    clearInterval(qrCheckTimer.value)
+    clearInterval(qrCheckTimer.value);
   }
-  
+
   qrCheckTimer.value = setInterval(async () => {
     try {
       // 模拟检查二维码状态
-      const random = Math.random()
-      if (random < 0.1) { // 10%概率扫码成功
-        qrStatus.value = 'scanned'
+      const random = Math.random();
+      if (random < 0.1) {
+        // 10%概率扫码成功
+        qrStatus.value = "scanned";
         setTimeout(() => {
           // 模拟确认登录
-          message.success('扫码登录成功')
-          router.push('/')
-          stopQrPolling()
-        }, 2000)
+          message.success("扫码登录成功");
+          router.push("/");
+          stopQrPolling();
+        }, 2000);
       }
     } catch (error) {
-      console.error('检查二维码状态失败:', error)
+      console.error("检查二维码状态失败:", error);
     }
-  }, 2000)
-}
+  }, 2000);
+};
 
 const stopQrPolling = () => {
   if (qrCheckTimer.value) {
-    clearInterval(qrCheckTimer.value)
-    qrCheckTimer.value = null
+    clearInterval(qrCheckTimer.value);
+    qrCheckTimer.value = null;
   }
   if (qrTimer.value) {
-    clearInterval(qrTimer.value)
-    qrTimer.value = null
+    clearInterval(qrTimer.value);
+    qrTimer.value = null;
   }
-}
+};
 
 // 处理登录
 const handleLogin = async () => {
   try {
-    loading.value = true
-    errorMessage.value = ''
-    
+    loading.value = true;
+    errorMessage.value = "";
+
     const loginData = {
       username: loginForm.username.trim(),
       password: loginForm.password,
-      loginType: /^1[3-9]\d{9}$/.test(loginForm.username) ? 'phone' : 'account',
-      remember: loginForm.remember
-    }
-    
+      loginType: /^1[3-9]\d{9}$/.test(loginForm.username) ? "phone" : "account",
+      remember: loginForm.remember,
+    };
+
     // 如果需要验证码
     if (showCaptcha.value) {
-      loginData.captcha = loginForm.captcha
-      loginData.captchaToken = captchaToken.value
+      loginData.captcha = loginForm.captcha;
+      loginData.captchaToken = captchaToken.value;
     }
-    
-    await userStore.login(loginData)
-    
-    message.success('登录成功')
-    
+
+    await userStore.login(loginData);
+
+    message.success("登录成功");
+
     // 重置登录尝试次数
-    loginAttempts.value = 0
-    
+    loginAttempts.value = 0;
+
     // 跳转到目标页面或首页
-    const redirect = route.query.redirect || '/'
-    router.push(redirect)
-    
+    const redirect = route.query.redirect || "/";
+    router.push(redirect);
   } catch (error) {
-    console.error('登录失败:', error)
-    
-    loginAttempts.value++
-    
+    console.error("登录失败:", error);
+
+    loginAttempts.value++;
+
     // 处理不同类型的错误
     if (error.response?.status === 401) {
-      errorMessage.value = '用户名或密码错误'
+      errorMessage.value = "用户名或密码错误";
     } else if (error.response?.status === 429) {
-      errorMessage.value = '登录尝试过于频繁，请稍后再试'
-    } else if (error.response?.data?.code === 'CAPTCHA_REQUIRED') {
-      showCaptcha.value = true
-      getCaptchaImage()
-      errorMessage.value = '请输入验证码'
-    } else if (error.response?.data?.code === 'CAPTCHA_INVALID') {
-      errorMessage.value = '验证码错误'
-      refreshCaptcha()
+      errorMessage.value = "登录尝试过于频繁，请稍后再试";
+    } else if (error.response?.data?.code === "CAPTCHA_REQUIRED") {
+      showCaptcha.value = true;
+      getCaptchaImage();
+      errorMessage.value = "请输入验证码";
+    } else if (error.response?.data?.code === "CAPTCHA_INVALID") {
+      errorMessage.value = "验证码错误";
+      refreshCaptcha();
     } else {
-      errorMessage.value = error.message || '登录失败，请检查用户名和密码'
+      errorMessage.value = error.message || "登录失败，请检查用户名和密码";
     }
-    
+
     // 多次失败后显示验证码
     if (loginAttempts.value >= 3 && !showCaptcha.value) {
-      showCaptcha.value = true
-      getCaptchaImage()
+      showCaptcha.value = true;
+      getCaptchaImage();
     }
-    
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const handleLoginFailed = (errorInfo) => {
-  console.log('表单验证失败:', errorInfo)
-  const firstError = errorInfo.errorFields[0]
+  console.log("表单验证失败:", errorInfo);
+  const firstError = errorInfo.errorFields[0];
   if (firstError) {
-    errorMessage.value = firstError.errors[0]
+    errorMessage.value = firstError.errors[0];
   }
-}
+};
 
 // 忘记密码
 const handleForgotPassword = () => {
-  forgotPasswordVisible.value = true
+  forgotPasswordVisible.value = true;
   // 获取忘记密码验证码
-  refreshForgotCaptcha()
-}
+  refreshForgotCaptcha();
+};
 
 const refreshForgotCaptcha = async () => {
   try {
     // 模拟获取验证码
-    await new Promise(resolve => setTimeout(resolve, 500))
-    forgotCaptchaImage.value = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
-    forgotCaptchaToken.value = 'forgot-token-' + Date.now()
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    forgotCaptchaImage.value =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+    forgotCaptchaToken.value = "forgot-token-" + Date.now();
   } catch (error) {
-    console.error('获取验证码失败:', error)
+    console.error("获取验证码失败:", error);
   }
-}
+};
 
 const handleForgotSubmit = async () => {
   try {
-    forgotLoading.value = true
-    
+    forgotLoading.value = true;
+
     // 模拟发送重置链接
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    message.success('重置链接已发送，请查收')
-    forgotPasswordVisible.value = false
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    message.success("重置链接已发送，请查收");
+    forgotPasswordVisible.value = false;
+
     // 重置表单
-    forgotForm.identifier = ''
-    forgotForm.captcha = ''
-    
+    forgotForm.identifier = "";
+    forgotForm.captcha = "";
   } catch (error) {
-    console.error('发送重置链接失败:', error)
-    message.error(error.message || '发送失败，请重试')
-    refreshForgotCaptcha()
+    console.error("发送重置链接失败:", error);
+    message.error(error.message || "发送失败，请重试");
+    refreshForgotCaptcha();
   } finally {
-    forgotLoading.value = false
+    forgotLoading.value = false;
   }
-}
+};
 
 // 生命周期
 onMounted(() => {
   // 检查URL参数
-  if (route.query.reason === 'session_expired') {
-    message.warning('会话已过期，请重新登录')
+  if (route.query.reason === "session_expired") {
+    message.warning("会话已过期，请重新登录");
   }
-  
+
   // 如果已登录，直接跳转
   if (userStore.isAuthenticated) {
-    router.push('/')
+    router.push("/");
   }
-})
+});
 
 onUnmounted(() => {
-  stopQrPolling()
-})
+  stopQrPolling();
+});
 
 // 监听activeTab变化
 watch(activeTab, (newTab) => {
-  if (newTab === 'qr') {
-    generateQrCode()
+  if (newTab === "qr") {
+    generateQrCode();
   } else {
-    stopQrPolling()
+    stopQrPolling();
   }
-})
+});
 </script>
 
 <style scoped>
@@ -597,7 +622,7 @@ watch(activeTab, (newTab) => {
 .login-header {
   background: #fff;
   border-bottom: 1px solid #e8e8e8;
-  height: 60px;
+  height: 80px;
   display: flex;
   align-items: center;
 }
@@ -639,28 +664,82 @@ watch(activeTab, (newTab) => {
   color: #333;
 }
 
+.logo-image {
+  width: 200px;
+  height: 50px;
+  display: block;
+  object-fit: contain;
+}
+
 .welcome-text {
   color: #666;
   font-size: 14px;
 }
 
+.logo-welcome {
+  color: #666;
+  font-size: 22px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  height: 80px;
+  width: 175px;
+}
+
 /* 主体区域样式 */
 .login-main {
   flex: 1;
-  background: linear-gradient(135deg, #4a90e2 0%, #357abd 50%, #1e5f99 100%);
   position: relative;
   overflow: hidden;
 }
 
-.login-main::before {
-  content: '';
+.bg-slider {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><path d="M0,300 Q300,200 600,300 T1200,300 L1200,600 L0,600 Z" fill="rgba(255,255,255,0.1)"/></svg>') no-repeat center;
+  z-index: 0;
+}
+
+.bg-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  transition: transform 0.6s ease-in-out;
+}
+
+.bg-slide {
+  position: relative;
+  height: 100%;
   background-size: cover;
+  background-position: center;
+  pointer-events: none;
+}
+
+.slider-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  z-index: 3;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+}
+
+.dot.active {
+  background: #ffffff;
 }
 
 .main-content {
@@ -1011,6 +1090,173 @@ watch(activeTab, (newTab) => {
   padding: 0 20px;
 }
 
+.footer-columns {
+  display: grid;
+  grid-template-columns: 420px 140px 140px 140px 140px 220px;
+  gap: 0;
+  align-items: start;
+}
+
+.footer-columns .partner-links {
+  margin-bottom: 0;
+}
+
+.partner-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 200px);
+  gap: 16px;
+  justify-items: start;
+  align-items: center;
+}
+
+.partner-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  padding: 10px 12px;
+  height: 72px;
+  box-sizing: border-box;
+}
+
+.partner-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  background: #eef2f5;
+  border: 1px solid #e8e8e8;
+}
+
+.partner-image {
+  width: 200px;
+  height: 34px;
+  object-fit: contain;
+  background: white;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.qr-block h4 {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.qr-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-code-small {
+  width: 120px;
+  height: 120px;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  display: block;
+}
+
+.qr-placeholder-small {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.qr-grid-small {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2px;
+  height: 100%;
+}
+
+.account-icons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.account-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #ddd;
+  border: 1px solid #e8e8e8;
+}
+
+.icon-blue {
+  background: #4a90e2;
+}
+
+.icon-red {
+  background: #e74c3c;
+}
+
+.app-download h4 {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.app-download {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.download-card {
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.download-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  display: block;
+}
+
+.app-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  line-height: 1.6;
+  padding: 4px;
+  margin-top: 8px;
+  align-self: center;
+}
+
+.app-card {
+  background: white;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  padding: 12px;
+  color: #666;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
 .partner-links {
   margin-bottom: 20px;
 }
@@ -1106,19 +1352,19 @@ watch(activeTab, (newTab) => {
     gap: 40px;
     max-width: 900px;
   }
-  
+
   .promo-content {
     padding-right: 30px;
   }
-  
+
   .login-section {
     width: 340px;
   }
-  
+
   .features-list {
     margin-bottom: 30px;
   }
-  
+
   .qr-section {
     padding: 16px;
   }
@@ -1129,66 +1375,66 @@ watch(activeTab, (newTab) => {
   .header-content {
     padding: 0 16px;
   }
-  
+
   .main-content {
     flex-direction: column;
     gap: 24px;
     padding: 30px 16px;
   }
-  
+
   .promo-section {
     max-width: none;
     text-align: center;
     order: 2; /* 移动端将推广区域放到登录框下方 */
   }
-  
+
   .promo-content {
     padding-right: 0;
   }
-  
+
   .login-section {
     width: 100%;
     max-width: 400px;
     order: 1; /* 登录框优先显示 */
   }
-  
+
   .qr-section {
     justify-content: center;
   }
-  
+
   .partner-logos {
     justify-content: center;
   }
-  
+
   .qr-group {
     gap: 20px;
   }
-  
+
   .captcha-container {
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
   }
-  
+
   .captcha-image {
     width: 100%;
     height: 50px;
   }
-  
+
   .qr-status {
     width: 180px;
     height: 180px;
   }
-  
+
   .tab-item {
     font-size: 15px;
     padding: 12px 16px;
   }
-  
+
   .main-title {
     font-size: 26px;
   }
-  
+
   .sub-title {
     font-size: 19px;
   }
@@ -1199,60 +1445,60 @@ watch(activeTab, (newTab) => {
   .header-content {
     padding: 0 12px;
   }
-  
+
   .logo-section {
     flex-direction: column;
     gap: 6px;
     align-items: flex-start;
   }
-  
+
   .welcome-text {
     font-size: 13px;
   }
-  
+
   .main-content {
     padding: 20px 12px;
   }
-  
+
   .main-title {
     font-size: 22px;
   }
-  
+
   .sub-title {
     font-size: 17px;
   }
-  
+
   .login-card {
     margin: 0 12px;
   }
-  
+
   .login-form-container {
     padding: 20px 16px;
   }
-  
+
   .qr-login-container {
     padding: 20px 16px;
   }
-  
+
   .qr-group {
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .qr-code-large {
     width: 140px;
     height: 140px;
   }
-  
+
   .feature-item {
     font-size: 15px;
   }
-  
+
   .login-button {
     height: 42px;
     font-size: 15px;
   }
-  
+
   .tab-item {
     font-size: 14px;
     padding: 10px 12px;
@@ -1264,62 +1510,103 @@ watch(activeTab, (newTab) => {
   .header-content {
     padding: 0 8px;
   }
-  
+
   .welcome-text {
     display: none; /* 超小屏幕隐藏欢迎文字 */
   }
-  
+
   .main-content {
     padding: 16px 8px;
   }
-  
+
   .login-card {
     margin: 0 8px;
   }
-  
+
   .login-form-container {
     padding: 16px 12px;
   }
-  
+
   .qr-login-container {
     padding: 16px 12px;
   }
-  
+
   .main-title {
     font-size: 20px;
   }
-  
+
   .sub-title {
     font-size: 16px;
   }
-  
+
   .tab-item {
     font-size: 13px;
     padding: 8px 10px;
   }
-  
+
   .login-button {
     height: 40px;
     font-size: 14px;
   }
-  
+
   .qr-code-large {
     width: 120px;
     height: 120px;
   }
-  
+
   .footer-content {
     padding: 0 8px;
   }
-  
+
   .qr-mini {
     width: 50px;
     height: 50px;
   }
-  
+
   .qr-item span {
     font-size: 11px;
   }
 }
-</style>
 
+@media (max-width: 1024px) and (min-width: 769px) {
+  .footer-columns {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .partner-links {
+    grid-column: span 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-columns {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .qr-block {
+    text-align: center;
+  }
+
+  .partner-grid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .partner-image {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .qr-code-small {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 360px) {
+  .qr-code-small {
+    width: 90px;
+    height: 90px;
+  }
+}
+</style>

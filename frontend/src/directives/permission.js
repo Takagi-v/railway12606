@@ -1,5 +1,5 @@
-import { usePermissionStore } from '@/stores/permission'
-import { useUserStore } from '@/stores/user'
+import { usePermissionStore } from "@/stores/permission";
+import { useUserStore } from "@/stores/user";
 
 /**
  * 权限指令
@@ -13,12 +13,12 @@ import { useUserStore } from '@/stores/user'
  */
 export const permissionDirective = {
   mounted(el, binding) {
-    checkPermission(el, binding)
+    checkPermission(el, binding);
   },
   updated(el, binding) {
-    checkPermission(el, binding)
-  }
-}
+    checkPermission(el, binding);
+  },
+};
 
 /**
  * 角色指令
@@ -30,12 +30,12 @@ export const permissionDirective = {
  */
 export const roleDirective = {
   mounted(el, binding) {
-    checkRole(el, binding)
+    checkRole(el, binding);
   },
   updated(el, binding) {
-    checkRole(el, binding)
-  }
-}
+    checkRole(el, binding);
+  },
+};
 
 /**
  * 权限或角色指令
@@ -45,166 +45,168 @@ export const roleDirective = {
  */
 export const authDirective = {
   mounted(el, binding) {
-    checkAuth(el, binding)
+    checkAuth(el, binding);
   },
   updated(el, binding) {
-    checkAuth(el, binding)
-  }
-}
+    checkAuth(el, binding);
+  },
+};
 
 function checkPermission(el, binding) {
-  const permissionStore = usePermissionStore()
-  const userStore = useUserStore()
-  
+  const permissionStore = usePermissionStore();
+  const userStore = useUserStore();
+
   // 如果用户未登录，隐藏元素
   if (!userStore.isAuthenticated) {
-    hideElement(el)
-    return
+    hideElement(el);
+    return;
   }
 
-  const { value, arg, modifiers } = binding
-  
+  const { value, arg, modifiers } = binding;
+
   if (!value) {
-    return
+    return;
   }
 
-  let hasPermission = false
+  let hasPermission = false;
 
   if (Array.isArray(value)) {
     // 检查模式：any（任一）或 all（全部）
-    const mode = Object.keys(modifiers)[0] || 'any'
-    
-    if (mode === 'all') {
-      hasPermission = permissionStore.hasAllPermissions(value)
+    const mode = Object.keys(modifiers)[0] || "any";
+
+    if (mode === "all") {
+      hasPermission = permissionStore.hasAllPermissions(value);
     } else {
-      hasPermission = permissionStore.hasAnyPermission(value)
+      hasPermission = permissionStore.hasAnyPermission(value);
     }
   } else {
-    hasPermission = permissionStore.hasPermission(value)
+    hasPermission = permissionStore.hasPermission(value);
   }
 
   if (!hasPermission) {
-    hideElement(el)
+    hideElement(el);
   } else {
-    showElement(el)
+    showElement(el);
   }
 }
 
 function checkRole(el, binding) {
-  const permissionStore = usePermissionStore()
-  const userStore = useUserStore()
-  
+  const permissionStore = usePermissionStore();
+  const userStore = useUserStore();
+
   // 如果用户未登录，隐藏元素
   if (!userStore.isAuthenticated) {
-    hideElement(el)
-    return
+    hideElement(el);
+    return;
   }
 
-  const { value, modifiers } = binding
-  
+  const { value, modifiers } = binding;
+
   if (!value) {
-    return
+    return;
   }
 
-  let hasRole = false
+  let hasRole = false;
 
   if (Array.isArray(value)) {
     // 检查模式：any（任一）或 all（全部）
-    const mode = Object.keys(modifiers)[0] || 'any'
-    
-    if (mode === 'all') {
-      hasRole = permissionStore.hasAllRoles(value)
+    const mode = Object.keys(modifiers)[0] || "any";
+
+    if (mode === "all") {
+      hasRole = permissionStore.hasAllRoles(value);
     } else {
-      hasRole = permissionStore.hasAnyRole(value)
+      hasRole = permissionStore.hasAnyRole(value);
     }
   } else {
-    hasRole = permissionStore.hasRole(value)
+    hasRole = permissionStore.hasRole(value);
   }
 
   if (!hasRole) {
-    hideElement(el)
+    hideElement(el);
   } else {
-    showElement(el)
+    showElement(el);
   }
 }
 
 function checkAuth(el, binding) {
-  const permissionStore = usePermissionStore()
-  const userStore = useUserStore()
-  
+  const permissionStore = usePermissionStore();
+  const userStore = useUserStore();
+
   // 如果用户未登录，隐藏元素
   if (!userStore.isAuthenticated) {
-    hideElement(el)
-    return
+    hideElement(el);
+    return;
   }
 
-  const { value } = binding
-  
-  if (!value || typeof value !== 'object') {
-    return
+  const { value } = binding;
+
+  if (!value || typeof value !== "object") {
+    return;
   }
 
-  const { permissions, roles, mode = 'any', requireAuth = true } = value
+  const { permissions, roles, mode = "any", requireAuth = true } = value;
 
   // 如果需要登录但用户未登录
   if (requireAuth && !userStore.isAuthenticated) {
-    hideElement(el)
-    return
+    hideElement(el);
+    return;
   }
 
-  let hasAccess = true
+  let hasAccess = true;
 
   // 检查权限
   if (permissions) {
-    let permissionCheck = false
-    
+    let permissionCheck = false;
+
     if (Array.isArray(permissions)) {
-      permissionCheck = mode === 'all'
-        ? permissionStore.hasAllPermissions(permissions)
-        : permissionStore.hasAnyPermission(permissions)
+      permissionCheck =
+        mode === "all"
+          ? permissionStore.hasAllPermissions(permissions)
+          : permissionStore.hasAnyPermission(permissions);
     } else {
-      permissionCheck = permissionStore.hasPermission(permissions)
+      permissionCheck = permissionStore.hasPermission(permissions);
     }
-    
-    hasAccess = hasAccess && permissionCheck
+
+    hasAccess = hasAccess && permissionCheck;
   }
 
   // 检查角色
   if (roles) {
-    let roleCheck = false
-    
+    let roleCheck = false;
+
     if (Array.isArray(roles)) {
-      roleCheck = mode === 'all'
-        ? permissionStore.hasAllRoles(roles)
-        : permissionStore.hasAnyRole(roles)
+      roleCheck =
+        mode === "all"
+          ? permissionStore.hasAllRoles(roles)
+          : permissionStore.hasAnyRole(roles);
     } else {
-      roleCheck = permissionStore.hasRole(roles)
+      roleCheck = permissionStore.hasRole(roles);
     }
-    
-    hasAccess = hasAccess && roleCheck
+
+    hasAccess = hasAccess && roleCheck;
   }
 
   if (!hasAccess) {
-    hideElement(el)
+    hideElement(el);
   } else {
-    showElement(el)
+    showElement(el);
   }
 }
 
 function hideElement(el) {
   // 保存原始显示状态
   if (!el._originalDisplay) {
-    el._originalDisplay = el.style.display || ''
+    el._originalDisplay = el.style.display || "";
   }
-  el.style.display = 'none'
+  el.style.display = "none";
 }
 
 function showElement(el) {
   // 恢复原始显示状态
   if (el._originalDisplay !== undefined) {
-    el.style.display = el._originalDisplay
+    el.style.display = el._originalDisplay;
   } else {
-    el.style.display = ''
+    el.style.display = "";
   }
 }
 
@@ -212,5 +214,5 @@ function showElement(el) {
 export default {
   permission: permissionDirective,
   role: roleDirective,
-  auth: authDirective
-}
+  auth: authDirective,
+};

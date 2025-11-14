@@ -4,28 +4,30 @@
       <div class="logo" @click="router.push('/')">
         <span class="logo-text">中国铁路12306</span>
       </div>
-      
+
       <div class="nav-menu">
         <a-menu
           mode="horizontal"
           :selected-keys="selectedKeys"
           class="header-menu"
         >
-          <a-menu-item key="home" @click="router.push('/')">
-            首页
-          </a-menu-item>
-          <a-menu-item key="orders" @click="router.push('/user/orders')" v-if="isAuthenticated">
+          <a-menu-item key="home" @click="router.push('/')"> 首页 </a-menu-item>
+          <a-menu-item
+            v-if="isAuthenticated"
+            key="orders"
+            @click="router.push('/user/orders')"
+          >
             我的订单
           </a-menu-item>
         </a-menu>
       </div>
-      
+
       <div class="user-section">
         <template v-if="isAuthenticated">
           <a-dropdown>
             <a-button type="text" class="user-button">
               <UserOutlined />
-              {{ user?.username || '用户' }}
+              {{ user?.username || "用户" }}
               <DownOutlined />
             </a-button>
             <template #overlay>
@@ -46,7 +48,9 @@
         </template>
         <template v-else>
           <a-button type="link" @click="router.push('/login')">登录</a-button>
-          <a-button type="primary" @click="router.push('/register')">注册</a-button>
+          <a-button type="primary" @click="router.push('/register')"
+            >注册</a-button
+          >
         </template>
       </div>
     </div>
@@ -54,31 +58,36 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useUserStore } from '@/stores/user'
-import { UserOutlined, DownOutlined, TeamOutlined, LogoutOutlined } from '@ant-design/icons-vue'
-import { message } from 'ant-design-vue'
+import { computed } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useUserStore } from "@/stores/user";
+import {
+  UserOutlined,
+  DownOutlined,
+  TeamOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons-vue";
+import { message } from "ant-design-vue";
 
-const router = useRouter()
-const route = useRoute()
-const userStore = useUserStore()
+const router = useRouter();
+const route = useRoute();
+const userStore = useUserStore();
 
-const isAuthenticated = computed(() => userStore.isAuthenticated)
-const user = computed(() => userStore.user)
+const isAuthenticated = computed(() => userStore.isAuthenticated);
+const user = computed(() => userStore.user);
 
 const selectedKeys = computed(() => {
-  const path = route.path
-  if (path === '/') return ['home']
-  if (path.startsWith('/user/orders')) return ['orders']
-  return []
-})
+  const path = route.path;
+  if (path === "/") return ["home"];
+  if (path.startsWith("/user/orders")) return ["orders"];
+  return [];
+});
 
 const handleLogout = () => {
-  userStore.logout()
-  message.success('退出登录成功')
-  router.push('/')
-}
+  userStore.logout();
+  message.success("退出登录成功");
+  router.push("/");
+};
 </script>
 
 <style scoped>
@@ -133,4 +142,3 @@ const handleLogout = () => {
   height: 40px;
 }
 </style>
-

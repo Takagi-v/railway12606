@@ -4,7 +4,7 @@
     <a-layout-content class="home-content">
       <div class="search-section">
         <h1 class="title">欢迎使用中国铁路12306购票系统</h1>
-        
+
         <a-card class="search-card">
           <a-form
             :model="searchForm"
@@ -12,29 +12,41 @@
             class="search-form"
             @finish="handleSearch"
           >
-            <a-form-item label="出发地" name="departureCity" :rules="[{ required: true, message: '请选择出发地' }]">
+            <a-form-item
+              label="出发地"
+              name="departureCity"
+              :rules="[{ required: true, message: '请选择出发地' }]"
+            >
               <a-input
                 v-model:value="searchForm.departureCity"
                 placeholder="请输入出发地"
                 style="width: 200px"
               />
             </a-form-item>
-            
+
             <a-form-item>
               <a-button type="link" @click="swapCities">
                 <SwapOutlined />
               </a-button>
             </a-form-item>
-            
-            <a-form-item label="目的地" name="arrivalCity" :rules="[{ required: true, message: '请选择目的地' }]">
+
+            <a-form-item
+              label="目的地"
+              name="arrivalCity"
+              :rules="[{ required: true, message: '请选择目的地' }]"
+            >
               <a-input
                 v-model:value="searchForm.arrivalCity"
                 placeholder="请输入目的地"
                 style="width: 200px"
               />
             </a-form-item>
-            
-            <a-form-item label="出发日期" name="travelDate" :rules="[{ required: true, message: '请选择出发日期' }]">
+
+            <a-form-item
+              label="出发日期"
+              name="travelDate"
+              :rules="[{ required: true, message: '请选择出发日期' }]"
+            >
               <a-date-picker
                 v-model:value="searchForm.travelDate"
                 style="width: 200px"
@@ -42,7 +54,7 @@
                 placeholder="选择日期"
               />
             </a-form-item>
-            
+
             <a-form-item>
               <a-button type="primary" html-type="submit" size="large">
                 <SearchOutlined /> 查询
@@ -50,22 +62,37 @@
             </a-form-item>
           </a-form>
         </a-card>
-        
+
         <div class="quick-links">
           <a-card title="快捷入口" :bordered="false">
             <a-row :gutter="16">
               <a-col :span="8">
-                <a-button type="link" size="large" @click="router.push('/user/orders')" block>
+                <a-button
+                  type="link"
+                  size="large"
+                  block
+                  @click="router.push('/user/orders')"
+                >
                   <FileTextOutlined /> 订单查询
                 </a-button>
               </a-col>
               <a-col :span="8">
-                <a-button type="link" size="large" @click="router.push('/user/passengers')" block>
+                <a-button
+                  type="link"
+                  size="large"
+                  block
+                  @click="router.push('/user/passengers')"
+                >
                   <TeamOutlined /> 乘客管理
                 </a-button>
               </a-col>
               <a-col :span="8">
-                <a-button type="link" size="large" @click="router.push('/user/profile')" block>
+                <a-button
+                  type="link"
+                  size="large"
+                  block
+                  @click="router.push('/user/profile')"
+                >
                   <UserOutlined /> 个人中心
                 </a-button>
               </a-col>
@@ -79,44 +106,53 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import dayjs from 'dayjs'
-import AppHeader from '@/components/AppHeader.vue'
-import AppFooter from '@/components/AppFooter.vue'
-import { SearchOutlined, SwapOutlined, FileTextOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons-vue'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import dayjs from "dayjs";
+import AppHeader from "@/components/AppHeader.vue";
+import AppFooter from "@/components/AppFooter.vue";
+import {
+  SearchOutlined,
+  SwapOutlined,
+  FileTextOutlined,
+  TeamOutlined,
+  UserOutlined,
+} from "@ant-design/icons-vue";
 
-const router = useRouter()
+const router = useRouter();
 
 const searchForm = ref({
-  departureCity: '',
-  arrivalCity: '',
-  travelDate: dayjs()
-})
+  departureCity: "",
+  arrivalCity: "",
+  travelDate: dayjs(),
+});
 
 const disabledDate = (current) => {
   // 只能选择今天到未来30天
-  return current && (current < dayjs().startOf('day') || current > dayjs().add(30, 'day'))
-}
+  return (
+    current &&
+    (current < dayjs().startOf("day") || current > dayjs().add(30, "day"))
+  );
+};
 
 const swapCities = () => {
-  const temp = searchForm.value.departureCity
-  searchForm.value.departureCity = searchForm.value.arrivalCity
-  searchForm.value.arrivalCity = temp
-}
+  const temp = searchForm.value.departureCity;
+  searchForm.value.departureCity = searchForm.value.arrivalCity;
+  searchForm.value.arrivalCity = temp;
+};
 
 const handleSearch = () => {
   const params = {
     departure_city: searchForm.value.departureCity,
     arrival_city: searchForm.value.arrivalCity,
-    travel_date: searchForm.value.travelDate.format('YYYY-MM-DD')
-  }
-  
+    travel_date: searchForm.value.travelDate.format("YYYY-MM-DD"),
+  };
+
   router.push({
-    name: 'trains',
-    query: params
-  })
-}
+    name: "trains",
+    query: params,
+  });
+};
 </script>
 
 <style scoped>
@@ -165,4 +201,3 @@ const handleSearch = () => {
   background: rgba(255, 255, 255, 0.95);
 }
 </style>
-

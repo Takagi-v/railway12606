@@ -1,35 +1,8 @@
 <template>
   <div class="register-page">
-    <!-- 顶栏 Header -->
-    <header class="register-header">
-      <div class="header-content">
-        <div class="logo-section">
-          <div class="logo">
-            <div class="logo-icon">🚄</div>
-            <span class="logo-text">中国铁路12306</span>
-          </div>
-          <span class="welcome-text">欢迎注册12306</span>
-        </div>
-        <div class="nav-links">
-          <a-button type="link" @click="router.push('/login')">登录</a-button>
-          <a-button type="link">帮助</a-button>
-        </div>
-      </div>
-    </header>
+    
 
-    <!-- 蓝色导航条 -->
-    <nav class="nav-bar">
-      <div class="nav-content">
-        <div class="nav-items">
-          <div class="nav-item">首页</div>
-          <div class="nav-item">车票</div>
-          <div class="nav-item">团购服务</div>
-          <div class="nav-item">会员服务</div>
-          <div class="nav-item">出行指南</div>
-          <div class="nav-item">信息查询</div>
-        </div>
-      </div>
-    </nav>
+    
 
     <!-- 主体区域 -->
     <main class="register-main">
@@ -47,24 +20,29 @@
                 :model="registerForm"
                 :rules="rules"
                 @finish="handleRegister"
-                layout="vertical"
+                layout="horizontal"
+                :label-col="{ span: 5 }"
+                :wrapper-col="{ span: 19 }"
                 class="register-form"
               >
                 <!-- 用户名 -->
                 <a-form-item name="username" class="form-item">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star">*</span>
+                      <span class="required-star"></span>
                       用户名
                     </span>
                   </template>
-                  <a-input
-                    v-model:value="registerForm.username"
-                    placeholder="6~30位字母、数字、'_'、'-'开头"
-                    size="large"
-                    class="form-input"
-                    @blur="clearFieldError('username')"
-                  />
+                  <div class="field-row">
+                    <a-input
+                      v-model:value="registerForm.username"
+                      placeholder="用户名设置成功后不可修改"
+                      size="middle"
+                      class="form-input"
+                      @blur="clearFieldError('username')"
+                    />
+                    <span class="field-hint username-hint">6-30位字母、数字或“_”字母开头</span>
+                  </div>
                   <div v-if="errors.username" class="error-message">{{ errors.username }}</div>
                 </a-form-item>
 
@@ -72,30 +50,32 @@
                 <a-form-item name="password" class="form-item">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star">*</span>
+                      <span class="required-star"></span>
                       密码
                     </span>
                   </template>
-                  <a-input-password
-                    v-model:value="registerForm.password"
-                    placeholder="6-20位，包含字母和数字"
-                    size="large"
-                    class="form-input"
-                    @input="updatePasswordStrength"
-                    @blur="clearFieldError('password')"
-                  />
-                  <!-- 密码强度指示器 -->
-                  <div v-if="registerForm.password" class="password-strength">
-                    <div class="strength-bar">
-                      <div 
-                        class="strength-fill" 
-                        :class="passwordStrength.level"
-                        :style="{ width: passwordStrength.width }"
-                      ></div>
+                  <div class="field-row">
+                    <a-input-password
+                      v-model:value="registerForm.password"
+                      placeholder="6-20位，包含字母和数字"
+                      size="middle"
+                      class="form-input"
+                      @input="updatePasswordStrength"
+                      @blur="clearFieldError('password')"
+                    />
+                    <span v-if="!registerForm.password" class="field-hint password-hint">6-20位，包含字母和数字</span>
+                    <div v-if="registerForm.password" class="password-strength inline">
+                      <div class="strength-bar">
+                        <div 
+                          class="strength-fill" 
+                          :class="passwordStrength.level"
+                          :style="{ width: passwordStrength.width }"
+                        ></div>
+                      </div>
+                      <span class="strength-text" :class="passwordStrength.level">
+                        {{ passwordStrength.text }}
+                      </span>
                     </div>
-                    <span class="strength-text" :class="passwordStrength.level">
-                      {{ passwordStrength.text }}
-                    </span>
                   </div>
                   <div v-if="errors.password" class="error-message">{{ errors.password }}</div>
                 </a-form-item>
@@ -104,17 +84,19 @@
                 <a-form-item name="confirmPassword" class="form-item">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star">*</span>
+                      <span class="required-star"></span>
                       再次输入密码
                     </span>
                   </template>
-                  <a-input-password
-                    v-model:value="registerForm.confirmPassword"
-                    placeholder="请再次输入密码"
-                    size="large"
-                    class="form-input"
-                    @blur="clearFieldError('confirmPassword')"
-                  />
+                  <div class="field-row">
+                    <a-input-password
+                      v-model:value="registerForm.confirmPassword"
+                      placeholder="请再次输入密码"
+                      size="middle"
+                      class="form-input"
+                      @blur="clearFieldError('confirmPassword')"
+                    />
+                  </div>
                   <div v-if="errors.confirmPassword" class="error-message">{{ errors.confirmPassword }}</div>
                 </a-form-item>
 
@@ -126,33 +108,38 @@
                       证件类型
                     </span>
                   </template>
-                  <a-select
-                    v-model:value="registerForm.idType"
-                    size="large"
-                    class="form-input"
-                  >
-                    <a-select-option value="身份证">身份证</a-select-option>
-                    <a-select-option value="护照">护照</a-select-option>
-                    <a-select-option value="港澳通行证">港澳通行证</a-select-option>
-                    <a-select-option value="台胞证">台胞证</a-select-option>
-                  </a-select>
+                  <div class="field-row">
+                    <a-select
+                      v-model:value="registerForm.idType"
+                      size="middle"
+                      class="form-input"
+                    >
+                      <a-select-option value="身份证">居民身份证</a-select-option>
+                      <a-select-option value="护照">护照</a-select-option>
+                      <a-select-option value="港澳通行证">港澳通行证</a-select-option>
+                      <a-select-option value="台胞证">台胞证</a-select-option>
+                    </a-select>
+                  </div>
                 </a-form-item>
 
                 <!-- 姓名 -->
                 <a-form-item name="realName" class="form-item">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star">*</span>
+                      <span class="required-star"></span>
                       姓名
                     </span>
                   </template>
-                  <a-input
-                    v-model:value="registerForm.realName"
-                    placeholder="与身份证匹配"
-                    size="large"
-                    class="form-input"
-                    @blur="clearFieldError('realName')"
-                  />
+                  <div class="field-row">
+                    <a-input
+                      v-model:value="registerForm.realName"
+                      placeholder="请输入姓名"
+                      size="middle"
+                      class="form-input"
+                      @blur="clearFieldError('realName')"
+                    />
+                    <span class="field-hint">姓名填写规则（用于身份核验，请正确填写）</span>
+                  </div>
                   <div v-if="errors.realName" class="error-message">{{ errors.realName }}</div>
                 </a-form-item>
 
@@ -160,17 +147,20 @@
                 <a-form-item name="idNumber" class="form-item">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star">*</span>
+                      <span class="required-star"></span>
                       证件号码
                     </span>
                   </template>
-                  <a-input
-                    v-model:value="registerForm.idNumber"
-                    placeholder="身份证号码验证格式"
-                    size="large"
-                    class="form-input"
-                    @blur="clearFieldError('idNumber')"
-                  />
+                  <div class="field-row">
+                    <a-input
+                      v-model:value="registerForm.idNumber"
+                      placeholder="请输入您的证件号码"
+                      size="middle"
+                      class="form-input"
+                      @blur="clearFieldError('idNumber')"
+                    />
+                    <span class="field-hint">（用于身份核验，请正确填写）</span>
+                  </div>
                   <div v-if="errors.idNumber" class="error-message">{{ errors.idNumber }}</div>
                 </a-form-item>
 
@@ -179,72 +169,80 @@
                   <template #label>
                     <span class="required-label">
                       <span class="required-star">*</span>
-                      优待（符）类型
+                      优惠（待）类型
                     </span>
                   </template>
-                  <a-select
-                    v-model:value="registerForm.userType"
-                    size="large"
-                    class="form-input"
-                  >
-                    <a-select-option value="成人">成人</a-select-option>
-                    <a-select-option value="学生">学生</a-select-option>
-                    <a-select-option value="残疾军人">残疾军人</a-select-option>
-                  </a-select>
+                  <div class="field-row">
+                    <a-select
+                      v-model:value="registerForm.userType"
+                      size="middle"
+                      class="form-input"
+                    >
+                      <a-select-option value="成人">成人</a-select-option>
+                      <a-select-option value="学生">学生</a-select-option>
+                      <a-select-option value="残疾军人">残疾军人</a-select-option>
+                    </a-select>
+                  </div>
                 </a-form-item>
+                <div class="form-divider"></div>
 
                 <!-- 邮箱 -->
                 <a-form-item name="email" class="form-item">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star">*</span>
+                      <span class="required-star"></span>
                       邮箱
                     </span>
                   </template>
-                  <a-input
-                    v-model:value="registerForm.email"
-                    placeholder="邮箱格式验证"
-                    size="large"
-                    class="form-input"
-                    @blur="clearFieldError('email')"
-                  />
+                  <div class="field-row">
+                    <a-input
+                      v-model:value="registerForm.email"
+                      placeholder="请正确填写邮箱地址"
+                      size="middle"
+                      class="form-input"
+                      @blur="clearFieldError('email')"
+                    />
+                  </div>
                   <div v-if="errors.email" class="error-message">{{ errors.email }}</div>
                 </a-form-item>
 
                 <!-- 手机号 -->
-                <a-form-item name="phone" class="form-item">
+                <a-form-item name="phone" class="form-item full-width">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star">*</span>
+                      <span class="required-star"></span>
                       手机号
                     </span>
                   </template>
-                  <a-input-group compact class="phone-input-group">
-                    <a-form-item-rest>
-                      <a-select
-                        v-model:value="registerForm.countryCode"
-                        size="large"
-                        class="country-code-select"
-                      >
-                        <a-select-option value="+86">+86 中国</a-select-option>
-                        <a-select-option value="+852">+852 香港</a-select-option>
-                        <a-select-option value="+853">+853 澳门</a-select-option>
-                        <a-select-option value="+886">+886 台湾</a-select-option>
-                      </a-select>
-                    </a-form-item-rest>
-                    <a-input
-                      v-model:value="registerForm.phone"
-                      placeholder="请填写手机号"
-                      size="large"
-                      class="phone-input"
-                      @blur="clearFieldError('phone')"
-                    />
-                  </a-input-group>
+                  <div class="field-row">
+                    <a-input-group compact class="phone-input-group">
+                      <a-form-item-rest>
+                        <a-select
+                          v-model:value="registerForm.countryCode"
+                          size="middle"
+                          class="country-code-select"
+                        >
+                          <a-select-option value="+86">+86 中国</a-select-option>
+                          <a-select-option value="+852">+852 香港</a-select-option>
+                          <a-select-option value="+853">+853 澳门</a-select-option>
+                          <a-select-option value="+886">+886 台湾</a-select-option>
+                        </a-select>
+                      </a-form-item-rest>
+                      <a-input
+                        v-model:value="registerForm.phone"
+                        placeholder="手机号"
+                        size="middle"
+                        class="phone-input"
+                        @blur="clearFieldError('phone')"
+                      />
+                    </a-input-group>
+                    <span class="field-hint">请正确填写手机号，稍后将向该手机号发送短信验证码</span>
+                  </div>
                   <div v-if="errors.phone" class="error-message">{{ errors.phone }}</div>
                 </a-form-item>
 
                 <!-- 服务协议 -->
-                <a-form-item name="agreeTerms" class="form-item">
+                <a-form-item name="agreeTerms" class="form-item full-width">
                   <a-checkbox v-model:checked="registerForm.agreeTerms">
                     我已阅读并同意
                     <a href="#" class="terms-link">《用户服务条款》</a>
@@ -255,11 +253,11 @@
                 </a-form-item>
 
                 <!-- 提交按钮 -->
-                <a-form-item class="form-item submit-item">
+                <a-form-item class="form-item submit-item full-width">
                   <a-button 
                     type="primary" 
                     html-type="submit" 
-                    size="large" 
+                    size="middle" 
                     block 
                     :loading="loading"
                     class="submit-btn"
@@ -268,61 +266,14 @@
                   </a-button>
                 </a-form-item>
 
-                <!-- 登录链接 -->
-                <div class="login-link">
-                  <span>已有账号？</span>
-                  <a-button type="link" @click="router.push('/login')" class="login-btn">
-                    立即登录
-                  </a-button>
-                </div>
-              </a-form>
+                </a-form>
             </div>
           </div>
         </div>
       </div>
     </main>
 
-    <!-- 页脚 -->
-    <footer class="register-footer">
-      <div class="footer-content">
-        <!-- 友情链接 -->
-        <div class="partner-links">
-          <h4>友情链接</h4>
-          <div class="partner-logos">
-            <div class="partner-item">中国铁路客户服务中心</div>
-            <div class="partner-item">中国铁路总公司</div>
-            <div class="partner-item">铁路客服中心</div>
-          </div>
-        </div>
-
-        <!-- 官方二维码 -->
-        <div class="official-qr">
-          <div class="qr-group">
-            <div class="qr-item">
-              <div class="qr-mini"></div>
-              <span>中国铁路官方微信</span>
-            </div>
-            <div class="qr-item">
-              <div class="qr-mini"></div>
-              <span>中国铁路官方微博</span>
-            </div>
-            <div class="qr-item">
-              <div class="qr-mini"></div>
-              <span>12306公众号</span>
-            </div>
-            <div class="qr-item">
-              <div class="qr-mini"></div>
-              <span>铁路12306</span>
-            </div>
-          </div>
-          <div class="copyright">
-            <p>版权所有©中国铁路，未经许可不得转载</p>
-            <p>建议使用IE9.0以上浏览器或兼容浏览器</p>
-            <p>京公网安备11010802020134号 京ICP备09069690号</p>
-          </div>
-        </div>
-      </div>
-    </footer>
+    
   </div>
 </template>
 
@@ -535,7 +486,13 @@ const handleRegister = async (values) => {
 .register-page {
   min-height: 100vh;
   background: #f5f5f5;
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
+  font-family: "Tahoma", "SimSun", "宋体", serif;
+  font-size: 12px;
+}
+
+.register-page :deep([class^="ant-"]:not(.anticon)) {
+  font-size: 12px;
+  font-family: "Tahoma", "SimSun", "宋体", serif;
 }
 
 /* 顶部Header */
@@ -616,7 +573,7 @@ const handleRegister = async (values) => {
 .nav-item {
   color: white;
   padding: 12px 0;
-  font-size: 14px;
+  font-size: 12px;
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -628,8 +585,11 @@ const handleRegister = async (values) => {
 
 /* 主体区域 */
 .register-main {
-  padding: 40px 20px;
-  min-height: calc(100vh - 200px);
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .main-content {
@@ -647,40 +607,80 @@ const handleRegister = async (values) => {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
-  overflow: hidden;
+  width: 978px;
+  height: auto;
 }
 
 .card-header {
-  background: linear-gradient(90deg, #1890ff 0%, #40a9ff 100%);
-  padding: 16px 24px;
-  border-bottom: 1px solid #e8e8e8;
+  background: #1678be;
+  height: 32px;
+  padding: 0 16px;
+  border-bottom: 2px solid #0558cb;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .card-title {
-  color: white;
-  font-size: 18px;
+  color: #E5F8FF;
+  font-size: 12px;
   font-weight: 600;
   margin: 0;
-  text-align: center;
+  text-align: left;
 }
 
 .card-body {
-  padding: 32px 24px;
+  padding: 16px 24px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* 表单样式 */
 .register-form {
   max-width: 100%;
+  display: block;
+  width: 900px;
+  margin: 0 auto;
 }
 
 .form-item {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
+  margin-left: 150px; 
+  /* text-align: center;  */
+}
+
+.form-item.full-width :deep(.ant-form-item-control-wrapper) {
+  width: 100% !important;
+}
+
+.form-item[name="agreeTerms"] {
+  margin-left: 0 !important;
+}
+
+.form-item[name="agreeTerms"] :deep(.ant-checkbox-wrapper) {
+  white-space: nowrap !important;
+  font-size: 12px;
+  font-family: "Tahoma", "SimSun", "宋体", serif;
+}
+
+.form-item[name="agreeTerms"] a.terms-link {
+  white-space: nowrap;
+  font-size: 12px;
+  font-family: "Tahoma", "SimSun", "宋体", serif;
 }
 
 .form-item :deep(.ant-form-item-label) {
-  padding-bottom: 4px;
+  padding-bottom: 2px;
+  padding-right: 0;
+  text-align: right;
+  display: flex;
+  font-size: 12px;
+  /* margin-left: 50px; */
+  align-items: center;
+  height: 30px;
+  background: transparent;
 }
 
 .required-label {
@@ -688,6 +688,8 @@ const handleRegister = async (values) => {
   align-items: center;
   font-weight: 500;
   color: #333;
+  font-size: 12px;
+  line-height: 30px;
 }
 
 .required-star {
@@ -700,6 +702,9 @@ const handleRegister = async (values) => {
   border-radius: 4px;
   border: 1px solid #d9d9d9;
   transition: all 0.3s;
+  font-size: 12px;
+  font-family: "Tahoma", "SimSun", "宋体", serif;
+  width: 201px;
 }
 
 .form-input:hover {
@@ -712,14 +717,65 @@ const handleRegister = async (values) => {
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 
+.form-item :deep(.ant-input),
+.form-item :deep(.ant-input-password .ant-input) {
+  height: 30px;
+  font-size: 12px;
+}
+
+/* 密码输入（带后缀）容器尺寸强制为 201×30 */
+.form-item :deep(.ant-input-affix-wrapper.form-input) {
+  width: 201px;
+  height: 30px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  position: relative;
+  z-index: 1;
+}
+
+.form-item :deep(.ant-input-affix-wrapper .ant-input) {
+  height: 30px;
+  line-height: 30px;
+  border: none;
+}
+
+.form-item :deep(.ant-input-affix-wrapper.form-input:hover) {
+  border-color: #40a9ff;
+}
+
+.form-item :deep(.ant-input-affix-wrapper.form-input.ant-input-affix-wrapper-focused) {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.form-item :deep(.ant-input-affix-wrapper .ant-input-suffix) {
+  display: flex;
+  align-items: center;
+}
+
+.form-item :deep(.ant-select-selector) {
+  height: 30px;
+  padding: 0 8px;
+}
+
+.form-item :deep(.ant-select-selector .ant-select-selection-item) {
+  line-height: 30px;
+  font-size: 12px;
+}
+
 /* 手机号输入组 */
 .phone-input-group {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+  width: 201px;
 }
 
 .country-code-select {
-  width: 140px;
+  width: 110px;
   flex-shrink: 0;
 }
 
@@ -729,15 +785,16 @@ const handleRegister = async (values) => {
 
 /* 密码强度指示器 */
 .password-strength {
-  margin-top: 8px;
+  margin-top: 0;
   display: flex;
   align-items: center;
   gap: 8px;
+  height: 30px;
 }
 
 .strength-bar {
   flex: 1;
-  height: 4px;
+  height: 2px;
   background: #f0f0f0;
   border-radius: 2px;
   overflow: hidden;
@@ -769,6 +826,7 @@ const handleRegister = async (values) => {
   font-size: 12px;
   font-weight: 500;
   min-width: 24px;
+  line-height: 30px;
 }
 
 .strength-text.weak {
@@ -810,22 +868,24 @@ const handleRegister = async (values) => {
 .submit-item {
   margin-top: 32px;
   margin-bottom: 16px;
+  text-align: center; /* 按钮居中 */
 }
 
 .submit-btn {
-  background: linear-gradient(90deg, #1890ff 0%, #40a9ff 100%);
+  width: 122px;
+  height: 30px;
+  background: #FFA500;
   border: none;
   border-radius: 6px;
-  height: 44px;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 600;
-  box-shadow: 0 2px 4px rgba(24, 144, 255, 0.3);
+  box-shadow: 0 2px 4px rgba(255, 165, 0, 0.3);
   transition: all 0.3s;
 }
 
 .submit-btn:hover {
-  background: linear-gradient(90deg, #40a9ff 0%, #1890ff 100%);
-  box-shadow: 0 4px 8px rgba(24, 144, 255, 0.4);
+  background: #FFC107; /* 悬停时颜色变浅 */
+  box-shadow: 0 4px 8px rgba(255, 165, 0, 0.4);
   transform: translateY(-1px);
 }
 
@@ -837,13 +897,13 @@ const handleRegister = async (values) => {
 .login-link {
   text-align: center;
   color: #666;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .login-btn {
   color: #1890ff;
   padding: 0;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .login-btn:hover {
@@ -945,189 +1005,16 @@ const handleRegister = async (values) => {
 }
 
 /* 响应式设计 */
-@media (max-width: 1200px) {
-  .main-content {
-    padding: 0 20px;
-  }
-  
-  .register-card {
-    max-width: 550px;
-  }
-}
+ 
 
-@media (max-width: 1024px) {
-  .main-content {
-    padding: 0 16px;
-  }
-  
-  .register-card {
-    max-width: 500px;
-  }
-  
-  .nav-items {
-    gap: 24px;
-  }
-  
-  .footer-content {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .official-qr {
-    align-items: center;
-  }
-  
-  .copyright {
-    text-align: center;
-  }
-}
+ 
 
-@media (max-width: 768px) {
-  .header-content {
-    padding: 8px 16px;
-  }
-  
-  .logo-text {
-    font-size: 16px;
-  }
-  
-  .welcome-text {
-    display: none;
-  }
-  
-  .nav-items {
-    gap: 16px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-  
-  .nav-item {
-    white-space: nowrap;
-    font-size: 13px;
-  }
-  
-  .register-main {
-    padding: 20px 16px;
-  }
-  
-  .register-card {
-    margin: 0;
-  }
-  
-  .card-body {
-    padding: 24px 16px;
-  }
-  
-  .phone-input-group {
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .country-code-select {
-    width: 100%;
-  }
-  
-  .qr-group {
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
-  }
-}
+ 
 
-@media (max-width: 480px) {
-  .header-content {
-    padding: 8px 12px;
-  }
-  
-  .nav-content {
-    padding: 0 12px;
-  }
-  
-  .register-main {
-    padding: 16px 12px;
-    min-height: calc(100vh - 160px);
-  }
-  
-  .card-body {
-    padding: 20px 12px;
-  }
-  
-  .form-item {
-    margin-bottom: 16px;
-  }
-  
-  .form-input {
-    min-height: 44px; /* 触摸友好的最小高度 */
-  }
-  
-  .submit-btn {
-    height: 48px; /* 更大的触摸目标 */
-    font-size: 16px;
-  }
-  
-  .submit-item {
-    margin-top: 24px;
-  }
-  
-  .qr-group {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-  
-  .qr-mini {
-    width: 50px;
-    height: 50px;
-  }
-  
-  /* 改善表单标签在小屏幕上的显示 */
-  .required-label {
-    font-size: 14px;
-  }
-  
-  /* 优化密码强度指示器 */
-  .password-strength {
-    margin-top: 8px;
-  }
-  
-  .strength-bar {
-    height: 6px;
-  }
-}
+ 
 
 /* 超小屏幕优化 */
-@media (max-width: 360px) {
-  .register-main {
-    padding: 12px 8px;
-  }
-  
-  .card-body {
-    padding: 16px 8px;
-  }
-  
-  .card-title {
-    font-size: 16px;
-  }
-  
-  .nav-items {
-    gap: 12px;
-  }
-  
-  .nav-item {
-    font-size: 12px;
-    padding: 10px 0;
-  }
-  
-  .qr-group {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  
-  .qr-mini {
-    width: 45px;
-    height: 45px;
-  }
-}
+ 
 
 /* 表单验证状态 */
 .form-item :deep(.ant-form-item-has-error .ant-input),
@@ -1148,6 +1035,11 @@ const handleRegister = async (values) => {
   color: #999;
 }
 
+.submit-btn {
+  height: 30px;
+  font-size: 12px;
+}
+
 /* 选择框样式 */
 .form-input.ant-select .ant-select-selector {
   border-radius: 4px;
@@ -1164,4 +1056,62 @@ const handleRegister = async (values) => {
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 </style>
+<style scoped>
+.full-width {
+  grid-column: 1 / -1;
+}
+.form-item.full-width :deep(.ant-checkbox-wrapper) {
+  margin-left: 105px;
+}
+.login-link {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+.form-item :deep(.ant-form-item-control) {
+  overflow: visible;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 201px auto;
+  align-items: center;
+  column-gap: 12px;
+  position: relative;
+  z-index: 0;
+}
+
+.field-hint {
+  color: #fa8c16;
+  font-size: 12px;
+  line-height: 30px;
+  background: transparent;
+}
+
+.password-hint {
+  padding: 0 6px;
+  border-radius: 2px;
+}
+
+.username-hint {
+  color: #FF7F00;
+}
+
+.password-strength.inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 使表单在卡片内水平垂直居中 */
+.register-form {
+  margin: 0 auto;
+}
+</style>
+
+.form-divider {
+  height: 0;
+  border-top: 1px dashed #d9d9d9;
+  margin: 12px 0;
+}
 

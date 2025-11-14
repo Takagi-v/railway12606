@@ -2,7 +2,7 @@
  * Authentication API
  * 认证相关的API接口
  */
-import request from '@/utils/request'
+import request from "@/utils/request";
 
 /**
  * 用户登录
@@ -15,18 +15,18 @@ import request from '@/utils/request'
  */
 export function login(data) {
   return request({
-    url: '/auth/login',
-    method: 'post',
+    url: "/auth/login",
+    method: "post",
     data: {
       ...data,
       timestamp: Date.now(),
       clientInfo: {
         userAgent: navigator.userAgent,
         platform: navigator.platform,
-        language: navigator.language
-      }
-    }
-  })
+        language: navigator.language,
+      },
+    },
+  });
 }
 
 /**
@@ -38,10 +38,10 @@ export function login(data) {
  */
 export function loginWithSms(data) {
   return request({
-    url: '/auth/login/sms',
-    method: 'post',
-    data
-  })
+    url: "/auth/login/sms",
+    method: "post",
+    data,
+  });
 }
 
 /**
@@ -52,8 +52,8 @@ export function loginWithSms(data) {
 export function checkQrLoginStatus(qrToken) {
   return request({
     url: `/auth/qr/status/${qrToken}`,
-    method: 'get'
-  })
+    method: "get",
+  });
 }
 
 /**
@@ -62,9 +62,9 @@ export function checkQrLoginStatus(qrToken) {
  */
 export function getQrLoginToken() {
   return request({
-    url: '/auth/qr/generate',
-    method: 'post'
-  })
+    url: "/auth/qr/generate",
+    method: "post",
+  });
 }
 
 /**
@@ -81,13 +81,13 @@ export function getQrLoginToken() {
  */
 export function register(data) {
   return request({
-    url: '/auth/register',
-    method: 'post',
+    url: "/auth/register",
+    method: "post",
     data: {
       ...data,
-      timestamp: Date.now()
-    }
-  })
+      timestamp: Date.now(),
+    },
+  });
 }
 
 /**
@@ -100,10 +100,10 @@ export function register(data) {
  */
 export function sendSmsCode(data) {
   return request({
-    url: '/auth/sms/send',
-    method: 'post',
-    data
-  })
+    url: "/auth/sms/send",
+    method: "post",
+    data,
+  });
 }
 
 /**
@@ -112,9 +112,9 @@ export function sendSmsCode(data) {
  */
 export function getCaptcha() {
   return request({
-    url: '/auth/captcha',
-    method: 'get'
-  })
+    url: "/auth/captcha",
+    method: "get",
+  });
 }
 
 /**
@@ -124,12 +124,12 @@ export function getCaptcha() {
  */
 export function refreshToken(refreshToken) {
   return request({
-    url: '/auth/refresh',
-    method: 'post',
+    url: "/auth/refresh",
+    method: "post",
     data: {
-      refresh_token: refreshToken
-    }
-  })
+      refresh_token: refreshToken,
+    },
+  });
 }
 
 /**
@@ -138,9 +138,9 @@ export function refreshToken(refreshToken) {
  */
 export function getUserProfile() {
   return request({
-    url: '/user/profile',
-    method: 'get'
-  })
+    url: "/user/profile",
+    method: "get",
+  });
 }
 
 /**
@@ -154,10 +154,10 @@ export function getUserProfile() {
  */
 export function updateUserProfile(data) {
   return request({
-    url: '/auth/profile',
-    method: 'put',
-    data
-  })
+    url: "/auth/profile",
+    method: "put",
+    data,
+  });
 }
 
 /**
@@ -170,10 +170,10 @@ export function updateUserProfile(data) {
  */
 export function changePassword(data) {
   return request({
-    url: '/auth/password/change',
-    method: 'post',
-    data
-  })
+    url: "/auth/password/change",
+    method: "post",
+    data,
+  });
 }
 
 /**
@@ -185,10 +185,10 @@ export function changePassword(data) {
  */
 export function requestPasswordReset(data) {
   return request({
-    url: '/auth/password/reset/request',
-    method: 'post',
-    data
-  })
+    url: "/auth/password/reset/request",
+    method: "post",
+    data,
+  });
 }
 
 /**
@@ -201,10 +201,10 @@ export function requestPasswordReset(data) {
  */
 export function confirmPasswordReset(data) {
   return request({
-    url: '/auth/password/reset/confirm',
-    method: 'post',
-    data
-  })
+    url: "/auth/password/reset/confirm",
+    method: "post",
+    data,
+  });
 }
 
 /**
@@ -216,10 +216,10 @@ export function confirmPasswordReset(data) {
  */
 export function bindPhone(data) {
   return request({
-    url: '/auth/phone/bind',
-    method: 'post',
-    data
-  })
+    url: "/auth/phone/bind",
+    method: "post",
+    data,
+  });
 }
 
 /**
@@ -231,10 +231,10 @@ export function bindPhone(data) {
  */
 export function unbindPhone(data) {
   return request({
-    url: '/auth/phone/unbind',
-    method: 'post',
-    data
-  })
+    url: "/auth/phone/unbind",
+    method: "post",
+    data,
+  });
 }
 
 /**
@@ -246,10 +246,10 @@ export function unbindPhone(data) {
  */
 export function bindEmail(data) {
   return request({
-    url: '/auth/email/bind',
-    method: 'post',
-    data
-  })
+    url: "/auth/email/bind",
+    method: "post",
+    data,
+  });
 }
 
 /**
@@ -258,9 +258,9 @@ export function bindEmail(data) {
  */
 export function logout() {
   return request({
-    url: '/auth/logout',
-    method: 'post'
-  })
+    url: "/auth/logout",
+    method: "post",
+  });
 }
 
 /**
@@ -271,8 +271,8 @@ export function logout() {
 export function checkUsernameAvailability(username) {
   return request({
     url: `/auth/check/username/${username}`,
-    method: 'get'
-  })
+    method: "get",
+  });
 }
 
 /**
@@ -283,8 +283,8 @@ export function checkUsernameAvailability(username) {
 export function checkPhoneRegistered(phone) {
   return request({
     url: `/auth/check/phone/${phone}`,
-    method: 'get'
-  })
+    method: "get",
+  });
 }
 
 /**
@@ -293,9 +293,9 @@ export function checkPhoneRegistered(phone) {
  */
 export function getSecuritySettings() {
   return request({
-    url: '/auth/security/settings',
-    method: 'get'
-  })
+    url: "/auth/security/settings",
+    method: "get",
+  });
 }
 
 /**
@@ -308,10 +308,10 @@ export function getSecuritySettings() {
  */
 export function updateSecuritySettings(data) {
   return request({
-    url: '/auth/security/settings',
-    method: 'put',
-    data
-  })
+    url: "/auth/security/settings",
+    method: "put",
+    data,
+  });
 }
 
 /**
@@ -323,10 +323,10 @@ export function updateSecuritySettings(data) {
  */
 export function getLoginHistory(params) {
   return request({
-    url: '/auth/login/history',
-    method: 'get',
-    params
-  })
+    url: "/auth/login/history",
+    method: "get",
+    params,
+  });
 }
 
 /**
@@ -339,10 +339,10 @@ export function getLoginHistory(params) {
  */
 export function submitFaceRecovery(data) {
   return request({
-    url: '/auth/password/recovery/face',
-    method: 'post',
-    data
-  })
+    url: "/auth/password/recovery/face",
+    method: "post",
+    data,
+  });
 }
 
 /**
@@ -355,10 +355,10 @@ export function submitFaceRecovery(data) {
  */
 export function submitPhoneRecovery(data) {
   return request({
-    url: '/auth/password/recovery/phone',
-    method: 'post',
-    data
-  })
+    url: "/auth/password/recovery/phone",
+    method: "post",
+    data,
+  });
 }
 
 /**
@@ -371,10 +371,10 @@ export function submitPhoneRecovery(data) {
  */
 export function submitEmailRecovery(data) {
   return request({
-    url: '/auth/password/recovery/email',
-    method: 'post',
-    data
-  })
+    url: "/auth/password/recovery/email",
+    method: "post",
+    data,
+  });
 }
 
 /**
@@ -387,10 +387,10 @@ export function submitEmailRecovery(data) {
  */
 export function verifyRecoveryCode(data) {
   return request({
-    url: '/auth/password/recovery/verify',
-    method: 'post',
-    data
-  })
+    url: "/auth/password/recovery/verify",
+    method: "post",
+    data,
+  });
 }
 
 /**
@@ -403,9 +403,8 @@ export function verifyRecoveryCode(data) {
  */
 export function setNewPassword(data) {
   return request({
-    url: '/auth/password/recovery/reset',
-    method: 'post',
-    data
-  })
+    url: "/auth/password/recovery/reset",
+    method: "post",
+    data,
+  });
 }
-
