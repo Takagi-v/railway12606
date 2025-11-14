@@ -2,7 +2,7 @@
 Station Model
 车站表模型
 """
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, UniqueConstraint
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
 
@@ -20,4 +20,9 @@ class Station(Base):
     # Relationships
     departing_trains = relationship("Train", foreign_keys="Train.departure_station_id", back_populates="departure_station")
     arriving_trains = relationship("Train", foreign_keys="Train.arrival_station_id", back_populates="arrival_station")
+
+    __table_args__ = (
+        UniqueConstraint('pinyin', name='uix_station_pinyin'),
+        UniqueConstraint('short_pinyin', name='uix_station_short_pinyin'),
+    )
 

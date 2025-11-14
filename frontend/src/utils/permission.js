@@ -1,257 +1,370 @@
 /**
- * Permission Management Utilities
- * 权限管理工具
+ * Permission Utilities
+ * 权限工具类
  */
-
-// 用户类型枚举（根据12306需求文档）
-export const USER_TYPES = {
-  GUEST: 'guest',        // 游客（未登录）
-  ADULT: 'adult',        // 成人用户
-  STUDENT: 'student'     // 学生用户
-}
-
-// 权限枚举
-export const PERMISSIONS = {
-  // 基础权限
-  VIEW_PUBLIC: 'view:public',           // 查看公开内容
-  VIEW_TRAINS: 'view:trains',           // 查看车次信息
-  
-  // 用户权限（需要登录）
-  CREATE_ORDER: 'create:order',         // 创建订单
-  VIEW_ORDER: 'view:order',             // 查看订单
-  CANCEL_ORDER: 'cancel:order',         // 取消订单
-  REFUND_TICKET: 'refund:ticket',       // 退票
-  
-  // 个人信息权限
-  VIEW_PROFILE: 'view:profile',         // 查看个人信息
-  EDIT_PROFILE: 'edit:profile',         // 编辑个人信息
-  MANAGE_PASSENGERS: 'manage:passengers', // 管理乘客信息
-  
-  // 服务权限
-  USE_SERVICES: 'use:services',         // 使用增值服务
-  SPECIAL_PASSENGER: 'special:passenger', // 重点旅客服务
-  
-  // 学生特殊权限
-  STUDENT_DISCOUNT: 'student:discount', // 学生票优惠
-  STUDENT_VERIFICATION: 'student:verification' // 学生身份验证
-}
-
-// 用户类型权限映射
-export const TYPE_PERMISSIONS = {
-  [USER_TYPES.GUEST]: [
-    PERMISSIONS.VIEW_PUBLIC,
-    PERMISSIONS.VIEW_TRAINS
-  ],
-  [USER_TYPES.ADULT]: [
-    PERMISSIONS.VIEW_PUBLIC,
-    PERMISSIONS.VIEW_TRAINS,
-    PERMISSIONS.CREATE_ORDER,
-    PERMISSIONS.VIEW_ORDER,
-    PERMISSIONS.CANCEL_ORDER,
-    PERMISSIONS.REFUND_TICKET,
-    PERMISSIONS.VIEW_PROFILE,
-    PERMISSIONS.EDIT_PROFILE,
-    PERMISSIONS.MANAGE_PASSENGERS,
-    PERMISSIONS.USE_SERVICES,
-    PERMISSIONS.SPECIAL_PASSENGER
-  ],
-  [USER_TYPES.STUDENT]: [
-    PERMISSIONS.VIEW_PUBLIC,
-    PERMISSIONS.VIEW_TRAINS,
-    PERMISSIONS.CREATE_ORDER,
-    PERMISSIONS.VIEW_ORDER,
-    PERMISSIONS.CANCEL_ORDER,
-    PERMISSIONS.REFUND_TICKET,
-    PERMISSIONS.VIEW_PROFILE,
-    PERMISSIONS.EDIT_PROFILE,
-    PERMISSIONS.MANAGE_PASSENGERS,
-    PERMISSIONS.USE_SERVICES,
-    PERMISSIONS.SPECIAL_PASSENGER,
-    PERMISSIONS.STUDENT_DISCOUNT,
-    PERMISSIONS.STUDENT_VERIFICATION
-  ]
-}
-
-// 保持向后兼容性
-export const USER_ROLES = USER_TYPES
-export const ROLE_PERMISSIONS = TYPE_PERMISSIONS
+import { usePermissionStore } from "@/stores/permission";
+import { useUserStore } from "@/stores/user";
+import { PERMISSIONS, ROLES } from "@/api/permission";
 
 /**
- * 检查用户是否有指定权限
- * @param {string} permission 权限标识
- * @param {Object} user 用户对象
- * @returns {boolean} 是否有权限
+ * 权限检查工具类
  */
-export function hasPermission(permission, user = null) {
-  if (!user) {
-    // 未登录用户只有游客权限
-    return TYPE_PERMISSIONS[USER_TYPES.GUEST].includes(permission)
+export class PermissionChecker {
+  constructor() {
+    this.permissionStore = null;
+    this.userStore = null;
   }
-  
-  // 根据用户类型获取权限，默认为成人用户
-  const userType = user.user_type || user.userType || USER_TYPES.ADULT
-  const userPermissions = TYPE_PERMISSIONS[userType] || TYPE_PERMISSIONS[USER_TYPES.ADULT]
-  
-  return userPermissions.includes(permission)
-}
 
-/**
- * 检查用户是否有指定类型
- * @param {string} type 用户类型标识
- * @param {Object} user 用户对象
- * @returns {boolean} 是否有该类型
- */
-export function hasUserType(type, user = null) {
-  if (!user) {
-    return type === USER_TYPES.GUEST
+  // 初始化store实例
+  _initStores() {
+    if (!this.permissionStore) {
+      this.permissionStore = usePermissionStore();
+    }
+    if (!this.userStore) {
+      this.userStore = useUserStore();
+    }
   }
-  
-  const userType = user.user_type || user.userType || USER_TYPES.ADULT
-  return userType === type
-}
 
-/**
- * 检查用户是否有指定角色（保持向后兼容）
- * @param {string} role 角色标识
- * @param {Object} user 用户对象
- * @returns {boolean} 是否有该角色
- */
-export function hasRole(role, user = null) {
-  return hasUserType(role, user)
-}
+  /**
+   * 检查是否具有指定权限
+   * @param {string|string[]} permissions - 权限代码或权限代码数组
+   * @param {string} mode - 检查模式：'any'(任一) 或 'all'(全部)
+   * @returns {boolean}
+   */
+  hasPermission(permissions, mode = "any") {
+    this._initStores();
 
-/**
- * 检查用户是否可以访问指定路由
- * @param {Object} route 路由对象
- * @param {Object} user 用户对象
- * @returns {boolean} 是否可以访问
- */
-export function canAccessRoute(route, user = null) {
-  const { meta = {} } = route
-  
-  // 检查是否需要登录
-  if (meta.requiresAuth && !user) {
-    return false
+    if (!this.userStore.isAuthenticated) {
+      return false;
+    }
+
+    if (typeof permissions === "string") {
+      return this.permissionStore.hasPermission(permissions);
+    }
+
+    if (Array.isArray(permissions)) {
+      return mode === "all"
+        ? this.permissionStore.hasAllPermissions(permissions)
+        : this.permissionStore.hasAnyPermission(permissions);
+    }
+
+    return false;
   }
-  
-  // 检查用户类型要求
-  if (meta.userTypes && meta.userTypes.length > 0) {
-    return meta.userTypes.some(type => hasUserType(type, user))
+
+  /**
+   * 检查是否具有指定角色
+   * @param {string|string[]} roles - 角色名称或角色名称数组
+   * @param {string} mode - 检查模式：'any'(任一) 或 'all'(全部)
+   * @returns {boolean}
+   */
+  hasRole(roles, mode = "any") {
+    this._initStores();
+
+    if (!this.userStore.isAuthenticated) {
+      return false;
+    }
+
+    if (typeof roles === "string") {
+      return this.permissionStore.hasRole(roles);
+    }
+
+    if (Array.isArray(roles)) {
+      return mode === "all"
+        ? this.permissionStore.hasAllRoles(roles)
+        : this.permissionStore.hasAnyRole(roles);
+    }
+
+    return false;
   }
-  
-  // 检查角色要求（向后兼容）
-  if (meta.roles && meta.roles.length > 0) {
-    return meta.roles.some(role => hasUserType(role, user))
+
+  /**
+   * 检查是否为管理员
+   * @returns {boolean}
+   */
+  isAdmin() {
+    this._initStores();
+    return this.permissionStore.isAdmin;
   }
-  
-  // 检查权限要求
-  if (meta.permissions && meta.permissions.length > 0) {
-    return meta.permissions.some(permission => hasPermission(permission, user))
+
+  /**
+   * 检查是否为超级管理员
+   * @returns {boolean}
+   */
+  isSuperAdmin() {
+    this._initStores();
+    return this.permissionStore.isSuperAdmin;
   }
-  
-  return true
-}
 
-/**
- * 获取用户的所有权限
- * @param {Object} user 用户对象
- * @returns {Array} 权限列表
- */
-export function getUserPermissions(user = null) {
-  if (!user) {
-    return TYPE_PERMISSIONS[USER_TYPES.GUEST]
+  /**
+   * 检查是否可以访问指定资源
+   * @param {string} resource - 资源名称
+   * @param {string} action - 操作类型
+   * @returns {boolean}
+   */
+  canAccess(resource, action) {
+    const permissionCode = `${resource}:${action}`;
+    return this.hasPermission(permissionCode);
   }
-  
-  const userType = user.user_type || user.userType || USER_TYPES.ADULT
-  return TYPE_PERMISSIONS[userType] || TYPE_PERMISSIONS[USER_TYPES.ADULT]
+
+  /**
+   * 检查是否可以管理指定资源
+   * @param {string} resource - 资源名称
+   * @returns {boolean}
+   */
+  canManage(resource) {
+    return this.canAccess(resource, "manage") || this.isSuperAdmin();
+  }
 }
 
 /**
- * 检查用户是否已登录
- * @param {Object} user 用户对象
- * @returns {boolean} 是否已登录
+ * 权限装饰器工厂
  */
-export function isAuthenticated(user = null) {
-  return user !== null && user !== undefined
+export class PermissionDecorator {
+  /**
+   * 创建权限检查装饰器
+   * @param {string|string[]} permissions - 所需权限
+   * @param {string} mode - 检查模式
+   * @returns {Function}
+   */
+  static requirePermissions(permissions, mode = "any") {
+    return function (target, propertyKey, descriptor) {
+      const originalMethod = descriptor.value;
+
+      descriptor.value = function (...args) {
+        const checker = new PermissionChecker();
+
+        if (!checker.hasPermission(permissions, mode)) {
+          throw new Error(
+            `权限不足：需要权限 ${Array.isArray(permissions) ? permissions.join(", ") : permissions}`,
+          );
+        }
+
+        return originalMethod.apply(this, args);
+      };
+
+      return descriptor;
+    };
+  }
+
+  /**
+   * 创建角色检查装饰器
+   * @param {string|string[]} roles - 所需角色
+   * @param {string} mode - 检查模式
+   * @returns {Function}
+   */
+  static requireRoles(roles, mode = "any") {
+    return function (target, propertyKey, descriptor) {
+      const originalMethod = descriptor.value;
+
+      descriptor.value = function (...args) {
+        const checker = new PermissionChecker();
+
+        if (!checker.hasRole(roles, mode)) {
+          throw new Error(
+            `权限不足：需要角色 ${Array.isArray(roles) ? roles.join(", ") : roles}`,
+          );
+        }
+
+        return originalMethod.apply(this, args);
+      };
+
+      return descriptor;
+    };
+  }
 }
 
 /**
- * 检查用户是否为学生
- * @param {Object} user 用户对象
- * @returns {boolean} 是否为学生
+ * 权限路由守卫
  */
-export function isStudent(user = null) {
-  return hasUserType(USER_TYPES.STUDENT, user)
-}
+export class PermissionGuard {
+  /**
+   * 检查路由权限
+   * @param {Object} route - 路由对象
+   * @param {Object} user - 用户对象
+   * @returns {boolean}
+   */
+  static checkRoutePermission(route, user) {
+    const checker = new PermissionChecker();
 
-/**
- * 检查用户是否为成人
- * @param {Object} user 用户对象
- * @returns {boolean} 是否为成人
- */
-export function isAdult(user = null) {
-  return hasUserType(USER_TYPES.ADULT, user)
-}
+    // 如果路由没有权限要求，允许访问
+    if (!route.meta?.permissions && !route.meta?.roles) {
+      return true;
+    }
 
-/**
- * 权限指令工厂函数
- * 用于Vue指令 v-permission
- */
-export function createPermissionDirective() {
-  const checkPermission = (el, binding, vnode) => {
-    // 尝试从多个来源获取用户状态
-    let user = null;
-    
-    // 1. 尝试从组件实例的setupState获取（用于<script setup>）
-    const instance = vnode.ctx;
-    if (instance && instance.setupState) {
-      const setupState = instance.setupState;
-      
-      // 检查computed属性 user
-      if (setupState.user && typeof setupState.user === 'object' && setupState.user.value !== undefined) {
-        user = setupState.user.value;
-      }
-      // 检查ref属性 testUser
-      else if (setupState.testUser && setupState.testUser.value !== undefined) {
-        user = setupState.testUser.value;
-      }
-      // 检查直接值
-      else if (setupState.user) {
-        user = setupState.user;
+    // 检查权限要求
+    if (route.meta.permissions) {
+      const mode = route.meta.permissionMode || "any";
+      if (!checker.hasPermission(route.meta.permissions, mode)) {
+        return false;
       }
     }
-    
-    // 2. 尝试从组件实例的data获取
-    if (!user && instance && instance.data && instance.data.user) {
-      user = instance.data.user;
-    }
-    
-    // 3. 尝试从Pinia store获取
-    if (!user) {
-      try {
-        const userStore = useUserStore();
-        user = userStore.user;
-      } catch (error) {
-        // 忽略错误，继续使用null用户
+
+    // 检查角色要求
+    if (route.meta.roles) {
+      const mode = route.meta.roleMode || "any";
+      if (!checker.hasRole(route.meta.roles, mode)) {
+        return false;
       }
     }
-    
-    const permission = binding.value;
-    const hasAccess = hasPermission(permission, user);
-    
-    if (!hasAccess) {
-      el.style.display = 'none';
-    } else {
-      el.style.display = '';
-    }
-  };
 
-  return {
-    mounted(el, binding, vnode) {
-      checkPermission(el, binding, vnode);
-    },
-    updated(el, binding, vnode) {
-      checkPermission(el, binding, vnode);
+    return true;
+  }
+
+  /**
+   * 获取权限错误信息
+   * @param {Object} route - 路由对象
+   * @returns {string}
+   */
+  static getPermissionError(route) {
+    const errors = [];
+
+    if (route.meta?.permissions) {
+      errors.push(
+        `需要权限: ${Array.isArray(route.meta.permissions) ? route.meta.permissions.join(", ") : route.meta.permissions}`,
+      );
     }
-  };
+
+    if (route.meta?.roles) {
+      errors.push(
+        `需要角色: ${Array.isArray(route.meta.roles) ? route.meta.roles.join(", ") : route.meta.roles}`,
+      );
+    }
+
+    return errors.join("; ") || "权限不足";
+  }
 }
+
+/**
+ * 权限指令助手
+ */
+export class PermissionDirective {
+  /**
+   * 检查元素是否应该显示
+   * @param {Object} binding - 指令绑定对象
+   * @returns {boolean}
+   */
+  static shouldShow(binding) {
+    const checker = new PermissionChecker();
+    const { value, modifiers } = binding;
+
+    if (!value) return true;
+
+    // 检查权限
+    if (value.permissions) {
+      const mode = modifiers.all ? "all" : "any";
+      if (!checker.hasPermission(value.permissions, mode)) {
+        return false;
+      }
+    }
+
+    // 检查角色
+    if (value.roles) {
+      const mode = modifiers.all ? "all" : "any";
+      if (!checker.hasRole(value.roles, mode)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+}
+
+/**
+ * 权限工具函数
+ */
+export const permissionUtils = {
+  /**
+   * 创建权限检查器实例
+   * @returns {PermissionChecker}
+   */
+  createChecker() {
+    return new PermissionChecker();
+  },
+
+  /**
+   * 快速权限检查
+   * @param {string|string[]} permissions - 权限代码
+   * @param {string} mode - 检查模式
+   * @returns {boolean}
+   */
+  check(permissions, mode = "any") {
+    const checker = new PermissionChecker();
+    return checker.hasPermission(permissions, mode);
+  },
+
+  /**
+   * 快速角色检查
+   * @param {string|string[]} roles - 角色名称
+   * @param {string} mode - 检查模式
+   * @returns {boolean}
+   */
+  checkRole(roles, mode = "any") {
+    const checker = new PermissionChecker();
+    return checker.hasRole(roles, mode);
+  },
+
+  /**
+   * 检查是否为管理员
+   * @returns {boolean}
+   */
+  isAdmin() {
+    const checker = new PermissionChecker();
+    return checker.isAdmin();
+  },
+
+  /**
+   * 检查是否为超级管理员
+   * @returns {boolean}
+   */
+  isSuperAdmin() {
+    const checker = new PermissionChecker();
+    return checker.isSuperAdmin();
+  },
+
+  /**
+   * 获取权限显示名称
+   * @param {string} permissionCode - 权限代码
+   * @returns {string}
+   */
+  getPermissionName(permissionCode) {
+    const permissionStore = usePermissionStore();
+    return permissionStore.permissionUtils.formatPermissionName(permissionCode);
+  },
+
+  /**
+   * 获取角色显示名称
+   * @param {string} roleName - 角色名称
+   * @returns {string}
+   */
+  getRoleName(roleName) {
+    const permissionStore = usePermissionStore();
+    return permissionStore.permissionUtils.formatRoleName(roleName);
+  },
+
+  /**
+   * 权限常量
+   */
+  PERMISSIONS,
+
+  /**
+   * 角色常量
+   */
+  ROLES,
+};
+
+// 导出单例实例
+export const permissionChecker = new PermissionChecker();
+export const permissionGuard = PermissionGuard;
+export const permissionDirective = PermissionDirective;
+
+// 默认导出
+export default {
+  PermissionChecker,
+  PermissionDecorator,
+  PermissionGuard,
+  PermissionDirective,
+  permissionUtils,
+  permissionChecker,
+  permissionGuard,
+  permissionDirective,
+};

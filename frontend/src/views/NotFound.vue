@@ -13,11 +13,11 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
-import AppHeader from '@/components/AppHeader.vue'
-import AppFooter from '@/components/AppFooter.vue'
+import { useRouter } from "vue-router";
+import AppHeader from "@/components/AppHeader.vue";
+import AppFooter from "@/components/AppFooter.vue";
 
-const router = useRouter()
+const router = useRouter();
 </script>
 
 <style scoped>

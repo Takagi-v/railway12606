@@ -10,9 +10,17 @@
                 <UserOutlined />
                 个人信息
               </a-menu-item>
+<<<<<<< HEAD
               <a-menu-item key="passengers" @click="router.push('/user/passengers')">
                 <TeamOutlined />
                 乘客管理
+=======
+              <a-menu-item
+                key="passengers"
+                @click="router.push('/user/passengers')"
+              >
+                <TeamOutlined /> 乘客管理
+>>>>>>> origin/feature/user-authentication
               </a-menu-item>
               <a-menu-item key="orders" @click="router.push('/user/orders')">
                 <FileTextOutlined />
@@ -31,19 +39,24 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { UserOutlined, TeamOutlined, FileTextOutlined } from '@ant-design/icons-vue'
-import AppHeader from '@/components/AppHeader.vue'
-import AppFooter from '@/components/AppFooter.vue'
+import { ref, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import {
+  UserOutlined,
+  TeamOutlined,
+  FileTextOutlined,
+} from "@ant-design/icons-vue";
+import AppHeader from "@/components/AppHeader.vue";
+import AppFooter from "@/components/AppFooter.vue";
 
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 
-const selectedKeys = ref(['profile'])
+const selectedKeys = ref(["profile"]);
 
 watch(
   () => route.path,
+<<<<<<< HEAD
   path => {
     if (path.includes('/user/profile')) {
       selectedKeys.value = ['profile']
@@ -51,10 +64,19 @@ watch(
       selectedKeys.value = ['passengers']
     } else if (path.includes('/user/orders')) {
       selectedKeys.value = ['orders']
+=======
+  (path) => {
+    if (path.includes("/user/profile")) {
+      selectedKeys.value = ["profile"];
+    } else if (path.includes("/user/passengers")) {
+      selectedKeys.value = ["passengers"];
+    } else if (path.includes("/user/orders")) {
+      selectedKeys.value = ["orders"];
+>>>>>>> origin/feature/user-authentication
     }
   },
-  { immediate: true }
-)
+  { immediate: true },
+);
 </script>
 
 <style scoped>
