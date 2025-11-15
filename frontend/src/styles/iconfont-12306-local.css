@@ -1,0 +1,97 @@
+/* Local replacement for 12306 iconfont using inline SVG masks.
+   Purpose: remove external font dependency and keep class API stable.
+   Usage: keep markup like <i class="icon icon-huochepiao"></i> */
+
+.icon,
+.icon-lock {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  background-color: currentColor;
+}
+
+/* Utility sizes (optional) */
+.icon.icon-20 { width: 20px; height: 20px; }
+.icon.icon-24 { width: 24px; height: 24px; }
+
+/* Base helpers for mask property */
+.icon,
+.icon-lock {
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* Train ticket */
+.icon-huochepiao {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 5h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-1l1.5 2H17l-1.5-2h-7L7 18H4.5L6 16H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm2 4h10v2H7V9zm2 5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm6 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 5h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-1l1.5 2H17l-1.5-2h-7L7 18H4.5L6 16H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm2 4h10v2H7V9zm2 5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm6 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>');
+}
+
+/* Common query (list) */
+.icon-cycx {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 5h16v2H4V5zm0 6h16v2H4v-2zm0 6h10v2H4v-2z"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 5h16v2H4V5zm0 6h16v2H4v-2zm0 6h10v2H4v-2z"/></svg>');
+}
+
+/* Dining */
+.icon-dingcan {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 2c.55 0 1 .45 1 1v7a3 3 0 0 1-3 3h2v8H5v-8H3V3c0-.55.45-1 1-1h3zm10 0a3 3 0 0 1 3 3v5h-3v10h-2V10h-3V5a3 3 0 0 1 3-3h2z"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 2c.55 0 1 .45 1 1v7a3 3 0 0 1-3 3h2v8H5v-8H3V3c0-.55.45-1 1-1h3zm10 0a3 3 0 0 1 3 3v5h-3v10h-2V10h-3V5a3 3 0 0 1 3-3h2z"/></svg>');
+}
+
+/* One-way */
+.icon-dancheng {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12h12l-4-4 1.4-1.4L19.8 14l-7.4 7.4L11 20l4-4H3v-4z"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12h12l-4-4 1.4-1.4L19.8 14l-7.4 7.4L11 20l4-4H3v-4z"/></svg>');
+}
+
+/* Round-trip */
+.icon-wangfan {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 7h10l-3-3 1.4-1.4L18.8 9l-6.4 6.4L11 14l3-3H4V7zm16 10H10l3 3-1.4 1.4L5.2 15l6.4-6.4L13 10l-3 3h10v4z"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 7h10l-3-3 1.4-1.4L18.8 9l-6.4 6.4L11 14l3-3H4V7zm16 10H10l3 3-1.4 1.4L5.2 15l6.4-6.4L13 10l-3 3h10v4z"/></svg>');
+}
+
+/* Transfer */
+.icon-huancheng {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 7h9l-2.5-2.5L14 3l5 5-5 5-1.5-1.5L15 9H6V7zm12 10H9l2.5 2.5L10 21l-5-5 5-5 1.5 1.5L9 15h9v2z"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 7h9l-2.5-2.5L14 3l5 5-5 5-1.5-1.5L15 9H6V7zm12 10H9l2.5 2.5L10 21l-5-5 5-5 1.5 1.5L9 15h9v2z"/></svg>');
+}
+
+/* Refund/Change (ticket tag) */
+.icon-chepiao {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h9l7 7-7 7H5a2 2 0 0 1-2-2v-3a2 2 0 1 0 0-4V7zm6 3a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h9l7 7-7 7H5a2 2 0 0 1-2-2v-3a2 2 0 1 0 0-4V7zm6 3a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>');
+}
+
+/* Location pin */
+.icon-place {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7zm0 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7zm0 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>');
+}
+
+/* Swap arrows */
+.icon-qiehuan {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 7h8l-2-2 1.4-1.4L19.8 8l-5.4 5.4L13 12l2-2H7V7zm10 10H9l2 2-1.4 1.4L4.2 16l5.4-5.4L11 12l-2 2h8v3z"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 7h8l-2-2 1.4-1.4L19.8 8l-5.4 5.4L13 12l2-2H7V7zm10 10H9l2 2-1.4 1.4L4.2 16l5.4-5.4L11 12l-2 2h8v3z"/></svg>');
+}
+
+/* Calendar */
+.icon-date {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2V2zm12 8H5v10h14V10z"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2V2zm12 8H5v10h14V10z"/></svg>');
+}
+
+/* Carets */
+.icon-caret-left { -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 6l-6 6 6 6V6z"/></svg>'); mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 6l-6 6 6 6V6z"/></svg>'); }
+.icon-caret-right { -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 6l6 6-6 6V6z"/></svg>'); mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 6l6 6-6 6V6z"/></svg>'); }
+
+/* Lock (used by Permission components) */
+.icon-lock {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h1V7a5 5 0 0 1 5-5zm3 8V7a3 3 0 1 0-6 0v3h6z"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h1V7a5 5 0 0 1 5-5zm3 8V7a3 3 0 1 0-6 0v3h6z"/></svg>');
+}

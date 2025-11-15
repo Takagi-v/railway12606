@@ -5,244 +5,17 @@
 
     <!-- 主内容区域 -->
     <main class="main-content">
-      <!-- 轮播图和搜索表单合并区域 -->
-      <div class="carousel-search-section">
-        <div class="carousel-container">
-          <!-- 轮播图背景 -->
-          <div class="carousel-background">
-            <!-- 轮播图片 -->
-            <div class="carousel-slides">
-              <div 
-                v-for="(item, index) in carouselItems" 
-                :key="item.id"
-                :class="['carousel-slide', { active: currentSlide === index }]"
-                :style="{ backgroundImage: `url(${item.image})` }"
-              >
-                <div class="slide-overlay"></div>
-              </div>
-            </div>
-            
-            <div class="carousel-indicators">
-              <span 
-                v-for="(item, index) in carouselItems" 
-                :key="index"
-                :class="['indicator', { active: currentSlide === index }]"
-                @click="handleIndicatorClick(index)"
-              >
-                {{ index + 1 }}
-              </span>
-            </div>
-          </div>
-          
-          <!-- 车票搜索表单 - 内嵌在左半部分 -->
-          <div class="embedded-search-form">
-            <div class="search-form-header">
-              <div class="service-tabs">
-                <div class="tab-item active">
-                  <CarOutlined />
-                  车票
-                </div>
-                <div class="tab-item">
-                  <SearchOutlined />
-                  常用查询
-                </div>
-                <div class="tab-item">
-                  <ShoppingOutlined />
-                  订餐
-                </div>
-              </div>
-            </div>
+      <!-- 复刻 12306 .section-first 查询与轮播组件 -->
+      <SectionFirst12306 />
 
-            <div class="search-tabs">
-              <div 
-                v-for="tab in searchTabs" 
-                :key="tab.key"
-                :class="['search-tab', { active: activeTab === tab.key }]"
-                @click="handleTabChange(tab.key)"
-              >
-                <component :is="tab.icon" class="tab-icon" />
-                {{ tab.label }}
-              </div>
-            </div>
+      <!-- 服务列表（与官网一致） -->
+      <ServiceList12306 />
 
-            <div class="search-form">
-              <div class="form-row">
-                <div class="input-group">
-                  <label class="input-label">出发地</label>
-                  <div class="input-wrapper">
-                    <input 
-                      type="text" 
-                      v-model="searchForm.fromStation"
-                      placeholder="请输入或选择出发地"
-                      class="station-input"
-                    />
-                    <EnvironmentOutlined class="input-icon" />
-                  </div>
-                </div>
+      <!-- 服务大图（service-lg 复刻） -->
+      <ServiceLg12306 />
+      <!-- 新闻公告（newstab 复刻） -->
+      <NewsTab12306 />
 
-                <div class="input-group">
-                  <label class="input-label">到达地</label>
-                  <div class="input-wrapper">
-                    <input 
-                      type="text" 
-                      v-model="searchForm.toStation"
-                      placeholder="请输入或选择到达地"
-                      class="station-input"
-                    />
-                    <EnvironmentOutlined class="input-icon" />
-                  </div>
-                </div>
-
-                <div class="swap-btn" @click="swapStations">
-                  <SwapOutlined />
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="input-group">
-                  <label class="input-label">出发日期</label>
-                  <div class="input-wrapper">
-                    <input 
-                      type="text" 
-                      v-model="searchForm.departureDate"
-                      placeholder="请输入日期"
-                      class="date-input"
-                      readonly
-                      @click="showDatePicker = true"
-                    />
-                    <CalendarOutlined class="input-icon" />
-                  </div>
-                </div>
-
-                <div class="input-group" v-if="activeTab === 'round'">
-                    <label class="input-label">返程日期</label>
-                    <div class="input-wrapper">
-                      <input 
-                        type="text" 
-                        v-model="searchForm.returnDate"
-                        placeholder="请输入返程日期"
-                        class="date-input"
-                        readonly
-                        @click="showReturnDatePicker = true"
-                      />
-                      <CalendarOutlined class="input-icon" />
-                    </div>
-                  </div>
-
-                  <!-- 返程日期选择器 -->
-                  <div v-if="showReturnDatePicker" class="date-picker-overlay" @click="showReturnDatePicker = false">
-                    <div class="date-picker" @click.stop>
-                      <div class="date-picker-header">
-                        <h3>选择返程日期</h3>
-                        <button @click="showReturnDatePicker = false" class="close-btn">×</button>
-                      </div>
-                      <div class="date-picker-content">
-                        <div class="date-grid">
-                          <div 
-                            v-for="date in availableDates" 
-                            :key="date"
-                            class="date-item"
-                            :class="{ selected: searchForm.returnDate === date }"
-                            @click="handleReturnDateSelect(date)"
-                          >
-                            {{ dayjs(date).format('MM-DD') }}
-                            <span class="weekday">{{ dayjs(date).format('ddd') }}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                <div class="search-options">
-                  <label class="option-item">
-                    <input type="checkbox" v-model="searchForm.isStudent" />
-                    学生
-                  </label>
-                  <label class="option-item">
-                    <input type="checkbox" v-model="searchForm.isHighSpeed" />
-                    高铁/动车
-                  </label>
-                </div>
-
-                <button class="search-button" @click="handleTicketSearch">
-                  查&nbsp;&nbsp;&nbsp;&nbsp;询
-                </button>
-              </div>
-
-              <!-- 搜索历史 -->
-              <div class="search-history" v-if="searchHistory.length > 0">
-                <div class="history-header">
-                  <HistoryOutlined />
-                  <span class="history-routes">
-                    <span 
-                      v-for="(route, index) in searchHistory" 
-                      :key="index"
-                      class="history-route"
-                      @click="selectHistoryRoute(route)"
-                    >
-                      {{ route }}
-                    </span>
-                  </span>
-                  <a href="#" class="clear-history" @click="clearHistory">删除历史</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 快捷服务图标 -->
-      <div class="service-icons">
-        <div class="service-item" v-for="service in quickServices" :key="service.name" @click="handleServiceClick(service.name)">
-          <div class="service-icon">
-            <component :is="service.icon" />
-          </div>
-          <span class="service-name">{{ service.name }}</span>
-        </div>
-      </div>
-
-      <!-- 公告区域 -->
-      <div class="announcements">
-        <div class="announcement-tabs">
-          <div 
-            class="tab" 
-            :class="{ active: activeAnnouncementTab === 'latest' }"
-            @click="activeAnnouncementTab = 'latest'"
-          >
-            最新发布
-          </div>
-          <div 
-            class="tab" 
-            :class="{ active: activeAnnouncementTab === 'faq' }"
-            @click="activeAnnouncementTab = 'faq'"
-          >
-            常见问题
-          </div>
-          <div 
-            class="tab" 
-            :class="{ active: activeAnnouncementTab === 'credit' }"
-            @click="activeAnnouncementTab = 'credit'"
-          >
-            信用信息
-          </div>
-        </div>
-        
-        <div class="announcement-list">
-          <div 
-            v-for="announcement in currentAnnouncements" 
-            :key="announcement.id"
-            class="announcement-item"
-            @click="handleAnnouncementClick(announcement)"
-          >
-            <span class="announcement-type">{{ announcement.type }}</span>
-            <a href="#" class="announcement-title" @click.prevent>{{ announcement.title }}</a>
-            <span class="announcement-date">{{ announcement.date }}</span>
-          </div>
-          <div class="more-link">
-            <a href="#" @click.prevent="handleMoreAnnouncements">更多></a>
-          </div>
-        </div>
-      </div>
     </main>
 
     <!-- 页面底部 -->
@@ -338,6 +111,10 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
 import Header12306 from '../components/Header12306.vue'
+import SectionFirst12306 from '../components/SectionFirst12306.vue'
+import ServiceList12306 from '../components/ServiceList12306.vue'
+import ServiceLg12306 from '../components/ServiceLg12306.vue'
+import NewsTab12306 from '../components/NewsTab12306.vue'
 import {
   SearchOutlined,
   DownOutlined,
@@ -455,58 +232,10 @@ const quickServices = ref([
   { name: '个人中心', icon: 'UserOutlined' }
 ])
 
-// 公告标签页
-const activeAnnouncementTab = ref('latest')
 
-// 公告列表
-const announcements = ref([
-  { id: 1, type: '公 告', title: '关于铁路客运推广使用全面数字化的电子发票的公告', date: '2024-12-11' },
-  { id: 2, type: '公 告', title: '关于优化铁路车票改签规则的公告', date: '2024-11-07' },
-  { id: 3, type: '公 告', title: '外国护照身份核验使用说明', date: '2024-01-11' },
-  { id: 4, type: '公 告', title: '铁路旅客禁止、限制携带和托运物品目录', date: '2023-12-13' },
-  { id: 5, type: '公 告', title: '候补购票操作说明', date: '2023-11-30' },
-  { id: 6, type: '公 告', title: '关于铁路车站起售时间的公告', date: '2024-04-19' },
-  { id: 7, type: '公 告', title: '中国铁路成都局集团有限公司关于2025年11月7日至30日加开部分列车的公告', date: '2022-12-22' },
-  { id: 8, type: '公 告', title: '中国铁路成都局集团有限公司关于2025年11月5日至30日加开部分列车的公告', date: '2025-10-15' }
-])
 
-// 常见问题列表
-const faqList = ref([
-  { id: 1, type: '问 答', title: '如何办理铁路畅行会员？', date: '2024-12-10' },
-  { id: 2, type: '问 答', title: '候补购票如何操作？', date: '2024-12-08' },
-  { id: 3, type: '问 答', title: '学生票如何购买和使用？', date: '2024-12-05' },
-  { id: 4, type: '问 答', title: '如何办理退票和改签？', date: '2024-12-03' },
-  { id: 5, type: '问 答', title: '身份证丢失如何乘车？', date: '2024-12-01' },
-  { id: 6, type: '问 答', title: '儿童票如何购买？', date: '2024-11-28' },
-  { id: 7, type: '问 答', title: '如何查询列车正晚点信息？', date: '2024-11-25' },
-  { id: 8, type: '问 答', title: '电子客票如何使用？', date: '2024-11-22' }
-])
 
-// 信用信息列表
-const creditList = ref([
-  { id: 1, type: '信 用', title: '铁路旅客信用信息记录管理办法', date: '2024-12-09' },
-  { id: 2, type: '信 用', title: '关于在一定期限内适当限制特定严重失信人乘坐火车的意见', date: '2024-12-06' },
-  { id: 3, type: '信 用', title: '铁路安全管理条例', date: '2024-12-04' },
-  { id: 4, type: '信 用', title: '铁路旅客运输规程', date: '2024-12-02' },
-  { id: 5, type: '信 用', title: '关于加强铁路征信体系建设的通知', date: '2024-11-30' },
-  { id: 6, type: '信 用', title: '铁路客运服务质量规范', date: '2024-11-27' },
-  { id: 7, type: '信 用', title: '关于建立完善守信联合激励和失信联合惩戒制度的指导意见', date: '2024-11-24' },
-  { id: 8, type: '信 用', title: '铁路旅客信用信息管理办法实施细则', date: '2024-11-21' }
-])
 
-// 计算当前显示的公告列表
-const currentAnnouncements = computed(() => {
-  switch (activeAnnouncementTab.value) {
-    case 'latest':
-      return announcements.value
-    case 'faq':
-      return faqList.value
-    case 'credit':
-      return creditList.value
-    default:
-      return announcements.value
-  }
-})
 
 // 方法
 const handleGlobalSearch = () => {
@@ -657,30 +386,7 @@ const handleWaitlistTicket = () => {
   router.push({ name: 'waitlist-ticket' })
 }
 
-// 公告点击处理
-const handleAnnouncementClick = (announcement) => {
-  console.log('点击公告:', announcement.title)
-  // 根据公告类型跳转到相应页面
-  if (announcement.type === 'announcement') {
-    router.push({ name: 'announcement', query: { id: announcement.id } })
-  } else if (announcement.type === 'faq') {
-    router.push({ name: 'faq', query: { id: announcement.id } })
-  } else if (announcement.type === 'credit') {
-    router.push({ name: 'credit', query: { id: announcement.id } })
-  }
-}
 
-// 更多公告处理
-const handleMoreAnnouncements = () => {
-  // 根据当前激活的标签页跳转到相应页面
-  if (activeAnnouncementTab.value === 'latest') {
-    router.push({ name: 'announcement' })
-  } else if (activeAnnouncementTab.value === 'faq') {
-    router.push({ name: 'faq' })
-  } else if (activeAnnouncementTab.value === 'credit') {
-    router.push({ name: 'credit' })
-  }
-}
 
 // 页面底部链接处理
 const handleFooterLink = (linkName) => {
