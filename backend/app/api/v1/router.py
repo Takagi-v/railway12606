@@ -4,7 +4,7 @@ API v1 Router
 """
 from fastapi import APIRouter
 from app.api.v1.endpoints import auth, users, passengers, trains, orders
-from app.api.v1.endpoints import membership, points, beneficiaries, redemptions
+from app.api.v1.endpoints import membership, points, beneficiaries, redemptions, privileges, stations
 
 api_router = APIRouter()
 
@@ -69,5 +69,19 @@ api_router.include_router(
     redemptions.router,
     prefix="/redemptions",
     tags=["积分兑换"]
+)
+
+# 会员专享
+api_router.include_router(
+    privileges.router,
+    prefix="/privileges",
+    tags=["会员专享"]
+)
+
+# 站点会员服务
+api_router.include_router(
+    stations.router,
+    prefix="/stations",
+    tags=["信息查询"]
 )
 

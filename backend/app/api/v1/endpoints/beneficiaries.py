@@ -1,6 +1,10 @@
 from typing import Optional
-from fastapi import APIRouter, Header, HTTPException, status, Body
+from fastapi import APIRouter, Depends, HTTPException, status, Body
 from app.schemas.common import Response
+from sqlalchemy.orm import Session
+from app.core.security import get_current_user
+from app.models.user import User
+from app.db.session import get_db
 
 
 router = APIRouter()
@@ -8,11 +12,10 @@ router = APIRouter()
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=Response)
 async def add_beneficiary(
-    authorization: Optional[str] = Header(None),
-    body: dict = Body(...)
+    body: dict = Body(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
-    if authorization is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
     name = body.get("name")
     id_type = body.get("idType")
     id_number = body.get("idNumber")

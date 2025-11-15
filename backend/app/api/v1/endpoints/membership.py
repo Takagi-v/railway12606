@@ -1,7 +1,11 @@
-from typing import Optional, Dict, Tuple
+from typing import Dict, Tuple
 from datetime import datetime
-from fastapi import APIRouter, Header, HTTPException, status, Body
+from fastapi import APIRouter, Depends, HTTPException, status, Body, Header
+from sqlalchemy.orm import Session
 from app.schemas.common import Response
+from app.core.security import get_current_user
+from app.models.user import User
+from app.db.session import get_db
 
 
 router = APIRouter()
@@ -11,8 +15,10 @@ _applied_ids: Dict[Tuple[str, str], bool] = {}
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=Response)
 async def apply_membership(
-    authorization: Optional[str] = Header(None),
-    body: dict = Body(...)
+    body: dict = Body(...),
+    authorization: str | None = Header(None),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
     if authorization is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
@@ -39,7 +45,11 @@ async def apply_membership(
 
 
 @router.get("/me", status_code=status.HTTP_200_OK, response_model=Response)
-async def get_membership_me(authorization: Optional[str] = Header(None)):
+async def get_membership_me(
+    authorization: str | None = Header(None),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     if authorization is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
     return Response(code=200, message="OK", data={"memberId": "m_001", "status": "verified"})
