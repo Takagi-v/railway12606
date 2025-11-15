@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     # Application
     APP_NAME: str = "Railway 12306"
     DEBUG: bool = True
-    API_PREFIX: str = "/api"
+    API_PREFIX: str = "/api/v1"
     
     # Database
     DATABASE_URL: str
