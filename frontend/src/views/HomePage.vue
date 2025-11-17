@@ -18,91 +18,7 @@
 
     </main>
 
-    <!-- 页面底部 -->
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-main">
-          <div class="footer-section">
-            <h4>购票服务</h4>
-            <div class="footer-links">
-              <a href="#" @click.prevent="handleFooterLink('购票')">购票</a>
-              <a href="#" @click.prevent="handleFooterLink('改签')">改签</a>
-              <a href="#" @click.prevent="handleFooterLink('退票')">退票</a>
-              <a href="#" @click.prevent="handleFooterLink('候补购票')">候补购票</a>
-              <a href="#" @click.prevent="handleFooterLink('时刻表')">时刻表</a>
-              <a href="#" @click.prevent="handleFooterLink('正晚点')">正晚点</a>
-            </div>
-          </div>
-          
-          <div class="footer-section">
-            <h4>信息查询</h4>
-            <div class="footer-links">
-              <a href="#" @click.prevent="handleFooterLink('余票查询')">余票查询</a>
-              <a href="#" @click.prevent="handleFooterLink('订单查询')">订单查询</a>
-              <a href="#" @click.prevent="handleFooterLink('积分查询')">积分查询</a>
-              <a href="#" @click.prevent="handleFooterLink('会员服务')">会员服务</a>
-              <a href="#" @click.prevent="handleFooterLink('客服中心')">客服中心</a>
-              <a href="#" @click.prevent="handleFooterLink('投诉建议')">投诉建议</a>
-            </div>
-          </div>
-          
-          <div class="footer-section">
-            <h4>旅客服务</h4>
-            <div class="footer-links">
-              <a href="#" @click.prevent="handleFooterLink('重点旅客')">重点旅客</a>
-              <a href="#" @click.prevent="handleFooterLink('失物招领')">失物招领</a>
-              <a href="#" @click.prevent="handleFooterLink('站车服务')">站车服务</a>
-              <a href="#" @click.prevent="handleFooterLink('便民服务')">便民服务</a>
-              <a href="#" @click.prevent="handleFooterLink('约车服务')">约车服务</a>
-              <a href="#" @click.prevent="handleFooterLink('托运服务')">托运服务</a>
-            </div>
-          </div>
-          
-          <div class="footer-section">
-            <h4>友情链接</h4>
-            <div class="footer-links">
-              <a href="#" @click.prevent="handleFooterLink('中国铁路')">中国铁路</a>
-              <a href="#" @click.prevent="handleFooterLink('铁路客服')">铁路客服</a>
-              <a href="#" @click.prevent="handleFooterLink('铁路货运')">铁路货运</a>
-              <a href="#" @click.prevent="handleFooterLink('中铁快运')">中铁快运</a>
-              <a href="#" @click.prevent="handleFooterLink('高铁网')">高铁网</a>
-              <a href="#" @click.prevent="handleFooterLink('铁路论坛')">铁路论坛</a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="footer-bottom">
-          <div class="footer-qr">
-            <div class="qr-section">
-              <div class="qr-code">
-                <div class="qr-placeholder">
-                  📱
-                </div>
-              </div>
-              <span>中国铁路官方微信</span>
-            </div>
-            <div class="qr-section">
-              <div class="qr-code">
-                <div class="qr-placeholder">
-                  🚄
-                </div>
-              </div>
-              <span>铁路12306</span>
-            </div>
-          </div>
-          
-          <div class="footer-info">
-            <p>© 2024 中国铁路客户服务中心 版权所有</p>
-            <p>
-              <a href="#" @click.prevent="handleFooterLink('网站声明')">网站声明</a>
-              <a href="#" @click.prevent="handleFooterLink('法律声明')">法律声明</a>
-              <a href="#" @click.prevent="handleFooterLink('隐私政策')">隐私政策</a>
-            </p>
-            <p>技术支持：中国铁道科学研究院集团有限公司</p>
-          </div>
-        </div>
-      </div>
-    </footer>
+    <LoginFooter />
   </div>
 </template>
 
@@ -111,6 +27,7 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
 import Header12306 from '../components/Header12306.vue'
+import LoginFooter from '../components/LoginFooter.vue'
 import SectionFirst12306 from '../components/SectionFirst12306.vue'
 import ServiceList12306 from '../components/ServiceList12306.vue'
 import ServiceLg12306 from '../components/ServiceLg12306.vue'

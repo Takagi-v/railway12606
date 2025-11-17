@@ -269,12 +269,14 @@
         </div>
       </div>
     </main>
+    <LoginFooter />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import Header12306 from '@/components/Header12306.vue'
+import LoginFooter from '@/components/LoginFooter.vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useUserStore } from '@/stores/user'
