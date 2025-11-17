@@ -1,10 +1,7 @@
 <template>
   <div class="register-page">
-    
+    <Header12306 />
 
-    
-
-    <!-- 主体区域 -->
     <main class="register-main">
       <div class="main-content">
         <div class="register-container">
@@ -272,13 +269,12 @@
         </div>
       </div>
     </main>
-
-    
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
+import Header12306 from '@/components/Header12306.vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useUserStore } from '@/stores/user'

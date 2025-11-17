@@ -1,15 +1,15 @@
 <template>
   <a-config-provider :locale="zhCN" :theme="antdTheme">
     <router-view />
-    <!-- 全局浮层：右侧悬浮菜单与返回顶部（贴近官网） -->
-    <FixedRight12306 />
-    <GoToTop12306 />
+    <FixedRight12306 v-if="showFloating" />
+    <GoToTop12306 v-if="showFloating" />
   </a-config-provider>
 </template>
 
 <script setup>
 import { ConfigProvider as AConfigProvider } from "ant-design-vue";
-import { inject } from "vue";
+import { inject, computed } from "vue";
+import { useRoute } from "vue-router";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
@@ -18,8 +18,9 @@ import GoToTop12306 from './components/GoToTop12306.vue'
 
 dayjs.locale("zh-cn");
 
-// 注入主题配置
 const antdTheme = inject("antdTheme");
+const route = useRoute();
+const showFloating = computed(() => route.name === 'home');
 </script>
 
 <style>
