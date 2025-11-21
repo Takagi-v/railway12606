@@ -1,0 +1,30 @@
+@import url('https://kyfw.12306.cn/otn/resources/merged/common_css.css');
+@import url('https://kyfw.12306.cn/otn/resources/merged/queryLeftTicket_css.css');
+@import url('https://kyfw.12306.cn/otn/resources/merged/queryLeftTicket_end_css.css');
+@import url('@/assets/12306-icons/fonts/iconfont.css');
+body{font-family:"Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif}
+.leftticket-page .wrapper{width:1200px;margin:0 auto}
+.leftticket-page .sear-box.quick-sear-box.sear-box-lg{width:1190px;height:70px;padding:12px 10px;border:1px solid #298cce;box-sizing:border-box}
+.leftticket-page #dfc{width:80px;height:48px}
+.leftticket-page #place_area{width:801px;height:50px}
+.leftticket-page .quick-s{width:209px;height:58px}
+.leftticket-page .inp-txt,.leftticket-page .inp_selected{width:120px;height:30px;line-height:30px}
+.leftticket-page .i-change.i-change2#change_station{background-position:-67px -96px;cursor:pointer}
+
+/* sear-sel layout fixes (float/flex and spacing) */
+.leftticket-page .sear-sel{width:1190px;box-sizing:border-box;position:relative;margin-top:10px}
+.leftticket-page .sear-sel-hd{height:30px}
+.leftticket-page .sear-sel-hd ul{display:flex;align-items:center;flex-wrap:nowrap}
+.leftticket-page .sear-sel-hd li{flex:0 0 74px;width:74px;height:30px;line-height:30px;text-align:center;border-right:1px solid #dcdcdc;background:linear-gradient(#f6f6f6,#e9e9e9)}
+.leftticket-page .sear-sel-hd li.sel{border-top:2px solid #298cce;background:#fff}
+.leftticket-page .hide{display:none !important}
+.leftticket-page .first{display:block}
+.leftticket-page .sear-sel-bd{padding:12px 10px}
+.leftticket-page .sear-sel-bd .pos-top{float:left;margin-right:20px}
+.leftticket-page .sear-sel-bd .section{float:left;margin-right:20px}
+.leftticket-page .sear-sel-bd .section-hd{float:left;width:70px;line-height:30px}
+.leftticket-page .sear-sel-bd .section-bd{float:left}
+.leftticket-page .sear-sel-bd .section-bd ul{display:flex;flex-wrap:wrap;gap:12px}
+.leftticket-page .sear-sel-bd::after{content:"";display:block;clear:both}
+.leftticket-page .quick-gif{position:absolute;right:20px}
+.leftticket-page .clear{clear:both}
