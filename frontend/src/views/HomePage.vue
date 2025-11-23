@@ -160,37 +160,33 @@ const handleGlobalSearch = () => {
 }
 
 const swapStations = () => {
-  const temp = searchForm.value.fromStation
-  searchForm.value.fromStation = searchForm.value.toStation
-  searchForm.value.toStation = temp
+  const temp = searchForm.fromStation
+  searchForm.fromStation = searchForm.toStation
+  searchForm.toStation = temp
+}
+
+const pushToTicketPage = (name, extraQuery = {}) => {
+  router.push({
+    name,
+    query: {
+      departure_city: searchForm.fromStation,
+      arrival_city: searchForm.toStation,
+      travel_date: searchForm.departureDate,
+      ...extraQuery,
+    },
+  })
 }
 
 const handleTicketSearch = () => {
   // 根据搜索类型进行不同的处理
   switch(searchForm.searchType) {
     case 'single':
-      // 单程查询
-      router.push({
-        name: 'trains',
-        query: {
-          departure_city: searchForm.fromStation,
-          arrival_city: searchForm.toStation,
-          travel_date: searchForm.departureDate,
-          type: 'single'
-        }
-      })
+      pushToTicketPage('leftTicket-single', { type: 'single' })
       break
     case 'round':
-      // 往返查询
-      router.push({
-        name: 'trains',
-        query: {
-          departure_city: searchForm.fromStation,
-          arrival_city: searchForm.toStation,
-          travel_date: searchForm.departureDate,
-          return_date: searchForm.returnDate,
-          type: 'round'
-        }
+      pushToTicketPage('leftTicket-round', {
+        type: 'round',
+        return_date: searchForm.returnDate || dayjs(searchForm.departureDate).add(1, 'day').format('YYYY-MM-DD')
       })
       break
     case 'transfer':
@@ -203,14 +199,7 @@ const handleTicketSearch = () => {
       break
     default:
       // 默认单程查询
-      router.push({
-        name: 'trains',
-        query: {
-          departure_city: searchForm.fromStation,
-          arrival_city: searchForm.toStation,
-          travel_date: searchForm.departureDate
-        }
-      })
+      pushToTicketPage('leftTicket-single')
   }
   
   // 添加到搜索历史

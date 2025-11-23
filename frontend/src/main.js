@@ -12,6 +12,7 @@ import router from "./router";
 import "./assets/main.css";
 import "./styles/theme.css";
 import "./assets/design-system.css";
+import "./assets/12306-leftticket/leftTicket.css";
 import antdTheme from "./config/theme.js";
 
 // 权限相关

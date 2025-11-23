@@ -53,17 +53,19 @@
             </ul>
           </div>
           <div class="quick-s">
-            <ul>
-              <li>
-                <input type="radio" id="sf1" class="radio" name="sf" checked="checked" />
-                <label id="sf1_label" for="sf1" class="cursor">普通</label>
-              </li>
-              <li>
-                <input type="radio" id="sf2" class="radio" name="sf" />
-                <label id="sf2_label" for="sf2" class="cursor">学生</label>
-              </li>
-            </ul>
-            <div class="btn-area"><a style="margin-top: 12px;" href="javascript:" id="query_ticket" class="btn92s" shape="rect" @click.prevent="search">查询</a></div>
+            <div class="quick-s-inner">
+              <ul>
+                <li>
+                  <input type="radio" id="sf1" class="radio" name="sf" checked="checked" />
+                  <label id="sf1_label" for="sf1" class="cursor">普通</label>
+                </li>
+                <li>
+                  <input type="radio" id="sf2" class="radio" name="sf" />
+                  <label id="sf2_label" for="sf2" class="cursor">学生</label>
+                </li>
+              </ul>
+              <div class="btn-area quick-s-btn"><a style="margin-top: 12px;" href="javascript:" id="query_ticket" class="btn92s" shape="rect" @click.prevent="search">查询</a></div>
+            </div>
           </div>
         </form>
       </div>
@@ -337,10 +339,11 @@ import dayjs from 'dayjs'
 import { message } from 'ant-design-vue'
 import Header12306 from '@/components/Header12306.vue'
 import Footer from '@/components/LoginFooter.vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { searchTrains } from '@/api/train'
 
 const router = useRouter()
+const route = useRoute()
 
 const showTicketPrice = (train) => {
   console.log('Show price for', train.station_train_code)
@@ -546,6 +549,13 @@ const search = async () => {
   }
 }
 
+const updateActiveDateByGoDate = () => {
+  const diff = dayjs(goDate.value).startOf('day').diff(dayjs().startOf('day'), 'day')
+  if (diff >= 0 && diff < dateTabs.value.length) {
+    activeDate.value = diff
+  }
+}
+
 const selectDate = (i) => {
   activeDate.value = i
   const d = dateTabs.value[i].dateObj
@@ -572,13 +582,52 @@ const toggleFilters = () => {
   filtersExpanded.value = !filtersExpanded.value
 }
 
+const pickQueryValue = (value) => (Array.isArray(value) ? value[0] : value)
+
+const syncFromRoute = () => {
+  let changed = false
+  const routeFrom = pickQueryValue(route.query.departure_city)
+  const routeTo = pickQueryValue(route.query.arrival_city)
+  const routeDate = pickQueryValue(route.query.travel_date)
+
+  if (routeFrom && routeFrom !== from.value) {
+    from.value = routeFrom
+    changed = true
+  }
+  if (routeTo && routeTo !== to.value) {
+    to.value = routeTo
+    changed = true
+  }
+  if (routeDate && dayjs(routeDate, 'YYYY-MM-DD', true).isValid()) {
+    const parsed = dayjs(routeDate).toDate()
+    if (parsed.toDateString() !== goDate.value.toDateString()) {
+      goDate.value = parsed
+      updateActiveDateByGoDate()
+      changed = true
+    }
+  }
+  return changed
+}
+
 watch(filterTime, () => {
   if (rawTrains.value.length) {
     search()
   }
 })
 
+watch(
+  () => route.query,
+  () => {
+    const changed = syncFromRoute()
+    if (changed) {
+      search()
+    }
+  }
+)
+
 onMounted(() => {
+  syncFromRoute()
+  updateActiveDateByGoDate()
   search()
 })
 </script>
@@ -600,4 +649,7 @@ onMounted(() => {
   text-decoration: none;
 }
 .leftticket-page .wrapper{width:1200px;margin:0 auto}
+.quick-s-inner{display:flex;align-items:center;justify-content:space-between}
+.quick-s-inner ul{flex:1}
+.quick-s-btn{margin-left:20px}
 </style>
