@@ -51,7 +51,6 @@
       </li>
     </ul>
   </div>
-  
 </template>
 
 <script setup>
@@ -76,49 +75,98 @@ const goFeedback = () => router.push({ name: 'user-feedback' })
 <style scoped>
 /* 复刻官网 service-list 样式 */
 .service-list:before,
-.service-list:after { content:""; display:table; }
-.service-list:after { clear:both; overflow:hidden; }
-
-.service-list li { 
-  float:left; 
-  width:14.2%; 
-  height:136px; 
-  padding:35px 0; 
-  line-height:20px; 
-  text-align:center; 
-  background-image:url('/assets/12306/images/line01.png');
-  background-image:-webkit-image-set( url('/assets/12306/images/line01.png') 1x, url('/assets/12306/images/line01@2x.png') 2x );
-  background-image:image-set( url('/assets/12306/images/line01.png') 1x, url('/assets/12306/images/line01@2x.png') 2x );
-  background-position:right center; 
-  background-repeat:no-repeat; 
+.service-list:after {
+  content: '';
+  display: table;
 }
-.service-list li a { display:block; height:66px; transition:0.3s linear color; color:#333; }
-.service-list li:hover .service-icon { opacity:0.8; }
-.service-list .last { background:none; }
+.service-list:after {
+  clear: both;
+  overflow: hidden;
+}
 
-.service-list .service-icon { 
-  display:block; 
-  width:36px; 
-  height:36px; 
-  margin:0 auto 5px; 
-  transition:0.3s linear opacity; 
-  background-image:url('/assets/12306/images/service.png');
-  background-image:-webkit-image-set( url('/assets/12306/images/service.png') 1x, url('/assets/12306/images/service@2x.png') 2x );
-  background-image:image-set( url('/assets/12306/images/service.png') 1x, url('/assets/12306/images/service@2x.png') 2x );
+.service-list li {
+  float: left;
+  width: 14.2%;
+  height: 136px;
+  padding: 35px 0;
+  line-height: 20px;
+  text-align: center;
+  background-image: url('/assets/12306/images/line01.png');
+  background-image: -webkit-image-set(
+    url('/assets/12306/images/line01.png') 1x,
+    url('/assets/12306/images/line01@2x.png') 2x
+  );
+  background-image: image-set(
+    url('/assets/12306/images/line01.png') 1x,
+    url('/assets/12306/images/line01@2x.png') 2x
+  );
+  background-position: right center;
+  background-repeat: no-repeat;
+}
+.service-list li a {
+  display: block;
+  height: 66px;
+  transition: 0.3s linear color;
+  color: #333;
+}
+.service-list li:hover .service-icon {
+  opacity: 0.8;
+}
+.service-list .last {
+  background: none;
+}
+
+.service-list .service-icon {
+  display: block;
+  width: 36px;
+  height: 36px;
+  margin: 0 auto 5px;
+  transition: 0.3s linear opacity;
+  background-image: url('/assets/12306/images/service.png');
+  background-image: -webkit-image-set(
+    url('/assets/12306/images/service.png') 1x,
+    url('/assets/12306/images/service@2x.png') 2x
+  );
+  background-image: image-set(
+    url('/assets/12306/images/service.png') 1x,
+    url('/assets/12306/images/service@2x.png') 2x
+  );
 }
 
 /* 精确定位雪碧图各图标位置 */
-.service-list .ico-s1 { background-position:0 0; }
-.service-list .ico-s2 { background-position:0 -40px; }
-.service-list .ico-s3 { background-position:0 -80px; }
-.service-list .ico-s4 { background-position:0 -120px; }
-.service-list .ico-s5 { background-position:0 -160px; }
-.service-list .ico-s6 { background-position:0 -200px; }
-.service-list .ico-s7 { background-position:0 -240px; }
-.service-list .ico-s8 { background-position:0 -280px; }
-.service-list .ico-s9 { background-position:0 -320px; }
-.service-list .ico-s10 { background-position:0 -360px; }
+.service-list .ico-s1 {
+  background-position: 0 0;
+}
+.service-list .ico-s2 {
+  background-position: 0 -40px;
+}
+.service-list .ico-s3 {
+  background-position: 0 -80px;
+}
+.service-list .ico-s4 {
+  background-position: 0 -120px;
+}
+.service-list .ico-s5 {
+  background-position: 0 -160px;
+}
+.service-list .ico-s6 {
+  background-position: 0 -200px;
+}
+.service-list .ico-s7 {
+  background-position: 0 -240px;
+}
+.service-list .ico-s8 {
+  background-position: 0 -280px;
+}
+.service-list .ico-s9 {
+  background-position: 0 -320px;
+}
+.service-list .ico-s10 {
+  background-position: 0 -360px;
+}
 
 /* 区块容器（与首页节距保持协调） */
-.section-service { margin-top: 20px; }
+.section-service {
+  margin-top: 20px;
+}
 </style>

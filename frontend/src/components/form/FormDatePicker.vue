@@ -34,7 +34,7 @@
       @panel-change="handlePanelChange"
       @open-change="handleOpenChange"
     />
-    
+
     <a-range-picker
       v-else-if="type === 'range'"
       v-model:value="dateValue"
@@ -61,7 +61,7 @@
       @open-change="handleOpenChange"
       @calendar-change="handleCalendarChange"
     />
-    
+
     <a-time-picker
       v-else-if="type === 'time'"
       v-model:value="dateValue"
@@ -106,7 +106,7 @@ const props = defineProps({
   type: {
     type: String,
     default: 'date',
-    validator: (value) => ['date', 'range', 'time'].includes(value)
+    validator: value => ['date', 'range', 'time'].includes(value)
   },
   // 日期值
   modelValue: {
@@ -143,7 +143,7 @@ const props = defineProps({
   validateStatus: {
     type: String,
     default: '',
-    validator: (value) => ['', 'success', 'warning', 'error', 'validating'].includes(value)
+    validator: value => ['', 'success', 'warning', 'error', 'validating'].includes(value)
   },
   // 是否显示反馈图标
   hasFeedback: {
@@ -159,7 +159,7 @@ const props = defineProps({
   size: {
     type: String,
     default: 'middle',
-    validator: (value) => ['small', 'middle', 'large'].includes(value)
+    validator: value => ['small', 'middle', 'large'].includes(value)
   },
   // 显示格式
   format: {
@@ -200,7 +200,7 @@ const props = defineProps({
   picker: {
     type: String,
     default: 'date',
-    validator: (value) => ['date', 'week', 'month', 'quarter', 'year'].includes(value)
+    validator: value => ['date', 'week', 'month', 'quarter', 'year'].includes(value)
   },
   // 面板模式
   mode: {
@@ -281,18 +281,15 @@ const computedPlaceholder = computed(() => {
 // 监听外部值变化
 watch(
   () => props.modelValue,
-  (newValue) => {
+  newValue => {
     dateValue.value = newValue
   }
 )
 
 // 监听内部值变化
-watch(
-  dateValue,
-  (newValue) => {
-    emit('update:modelValue', newValue)
-  }
-)
+watch(dateValue, newValue => {
+  emit('update:modelValue', newValue)
+})
 
 // 处理日期变化
 const handleChange = (date, dateString) => {
@@ -300,7 +297,7 @@ const handleChange = (date, dateString) => {
 }
 
 // 处理确定
-const handleOk = (date) => {
+const handleOk = date => {
   emit('ok', date)
 }
 
@@ -310,7 +307,7 @@ const handlePanelChange = (value, mode) => {
 }
 
 // 处理打开状态变化
-const handleOpenChange = (open) => {
+const handleOpenChange = open => {
   emit('openChange', open)
 }
 
@@ -409,7 +406,13 @@ const handleCalendarChange = (dates, dateStrings, info) => {
   color: var(--text-color);
 }
 
-.form-date-picker :deep(.ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end)) .ant-picker-cell-inner {
+.form-date-picker
+  :deep(
+    .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(
+        .ant-picker-cell-range-end
+      ):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end)
+  )
+  .ant-picker-cell-inner {
   background-color: var(--background-color-light);
 }
 

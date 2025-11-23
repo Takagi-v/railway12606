@@ -177,7 +177,10 @@
                 </a-col>
                 <a-col :span="8">
                   <a-form-item label="接收通知" name="notifications">
-                    <a-checkbox-group v-model:value="demoFormData.notifications" class="checkbox-railway">
+                    <a-checkbox-group
+                      v-model:value="demoFormData.notifications"
+                      class="checkbox-railway"
+                    >
                       <a-checkbox value="email">邮件</a-checkbox>
                       <a-checkbox value="sms">短信</a-checkbox>
                       <a-checkbox value="push">推送</a-checkbox>
@@ -218,12 +221,8 @@
                 <a-button type="primary" html-type="submit" class="btn-railway-primary">
                   提交表单
                 </a-button>
-                <a-button html-type="reset">
-                  重置表单
-                </a-button>
-                <a-button @click="fillDemoData">
-                  填充示例数据
-                </a-button>
+                <a-button html-type="reset">重置表单</a-button>
+                <a-button @click="fillDemoData">填充示例数据</a-button>
               </a-space>
             </template>
           </BaseForm>
@@ -306,12 +305,8 @@ const demoRules = {
     { required: true, message: '请输入手机号', trigger: 'blur' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' }
   ],
-  city: [
-    { required: true, message: '请选择城市', trigger: 'change' }
-  ],
-  birthday: [
-    { required: true, message: '请选择生日', trigger: 'change' }
-  ]
+  city: [{ required: true, message: '请选择城市', trigger: 'change' }],
+  birthday: [{ required: true, message: '请选择生日', trigger: 'change' }]
 }
 
 // 选项数据
@@ -338,7 +333,7 @@ const hobbyOptions = [
 ]
 
 // 事件处理
-const handleDemoSubmit = (values) => {
+const handleDemoSubmit = values => {
   console.log('表单提交数据:', values)
   message.success('表单提交成功！')
 }
@@ -381,7 +376,7 @@ const fillDemoData = () => {
   text-align: center;
   margin-bottom: 48px;
   padding: 48px 0;
-  background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
   color: white;
   border-radius: 8px;
 }
@@ -463,19 +458,19 @@ const fillDemoData = () => {
   .form-demo {
     padding: 16px;
   }
-  
+
   .demo-header {
     padding: 32px 16px;
   }
-  
+
   .demo-header h1 {
     font-size: 24px;
   }
-  
+
   .demo-card {
     padding: 24px 16px;
   }
-  
+
   .color-palette {
     justify-content: center;
   }

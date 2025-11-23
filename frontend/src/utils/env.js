@@ -43,20 +43,20 @@ export const ENV_CONFIG = {
   // API 配置
   API_BASE_URL: getEnv('VITE_API_BASE_URL', '/api'),
   REQUEST_TIMEOUT: getNumberEnv('VITE_REQUEST_TIMEOUT', 30000),
-  
+
   // 应用配置
   APP_TITLE: getEnv('VITE_APP_TITLE', '中国铁路12306'),
   APP_VERSION: getEnv('VITE_APP_VERSION', '1.0.0'),
   NODE_ENV: getEnv('VITE_NODE_ENV', 'development'),
-  
+
   // 功能开关
   DEBUG: getBooleanEnv('VITE_DEBUG', false),
   USE_MOCK: getBooleanEnv('VITE_USE_MOCK', false),
-  
+
   // 业务配置
   UPLOAD_SIZE_LIMIT: getNumberEnv('VITE_UPLOAD_SIZE_LIMIT', 10),
   PAGE_SIZE: getNumberEnv('VITE_PAGE_SIZE', 20),
-  TOKEN_EXPIRE_HOURS: getNumberEnv('VITE_TOKEN_EXPIRE_HOURS', 24),
+  TOKEN_EXPIRE_HOURS: getNumberEnv('VITE_TOKEN_EXPIRE_HOURS', 24)
 }
 
 // 开发环境检查

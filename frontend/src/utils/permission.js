@@ -2,26 +2,26 @@
  * Permission Utilities
  * 权限工具类
  */
-import { usePermissionStore } from "@/stores/permission";
-import { useUserStore } from "@/stores/user";
-import { PERMISSIONS, ROLES } from "@/api/permission";
+import { usePermissionStore } from '@/stores/permission'
+import { useUserStore } from '@/stores/user'
+import { PERMISSIONS, ROLES } from '@/api/permission'
 
 /**
  * 权限检查工具类
  */
 export class PermissionChecker {
   constructor() {
-    this.permissionStore = null;
-    this.userStore = null;
+    this.permissionStore = null
+    this.userStore = null
   }
 
   // 初始化store实例
   _initStores() {
     if (!this.permissionStore) {
-      this.permissionStore = usePermissionStore();
+      this.permissionStore = usePermissionStore()
     }
     if (!this.userStore) {
-      this.userStore = useUserStore();
+      this.userStore = useUserStore()
     }
   }
 
@@ -31,24 +31,24 @@ export class PermissionChecker {
    * @param {string} mode - 检查模式：'any'(任一) 或 'all'(全部)
    * @returns {boolean}
    */
-  hasPermission(permissions, mode = "any") {
-    this._initStores();
+  hasPermission(permissions, mode = 'any') {
+    this._initStores()
 
     if (!this.userStore.isAuthenticated) {
-      return false;
+      return false
     }
 
-    if (typeof permissions === "string") {
-      return this.permissionStore.hasPermission(permissions);
+    if (typeof permissions === 'string') {
+      return this.permissionStore.hasPermission(permissions)
     }
 
     if (Array.isArray(permissions)) {
-      return mode === "all"
+      return mode === 'all'
         ? this.permissionStore.hasAllPermissions(permissions)
-        : this.permissionStore.hasAnyPermission(permissions);
+        : this.permissionStore.hasAnyPermission(permissions)
     }
 
-    return false;
+    return false
   }
 
   /**
@@ -57,24 +57,24 @@ export class PermissionChecker {
    * @param {string} mode - 检查模式：'any'(任一) 或 'all'(全部)
    * @returns {boolean}
    */
-  hasRole(roles, mode = "any") {
-    this._initStores();
+  hasRole(roles, mode = 'any') {
+    this._initStores()
 
     if (!this.userStore.isAuthenticated) {
-      return false;
+      return false
     }
 
-    if (typeof roles === "string") {
-      return this.permissionStore.hasRole(roles);
+    if (typeof roles === 'string') {
+      return this.permissionStore.hasRole(roles)
     }
 
     if (Array.isArray(roles)) {
-      return mode === "all"
+      return mode === 'all'
         ? this.permissionStore.hasAllRoles(roles)
-        : this.permissionStore.hasAnyRole(roles);
+        : this.permissionStore.hasAnyRole(roles)
     }
 
-    return false;
+    return false
   }
 
   /**
@@ -82,8 +82,8 @@ export class PermissionChecker {
    * @returns {boolean}
    */
   isAdmin() {
-    this._initStores();
-    return this.permissionStore.isAdmin;
+    this._initStores()
+    return this.permissionStore.isAdmin
   }
 
   /**
@@ -91,8 +91,8 @@ export class PermissionChecker {
    * @returns {boolean}
    */
   isSuperAdmin() {
-    this._initStores();
-    return this.permissionStore.isSuperAdmin;
+    this._initStores()
+    return this.permissionStore.isSuperAdmin
   }
 
   /**
@@ -102,8 +102,8 @@ export class PermissionChecker {
    * @returns {boolean}
    */
   canAccess(resource, action) {
-    const permissionCode = `${resource}:${action}`;
-    return this.hasPermission(permissionCode);
+    const permissionCode = `${resource}:${action}`
+    return this.hasPermission(permissionCode)
   }
 
   /**
@@ -112,7 +112,7 @@ export class PermissionChecker {
    * @returns {boolean}
    */
   canManage(resource) {
-    return this.canAccess(resource, "manage") || this.isSuperAdmin();
+    return this.canAccess(resource, 'manage') || this.isSuperAdmin()
   }
 }
 
@@ -126,24 +126,24 @@ export class PermissionDecorator {
    * @param {string} mode - 检查模式
    * @returns {Function}
    */
-  static requirePermissions(permissions, mode = "any") {
+  static requirePermissions(permissions, mode = 'any') {
     return function (target, propertyKey, descriptor) {
-      const originalMethod = descriptor.value;
+      const originalMethod = descriptor.value
 
       descriptor.value = function (...args) {
-        const checker = new PermissionChecker();
+        const checker = new PermissionChecker()
 
         if (!checker.hasPermission(permissions, mode)) {
           throw new Error(
-            `权限不足：需要权限 ${Array.isArray(permissions) ? permissions.join(", ") : permissions}`,
-          );
+            `权限不足：需要权限 ${Array.isArray(permissions) ? permissions.join(', ') : permissions}`
+          )
         }
 
-        return originalMethod.apply(this, args);
-      };
+        return originalMethod.apply(this, args)
+      }
 
-      return descriptor;
-    };
+      return descriptor
+    }
   }
 
   /**
@@ -152,24 +152,22 @@ export class PermissionDecorator {
    * @param {string} mode - 检查模式
    * @returns {Function}
    */
-  static requireRoles(roles, mode = "any") {
+  static requireRoles(roles, mode = 'any') {
     return function (target, propertyKey, descriptor) {
-      const originalMethod = descriptor.value;
+      const originalMethod = descriptor.value
 
       descriptor.value = function (...args) {
-        const checker = new PermissionChecker();
+        const checker = new PermissionChecker()
 
         if (!checker.hasRole(roles, mode)) {
-          throw new Error(
-            `权限不足：需要角色 ${Array.isArray(roles) ? roles.join(", ") : roles}`,
-          );
+          throw new Error(`权限不足：需要角色 ${Array.isArray(roles) ? roles.join(', ') : roles}`)
         }
 
-        return originalMethod.apply(this, args);
-      };
+        return originalMethod.apply(this, args)
+      }
 
-      return descriptor;
-    };
+      return descriptor
+    }
   }
 }
 
@@ -184,30 +182,30 @@ export class PermissionGuard {
    * @returns {boolean}
    */
   static checkRoutePermission(route, user) {
-    const checker = new PermissionChecker();
+    const checker = new PermissionChecker()
 
     // 如果路由没有权限要求，允许访问
     if (!route.meta?.permissions && !route.meta?.roles) {
-      return true;
+      return true
     }
 
     // 检查权限要求
     if (route.meta.permissions) {
-      const mode = route.meta.permissionMode || "any";
+      const mode = route.meta.permissionMode || 'any'
       if (!checker.hasPermission(route.meta.permissions, mode)) {
-        return false;
+        return false
       }
     }
 
     // 检查角色要求
     if (route.meta.roles) {
-      const mode = route.meta.roleMode || "any";
+      const mode = route.meta.roleMode || 'any'
       if (!checker.hasRole(route.meta.roles, mode)) {
-        return false;
+        return false
       }
     }
 
-    return true;
+    return true
   }
 
   /**
@@ -216,21 +214,21 @@ export class PermissionGuard {
    * @returns {string}
    */
   static getPermissionError(route) {
-    const errors = [];
+    const errors = []
 
     if (route.meta?.permissions) {
       errors.push(
-        `需要权限: ${Array.isArray(route.meta.permissions) ? route.meta.permissions.join(", ") : route.meta.permissions}`,
-      );
+        `需要权限: ${Array.isArray(route.meta.permissions) ? route.meta.permissions.join(', ') : route.meta.permissions}`
+      )
     }
 
     if (route.meta?.roles) {
       errors.push(
-        `需要角色: ${Array.isArray(route.meta.roles) ? route.meta.roles.join(", ") : route.meta.roles}`,
-      );
+        `需要角色: ${Array.isArray(route.meta.roles) ? route.meta.roles.join(', ') : route.meta.roles}`
+      )
     }
 
-    return errors.join("; ") || "权限不足";
+    return errors.join('; ') || '权限不足'
   }
 }
 
@@ -244,28 +242,28 @@ export class PermissionDirective {
    * @returns {boolean}
    */
   static shouldShow(binding) {
-    const checker = new PermissionChecker();
-    const { value, modifiers } = binding;
+    const checker = new PermissionChecker()
+    const { value, modifiers } = binding
 
-    if (!value) return true;
+    if (!value) return true
 
     // 检查权限
     if (value.permissions) {
-      const mode = modifiers.all ? "all" : "any";
+      const mode = modifiers.all ? 'all' : 'any'
       if (!checker.hasPermission(value.permissions, mode)) {
-        return false;
+        return false
       }
     }
 
     // 检查角色
     if (value.roles) {
-      const mode = modifiers.all ? "all" : "any";
+      const mode = modifiers.all ? 'all' : 'any'
       if (!checker.hasRole(value.roles, mode)) {
-        return false;
+        return false
       }
     }
 
-    return true;
+    return true
   }
 }
 
@@ -278,7 +276,7 @@ export const permissionUtils = {
    * @returns {PermissionChecker}
    */
   createChecker() {
-    return new PermissionChecker();
+    return new PermissionChecker()
   },
 
   /**
@@ -287,9 +285,9 @@ export const permissionUtils = {
    * @param {string} mode - 检查模式
    * @returns {boolean}
    */
-  check(permissions, mode = "any") {
-    const checker = new PermissionChecker();
-    return checker.hasPermission(permissions, mode);
+  check(permissions, mode = 'any') {
+    const checker = new PermissionChecker()
+    return checker.hasPermission(permissions, mode)
   },
 
   /**
@@ -298,9 +296,9 @@ export const permissionUtils = {
    * @param {string} mode - 检查模式
    * @returns {boolean}
    */
-  checkRole(roles, mode = "any") {
-    const checker = new PermissionChecker();
-    return checker.hasRole(roles, mode);
+  checkRole(roles, mode = 'any') {
+    const checker = new PermissionChecker()
+    return checker.hasRole(roles, mode)
   },
 
   /**
@@ -308,8 +306,8 @@ export const permissionUtils = {
    * @returns {boolean}
    */
   isAdmin() {
-    const checker = new PermissionChecker();
-    return checker.isAdmin();
+    const checker = new PermissionChecker()
+    return checker.isAdmin()
   },
 
   /**
@@ -317,8 +315,8 @@ export const permissionUtils = {
    * @returns {boolean}
    */
   isSuperAdmin() {
-    const checker = new PermissionChecker();
-    return checker.isSuperAdmin();
+    const checker = new PermissionChecker()
+    return checker.isSuperAdmin()
   },
 
   /**
@@ -327,8 +325,8 @@ export const permissionUtils = {
    * @returns {string}
    */
   getPermissionName(permissionCode) {
-    const permissionStore = usePermissionStore();
-    return permissionStore.permissionUtils.formatPermissionName(permissionCode);
+    const permissionStore = usePermissionStore()
+    return permissionStore.permissionUtils.formatPermissionName(permissionCode)
   },
 
   /**
@@ -337,8 +335,8 @@ export const permissionUtils = {
    * @returns {string}
    */
   getRoleName(roleName) {
-    const permissionStore = usePermissionStore();
-    return permissionStore.permissionUtils.formatRoleName(roleName);
+    const permissionStore = usePermissionStore()
+    return permissionStore.permissionUtils.formatRoleName(roleName)
   },
 
   /**
@@ -349,13 +347,13 @@ export const permissionUtils = {
   /**
    * 角色常量
    */
-  ROLES,
-};
+  ROLES
+}
 
 // 导出单例实例
-export const permissionChecker = new PermissionChecker();
-export const permissionGuard = PermissionGuard;
-export const permissionDirective = PermissionDirective;
+export const permissionChecker = new PermissionChecker()
+export const permissionGuard = PermissionGuard
+export const permissionDirective = PermissionDirective
 
 // 默认导出
 export default {
@@ -366,5 +364,5 @@ export default {
   permissionUtils,
   permissionChecker,
   permissionGuard,
-  permissionDirective,
-};
+  permissionDirective
+}

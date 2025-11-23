@@ -5,9 +5,7 @@
       <div class="content-wrapper">
         <a-card title="订单填写">
           <a-empty description="订单创建功能待实现">
-            <a-button type="primary" @click="router.push('/')"
-              >返回首页</a-button
-            >
+            <a-button type="primary" @click="router.push('/')">返回首页</a-button>
           </a-empty>
         </a-card>
       </div>
@@ -17,11 +15,11 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
-import AppHeader from "@/components/AppHeader.vue";
-import AppFooter from "@/components/AppFooter.vue";
+import { useRouter } from 'vue-router'
+import AppHeader from '@/components/AppHeader.vue'
+import AppFooter from '@/components/AppFooter.vue'
 
-const router = useRouter();
+const router = useRouter()
 </script>
 
 <style scoped>

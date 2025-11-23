@@ -7,20 +7,20 @@
 </template>
 
 <script setup>
-import { ConfigProvider as AConfigProvider } from "ant-design-vue";
-import { inject, computed } from "vue";
-import { useRoute } from "vue-router";
-import zhCN from "ant-design-vue/es/locale/zh_CN";
-import dayjs from "dayjs";
-import "dayjs/locale/zh-cn";
+import { ConfigProvider as AConfigProvider } from 'ant-design-vue'
+import { inject, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import zhCN from 'ant-design-vue/es/locale/zh_CN'
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
 import FixedRight12306 from './components/FixedRight12306.vue'
 import GoToTop12306 from './components/GoToTop12306.vue'
 
-dayjs.locale("zh-cn");
+dayjs.locale('zh-cn')
 
-const antdTheme = inject("antdTheme");
-const route = useRoute();
-const showFloating = computed(() => route.name === 'home');
+const antdTheme = inject('antdTheme')
+const route = useRoute()
+const showFloating = computed(() => route.name === 'home')
 </script>
 
 <style>
@@ -32,9 +32,8 @@ const showFloating = computed(() => route.name === 'home');
 
 body {
   font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 </style>
 

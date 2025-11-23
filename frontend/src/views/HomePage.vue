@@ -15,7 +15,6 @@
       <ServiceLg12306 />
       <!-- 新闻公告（newstab 复刻） -->
       <NewsTab12306 />
-
     </main>
 
     <LoginFooter />
@@ -99,7 +98,7 @@ const searchTabs = ref([
 ])
 
 // 监听标签页切换
-const handleTabChange = (tabKey) => {
+const handleTabChange = tabKey => {
   activeTab.value = tabKey
   searchForm.searchType = tabKey
 }
@@ -120,12 +119,12 @@ const showDatePicker = ref(false)
 const showReturnDatePicker = ref(false)
 
 // 日期选择处理
-const handleDateSelect = (date) => {
+const handleDateSelect = date => {
   searchForm.departureDate = date
   showDatePicker.value = false
 }
 
-const handleReturnDateSelect = (date) => {
+const handleReturnDateSelect = date => {
   searchForm.returnDate = date
   showReturnDatePicker.value = false
 }
@@ -149,11 +148,6 @@ const quickServices = ref([
   { name: '个人中心', icon: 'UserOutlined' }
 ])
 
-
-
-
-
-
 // 方法
 const handleGlobalSearch = () => {
   console.log('全局搜索:', searchKeyword.value)
@@ -167,7 +161,7 @@ const swapStations = () => {
 
 const handleTicketSearch = () => {
   // 根据搜索类型进行不同的处理
-  switch(searchForm.searchType) {
+  switch (searchForm.searchType) {
     case 'single':
       // 单程查询
       router.push({
@@ -212,7 +206,7 @@ const handleTicketSearch = () => {
         }
       })
   }
-  
+
   // 添加到搜索历史
   const route = `${searchForm.fromStation}-${searchForm.toStation}`
   if (!searchHistory.value.includes(route)) {
@@ -223,7 +217,7 @@ const handleTicketSearch = () => {
   }
 }
 
-const selectHistoryRoute = (route) => {
+const selectHistoryRoute = route => {
   const [from, to] = route.split('-')
   searchForm.value.fromStation = from
   searchForm.value.toStation = to
@@ -243,7 +237,7 @@ const handleRegister = () => {
 }
 
 const handleMyAccount = () => {
-  router.push('/user/profile')
+  router.push({ path: '/user/profile', query: { group: '个人中心' } })
 }
 
 const handleOrderInquiry = () => {
@@ -255,7 +249,7 @@ const handlePassengerManagement = () => {
 }
 
 const handlePersonalCenter = () => {
-  router.push('/user/profile')
+  router.push({ path: '/user/profile', query: { group: '个人中心' } })
 }
 
 // 重点旅客预约服务
@@ -303,10 +297,8 @@ const handleWaitlistTicket = () => {
   router.push({ name: 'waitlist-ticket' })
 }
 
-
-
 // 页面底部链接处理
-const handleFooterLink = (linkName) => {
+const handleFooterLink = linkName => {
   console.log('点击底部链接:', linkName)
   // 这里可以根据不同的链接进行相应的跳转或处理
   switch (linkName) {
@@ -358,8 +350,8 @@ const handleFooterLink = (linkName) => {
 }
 
 // 处理快捷服务点击
-const handleServiceClick = (serviceName) => {
-  switch(serviceName) {
+const handleServiceClick = serviceName => {
+  switch (serviceName) {
     case '订单查询':
       handleOrderInquiry()
       break
@@ -402,8 +394,8 @@ const handleServiceClick = (serviceName) => {
 }
 
 // 主导航菜单功能
-const handleMainNavClick = (navItem) => {
-  switch(navItem) {
+const handleMainNavClick = navItem => {
+  switch (navItem) {
     case '首页':
       router.push('/')
       break
@@ -440,7 +432,7 @@ const handleMainNavClick = (navItem) => {
 onMounted(() => {
   // 设置当前日期
   searchForm.departureDate = dayjs().format('YYYY-MM-DD')
-  
+
   // 启动轮播图自动播放
   startCarouselAutoPlay()
 })
@@ -462,7 +454,7 @@ const stopCarouselAutoPlay = () => {
 }
 
 // 手动点击指示器时暂停自动播放
-const handleIndicatorClick = (index) => {
+const handleIndicatorClick = index => {
   currentSlide.value = index
   stopCarouselAutoPlay()
   // 3秒后重新开始自动播放
@@ -475,7 +467,9 @@ const handleIndicatorClick = (index) => {
 <style scoped>
 /* 12306官网样式复刻 */
 .railway-homepage {
-  font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  font-family:
+    'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    'WenQuanYi Micro Hei', sans-serif;
   font-size: 14px;
   color: #333;
   background: #fff;
@@ -623,7 +617,7 @@ const handleIndicatorClick = (index) => {
   left: 0;
   background: #fff;
   border: 1px solid #e5e5e5;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   min-width: 120px;
   z-index: 1000;
   display: none;
@@ -725,7 +719,7 @@ const handleIndicatorClick = (index) => {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.5);
+  background: rgba(255, 255, 255, 0.5);
   color: #fff;
   display: flex;
   align-items: center;
@@ -1071,7 +1065,7 @@ const handleIndicatorClick = (index) => {
 .quick-services {
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
@@ -1106,13 +1100,13 @@ const handleIndicatorClick = (index) => {
     height: 280px;
     flex-direction: column;
   }
-  
+
   .embedded-search-form {
     width: calc(100% - 40px);
     height: auto;
     max-height: calc(100% - 40px);
   }
-  
+
   .carousel-indicators {
     bottom: 10px;
     right: 10px;
@@ -1123,17 +1117,17 @@ const handleIndicatorClick = (index) => {
   .carousel-container {
     height: 320px;
   }
-  
+
   .embedded-search-form {
     margin: 10px;
     width: calc(100% - 20px);
   }
-  
+
   .embedded-search-form .form-row {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .embedded-search-form .swap-btn {
     align-self: center;
     margin: 8px 0;
@@ -1204,17 +1198,17 @@ const handleIndicatorClick = (index) => {
     gap: 10px;
     padding: 0 10px;
   }
-  
+
   .service-item {
     padding: 15px 8px;
   }
-  
+
   .service-icon {
     width: 40px;
     height: 40px;
     font-size: 20px;
   }
-  
+
   .service-name {
     font-size: 12px;
   }
@@ -1224,7 +1218,7 @@ const handleIndicatorClick = (index) => {
 .announcements {
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
@@ -1406,17 +1400,17 @@ const handleIndicatorClick = (index) => {
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .footer-bottom {
     flex-direction: column;
     gap: 20px;
     text-align: center;
   }
-  
+
   .footer-info {
     text-align: center;
   }
-  
+
   .footer-qr {
     justify-content: center;
   }
@@ -1429,25 +1423,25 @@ const handleIndicatorClick = (index) => {
     height: auto;
     padding: 20px 0;
   }
-  
+
   .search-section {
     margin: 20px 0;
     max-width: 100%;
   }
-  
+
   .nav-menu {
     flex-wrap: wrap;
   }
-  
+
   .form-row {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .service-icons {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   .footer-content {
     flex-direction: column;
     gap: 20px;

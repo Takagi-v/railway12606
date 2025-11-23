@@ -43,7 +43,10 @@ onBeforeUnmount(() => {
   transition: 0.6s linear opacity;
   z-index: 1100;
 }
-.gototop.visible { opacity: 1; visibility: visible; }
+.gototop.visible {
+  opacity: 1;
+  visibility: visible;
+}
 
 .js-gotop {
   display: flex; /* 让内部图标在容器中居中 */
@@ -56,7 +59,9 @@ onBeforeUnmount(() => {
   box-shadow: none;
   border-radius: 0;
 }
-.js-gotop:hover .icon-gotop { opacity: 0.85; }
+.js-gotop:hover .icon-gotop {
+  opacity: 0.85;
+}
 
 .js-gotop .icon-gotop {
   display: block;

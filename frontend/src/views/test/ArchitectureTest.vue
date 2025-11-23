@@ -11,19 +11,31 @@
       <div class="test-card">
         <h3>当前用户状态</h3>
         <div class="status-info">
-          <p><strong>认证状态:</strong> {{ isAuthenticated ? '已登录' : '未登录' }}</p>
-          <p><strong>用户信息:</strong> {{ user ? JSON.stringify(user, null, 2) : '无' }}</p>
-          <p><strong>Token:</strong> {{ token ? '存在' : '不存在' }}</p>
+          <p>
+            <strong>认证状态:</strong>
+            {{ isAuthenticated ? '已登录' : '未登录' }}
+          </p>
+          <p>
+            <strong>用户信息:</strong>
+            {{ user ? JSON.stringify(user, null, 2) : '无' }}
+          </p>
+          <p>
+            <strong>Token:</strong>
+            {{ token ? '存在' : '不存在' }}
+          </p>
         </div>
-        
+
         <div class="test-actions">
           <button @click="simulateLogin" class="btn-primary">模拟登录</button>
           <button @click="simulateLogout" class="btn-secondary">模拟登出</button>
           <button @click="refreshPage" class="btn-info">刷新页面测试持久化</button>
         </div>
-        
+
         <div class="test-result">
-          <p><strong>测试说明:</strong> 点击"模拟登录"后再点击"刷新页面测试持久化"，如果刷新后状态仍然保持，说明持久化功能正常。</p>
+          <p>
+            <strong>测试说明:</strong>
+            点击"模拟登录"后再点击"刷新页面测试持久化"，如果刷新后状态仍然保持，说明持久化功能正常。
+          </p>
         </div>
       </div>
     </div>
@@ -34,13 +46,16 @@
       <div class="test-card">
         <h3>当前用户权限</h3>
         <div class="permissions-info">
-          <p><strong>用户角色:</strong> {{ currentRole }}</p>
+          <p>
+            <strong>用户角色:</strong>
+            {{ currentRole }}
+          </p>
           <p><strong>拥有权限:</strong></p>
           <ul>
             <li v-for="permission in userPermissions" :key="permission">{{ permission }}</li>
           </ul>
         </div>
-        
+
         <div class="permission-tests">
           <h4>权限测试</h4>
           <div class="permission-test" v-for="test in permissionTests" :key="test.name">
@@ -50,7 +65,7 @@
             </span>
           </div>
         </div>
-        
+
         <div class="test-actions">
           <button @click="changeRole(USER_ROLES.GUEST)" class="btn-role">切换为游客</button>
           <button @click="changeRole(USER_ROLES.USER)" class="btn-role">切换为普通用户</button>
@@ -106,13 +121,13 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import { 
-  hasPermission, 
-  hasRole, 
-  canAccessRoute, 
-  getUserPermissions, 
-  USER_ROLES, 
-  PERMISSIONS 
+import {
+  hasPermission,
+  hasRole,
+  canAccessRoute,
+  getUserPermissions,
+  USER_ROLES,
+  PERMISSIONS
 } from '@/utils/permission'
 
 const router = useRouter()
@@ -207,14 +222,14 @@ const simulateLogin = () => {
     id: 1,
     username: 'testuser',
     email: 'test@example.com',
-    role: USER_ROLES.USER  // 使用正确的角色常量
+    role: USER_ROLES.USER // 使用正确的角色常量
   }
-  
+
   // 直接修改store的状态
   userStore.user = mockUser
   userStore.token = 'mock-jwt-token'
   userStore.isAuthenticated = true
-  
+
   addLog(`模拟登录成功，用户角色: ${USER_ROLES.USER}`, 'success')
   updateRouteTests()
 }
@@ -229,19 +244,19 @@ const refreshPage = () => {
   window.location.reload()
 }
 
-const changeRole = (role) => {
+const changeRole = role => {
   if (!isAuthenticated.value) {
     addLog('请先登录再切换角色', 'error')
     return
   }
-  
+
   const updatedUser = { ...user.value, role }
   userStore.user = updatedUser
   addLog(`角色已切换为: ${role}`, 'success')
   updateRouteTests()
 }
 
-const testRouteAccess = (route) => {
+const testRouteAccess = route => {
   const mockRoute = {
     path: route.path,
     meta: {
@@ -249,10 +264,10 @@ const testRouteAccess = (route) => {
       permissions: route.permissions
     }
   }
-  
+
   const canAccess = canAccessRoute(mockRoute, user.value)
   route.canAccess = canAccess
-  
+
   const message = `测试路由 ${route.name} (${route.path}): ${canAccess ? '可访问' : '无法访问'}`
   addLog(message, canAccess ? 'success' : 'error')
 }
@@ -315,18 +330,21 @@ onMounted(() => {
   margin-bottom: 15px;
 }
 
-.status-info, .permissions-info {
+.status-info,
+.permissions-info {
   background: white;
   padding: 15px;
   border-radius: 5px;
   margin-bottom: 15px;
 }
 
-.status-info p, .permissions-info p {
+.status-info p,
+.permissions-info p {
   margin: 5px 0;
 }
 
-.status-info ul, .permissions-info ul {
+.status-info ul,
+.permissions-info ul {
   margin: 10px 0;
   padding-left: 20px;
 }
@@ -338,7 +356,11 @@ onMounted(() => {
   margin: 15px 0;
 }
 
-.btn-primary, .btn-secondary, .btn-info, .btn-role, .btn-test {
+.btn-primary,
+.btn-secondary,
+.btn-info,
+.btn-role,
+.btn-test {
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
@@ -412,7 +434,8 @@ onMounted(() => {
   margin-right: 10px;
 }
 
-.route-auth, .route-permissions {
+.route-auth,
+.route-permissions {
   background: #e9ecef;
   padding: 2px 6px;
   border-radius: 3px;

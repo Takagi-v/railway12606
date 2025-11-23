@@ -47,7 +47,7 @@
           {{ option.label }}
         </a-select-option>
       </template>
-      
+
       <template v-else>
         <slot />
       </template>
@@ -103,7 +103,7 @@ const props = defineProps({
   validateStatus: {
     type: String,
     default: '',
-    validator: (value) => ['', 'success', 'warning', 'error', 'validating'].includes(value)
+    validator: value => ['', 'success', 'warning', 'error', 'validating'].includes(value)
   },
   // 是否显示反馈图标
   hasFeedback: {
@@ -119,13 +119,13 @@ const props = defineProps({
   size: {
     type: String,
     default: 'middle',
-    validator: (value) => ['small', 'middle', 'large'].includes(value)
+    validator: value => ['small', 'middle', 'large'].includes(value)
   },
   // 选择模式
   mode: {
     type: String,
     default: undefined,
-    validator: (value) => [undefined, 'multiple', 'tags'].includes(value)
+    validator: value => [undefined, 'multiple', 'tags'].includes(value)
   },
   // 是否显示清除按钮
   allowClear: {
@@ -210,18 +210,15 @@ const selectValue = ref(props.modelValue)
 // 监听外部值变化
 watch(
   () => props.modelValue,
-  (newValue) => {
+  newValue => {
     selectValue.value = newValue
   }
 )
 
 // 监听内部值变化
-watch(
-  selectValue,
-  (newValue) => {
-    emit('update:modelValue', newValue)
-  }
-)
+watch(selectValue, newValue => {
+  emit('update:modelValue', newValue)
+})
 
 // 处理选择变化
 const handleChange = (value, option) => {
@@ -239,7 +236,7 @@ const handleDeselect = (value, option) => {
 }
 
 // 处理搜索
-const handleSearch = (value) => {
+const handleSearch = value => {
   emit('search', value)
 }
 
@@ -254,7 +251,7 @@ const handleFocus = () => {
 }
 
 // 处理下拉菜单显示状态变化
-const handleDropdownVisibleChange = (open) => {
+const handleDropdownVisibleChange = open => {
   emit('dropdownVisibleChange', open)
 }
 </script>

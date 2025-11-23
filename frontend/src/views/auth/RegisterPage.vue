@@ -10,7 +10,7 @@
             <div class="card-header">
               <h2 class="card-title">账户信息</h2>
             </div>
-            
+
             <div class="card-body">
               <a-form
                 ref="formRef"
@@ -60,11 +60,13 @@
                       @input="updatePasswordStrength"
                       @blur="clearFieldError('password')"
                     />
-                    <span v-if="!registerForm.password" class="field-hint password-hint">6-20位，包含字母和数字</span>
+                    <span v-if="!registerForm.password" class="field-hint password-hint">
+                      6-20位，包含字母和数字
+                    </span>
                     <div v-if="registerForm.password" class="password-strength inline">
                       <div class="strength-bar">
-                        <div 
-                          class="strength-fill" 
+                        <div
+                          class="strength-fill"
                           :class="passwordStrength.level"
                           :style="{ width: passwordStrength.width }"
                         ></div>
@@ -94,7 +96,9 @@
                       @blur="clearFieldError('confirmPassword')"
                     />
                   </div>
-                  <div v-if="errors.confirmPassword" class="error-message">{{ errors.confirmPassword }}</div>
+                  <div v-if="errors.confirmPassword" class="error-message">
+                    {{ errors.confirmPassword }}
+                  </div>
                 </a-form-item>
 
                 <!-- 证件类型 -->
@@ -106,11 +110,7 @@
                     </span>
                   </template>
                   <div class="field-row">
-                    <a-select
-                      v-model:value="registerForm.idType"
-                      size="middle"
-                      class="form-input"
-                    >
+                    <a-select v-model:value="registerForm.idType" size="middle" class="form-input">
                       <a-select-option value="身份证">居民身份证</a-select-option>
                       <a-select-option value="护照">护照</a-select-option>
                       <a-select-option value="港澳通行证">港澳通行证</a-select-option>
@@ -251,19 +251,18 @@
 
                 <!-- 提交按钮 -->
                 <a-form-item class="form-item submit-item full-width">
-                  <a-button 
-                    type="primary" 
-                    html-type="submit" 
-                    size="middle" 
-                    block 
+                  <a-button
+                    type="primary"
+                    html-type="submit"
+                    size="middle"
+                    block
                     :loading="loading"
                     class="submit-btn"
                   >
                     下一步
                   </a-button>
                 </a-form-item>
-
-                </a-form>
+              </a-form>
             </div>
           </div>
         </div>
@@ -319,7 +318,7 @@ const passwordStrength = computed(() => {
   if (!password) return { level: '', width: '0%', text: '' }
 
   let score = 0
-  let feedback = []
+  const feedback = []
 
   // 长度检查
   if (password.length >= 8) score += 25
@@ -368,7 +367,11 @@ const rules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
     { min: 6, max: 30, message: '用户名长度为6-30位', trigger: 'blur' },
-    { pattern: /^[a-zA-Z0-9_-][a-zA-Z0-9_-]*$/, message: '用户名只能以字母、数字、下划线或横线开头，包含字母、数字、下划线和横线', trigger: 'blur' }
+    {
+      pattern: /^[a-zA-Z0-9_-][a-zA-Z0-9_-]*$/,
+      message: '用户名只能以字母、数字、下划线或横线开头，包含字母、数字、下划线和横线',
+      trigger: 'blur'
+    }
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
@@ -396,7 +399,8 @@ const rules = {
     {
       validator: (rule, value) => {
         if (registerForm.idType === '身份证') {
-          const idPattern = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+          const idPattern =
+            /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
           if (!idPattern.test(value)) {
             return Promise.reject('请输入正确的身份证号码')
           }
@@ -428,7 +432,7 @@ const rules = {
 }
 
 // 清除字段错误
-const clearFieldError = (field) => {
+const clearFieldError = field => {
   errors[field] = ''
 }
 
@@ -438,10 +442,10 @@ const updatePasswordStrength = () => {
 }
 
 // 表单提交
-const handleRegister = async (values) => {
+const handleRegister = async values => {
   try {
     loading.value = true
-    
+
     // 验证服务条款
     if (!registerForm.agreeTerms) {
       errors.agreeTerms = '请阅读并同意服务条款'
@@ -468,7 +472,7 @@ const handleRegister = async (values) => {
       id_number: registerData.idNumber,
       user_type: registerData.userType
     })
-    
+
     message.success('注册成功，请登录')
     router.push('/login')
   } catch (error) {
@@ -484,13 +488,13 @@ const handleRegister = async (values) => {
 .register-page {
   min-height: 100vh;
   background: #f5f5f5;
-  font-family: "Tahoma", "SimSun", "宋体", serif;
+  font-family: 'Tahoma', 'SimSun', '宋体', serif;
   font-size: 12px;
 }
 
-.register-page :deep([class^="ant-"]:not(.anticon)) {
+.register-page :deep([class^='ant-']:not(.anticon)) {
   font-size: 12px;
-  font-family: "Tahoma", "SimSun", "宋体", serif;
+  font-family: 'Tahoma', 'SimSun', '宋体', serif;
 }
 
 /* 顶部Header */
@@ -620,7 +624,7 @@ const handleRegister = async (values) => {
 }
 
 .card-title {
-  color: #E5F8FF;
+  color: #e5f8ff;
   font-size: 12px;
   font-weight: 600;
   margin: 0;
@@ -645,7 +649,7 @@ const handleRegister = async (values) => {
 
 .form-item {
   margin-bottom: 5px;
-  margin-left: 150px; 
+  margin-left: 150px;
   /* text-align: center;  */
 }
 
@@ -653,20 +657,20 @@ const handleRegister = async (values) => {
   width: 100% !important;
 }
 
-.form-item[name="agreeTerms"] {
+.form-item[name='agreeTerms'] {
   margin-left: 0 !important;
 }
 
-.form-item[name="agreeTerms"] :deep(.ant-checkbox-wrapper) {
+.form-item[name='agreeTerms'] :deep(.ant-checkbox-wrapper) {
   white-space: nowrap !important;
   font-size: 12px;
-  font-family: "Tahoma", "SimSun", "宋体", serif;
+  font-family: 'Tahoma', 'SimSun', '宋体', serif;
 }
 
-.form-item[name="agreeTerms"] a.terms-link {
+.form-item[name='agreeTerms'] a.terms-link {
   white-space: nowrap;
   font-size: 12px;
-  font-family: "Tahoma", "SimSun", "宋体", serif;
+  font-family: 'Tahoma', 'SimSun', '宋体', serif;
 }
 
 .form-item :deep(.ant-form-item-label) {
@@ -701,7 +705,7 @@ const handleRegister = async (values) => {
   border: 1px solid #d9d9d9;
   transition: all 0.3s;
   font-size: 12px;
-  font-family: "Tahoma", "SimSun", "宋体", serif;
+  font-family: 'Tahoma', 'SimSun', '宋体', serif;
   width: 201px;
 }
 
@@ -872,7 +876,7 @@ const handleRegister = async (values) => {
 .submit-btn {
   width: 122px;
   height: 30px;
-  background: #FFA500;
+  background: #ffa500;
   border: none;
   border-radius: 6px;
   font-size: 12px;
@@ -882,7 +886,7 @@ const handleRegister = async (values) => {
 }
 
 .submit-btn:hover {
-  background: #FFC107; /* 悬停时颜色变浅 */
+  background: #ffc107; /* 悬停时颜色变浅 */
   box-shadow: 0 4px 8px rgba(255, 165, 0, 0.4);
   transform: translateY(-1px);
 }
@@ -1003,16 +1007,8 @@ const handleRegister = async (values) => {
 }
 
 /* 响应式设计 */
- 
-
- 
-
- 
-
- 
 
 /* 超小屏幕优化 */
- 
 
 /* 表单验证状态 */
 .form-item :deep(.ant-form-item-has-error .ant-input),
@@ -1092,7 +1088,7 @@ const handleRegister = async (values) => {
 }
 
 .username-hint {
-  color: #FF7F00;
+  color: #ff7f00;
 }
 
 .password-strength.inline {
@@ -1107,9 +1103,4 @@ const handleRegister = async (values) => {
 }
 </style>
 
-.form-divider {
-  height: 0;
-  border-top: 1px dashed #d9d9d9;
-  margin: 12px 0;
-}
-
+.form-divider { height: 0; border-top: 1px dashed #d9d9d9; margin: 12px 0; }

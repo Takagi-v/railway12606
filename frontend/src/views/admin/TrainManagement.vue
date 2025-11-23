@@ -15,15 +15,11 @@
           <h3>权限测试</h3>
 
           <PermissionWrapper :permissions="['train:create']">
-            <button class="btn btn-primary">
-              创建车次 (需要 train:create 权限)
-            </button>
+            <button class="btn btn-primary">创建车次 (需要 train:create 权限)</button>
           </PermissionWrapper>
 
           <PermissionWrapper :permissions="['train:delete']">
-            <button class="btn btn-danger">
-              删除车次 (需要 train:delete 权限)
-            </button>
+            <button class="btn btn-danger">删除车次 (需要 train:delete 权限)</button>
           </PermissionWrapper>
 
           <button v-permission="'train:update'" class="btn btn-secondary">
@@ -36,7 +32,7 @@
 </template>
 
 <script setup>
-import PermissionWrapper from "@/components/Permission/PermissionWrapper.vue";
+import PermissionWrapper from '@/components/Permission/PermissionWrapper.vue'
 </script>
 
 <style scoped>

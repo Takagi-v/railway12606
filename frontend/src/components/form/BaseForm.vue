@@ -6,24 +6,23 @@
     :layout="layout"
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
-    :class="['base-form', 'form-railway', `form-railway--${layout}`, `base-form--${size}`, className]"
+    :class="[
+      'base-form',
+      'form-railway',
+      `form-railway--${layout}`,
+      `base-form--${size}`,
+      className
+    ]"
     @finish="handleSubmit"
     @finishFailed="handleSubmitFailed"
     @valuesChange="handleValuesChange"
   >
     <slot />
-    
+
     <!-- 表单操作按钮区域 -->
-    <a-form-item
-      v-if="showActions"
-      :wrapper-col="actionWrapperCol"
-      class="base-form__actions"
-    >
+    <a-form-item v-if="showActions" :wrapper-col="actionWrapperCol" class="base-form__actions">
       <a-space :size="16">
-        <a-button
-          v-if="showCancel"
-          @click="handleCancel"
-        >
+        <a-button v-if="showCancel" @click="handleCancel">
           {{ cancelText }}
         </a-button>
         <a-button
@@ -58,7 +57,7 @@ const props = defineProps({
   layout: {
     type: String,
     default: 'vertical',
-    validator: (value) => ['horizontal', 'vertical', 'inline'].includes(value)
+    validator: value => ['horizontal', 'vertical', 'inline'].includes(value)
   },
   // 标签列配置
   labelCol: {
@@ -74,7 +73,7 @@ const props = defineProps({
   size: {
     type: String,
     default: 'middle',
-    validator: (value) => ['small', 'middle', 'large'].includes(value)
+    validator: value => ['small', 'middle', 'large'].includes(value)
   },
   // 自定义类名
   className: {
@@ -137,7 +136,7 @@ const actionWrapperCol = computed(() => {
 // 监听外部数据变化
 watch(
   () => props.modelValue,
-  (newValue) => {
+  newValue => {
     formData.value = { ...newValue }
   },
   { deep: true }
@@ -146,19 +145,19 @@ watch(
 // 监听内部数据变化
 watch(
   formData,
-  (newValue) => {
+  newValue => {
     emit('update:modelValue', newValue)
   },
   { deep: true }
 )
 
 // 表单提交成功
-const handleSubmit = (values) => {
+const handleSubmit = values => {
   emit('submit', values)
 }
 
 // 表单提交失败
-const handleSubmitFailed = (errorInfo) => {
+const handleSubmitFailed = errorInfo => {
   emit('validateFailed', errorInfo)
 }
 
@@ -178,7 +177,7 @@ const validate = () => {
 }
 
 // 验证指定字段
-const validateFields = (fields) => {
+const validateFields = fields => {
   return formRef.value?.validateFields(fields)
 }
 
@@ -188,18 +187,18 @@ const resetFields = () => {
 }
 
 // 清除验证
-const clearValidate = (fields) => {
+const clearValidate = fields => {
   formRef.value?.clearValidate(fields)
 }
 
 // 设置字段值
-const setFieldsValue = (values) => {
+const setFieldsValue = values => {
   formRef.value?.setFieldsValue(values)
   Object.assign(formData.value, values)
 }
 
 // 获取字段值
-const getFieldsValue = (fields) => {
+const getFieldsValue = fields => {
   return formRef.value?.getFieldsValue(fields)
 }
 
@@ -287,7 +286,11 @@ defineExpose({
   font-weight: 500;
 }
 
-.base-form :deep(.ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before) {
+.base-form
+  :deep(
+    .ant-form-item-label
+      > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before
+  ) {
   color: var(--error-color);
 }
 

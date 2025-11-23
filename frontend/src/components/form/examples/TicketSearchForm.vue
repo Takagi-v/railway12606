@@ -20,7 +20,7 @@
           show-search
           :filter-option="filterStation"
         />
-        
+
         <FormSelect
           name="toStation"
           label="目的地"
@@ -30,7 +30,7 @@
           show-search
           :filter-option="filterStation"
         />
-        
+
         <FormDatePicker
           name="departureDate"
           label="出发日期"
@@ -38,7 +38,7 @@
           placeholder="请选择出发日期"
           :disabled-date="disabledDate"
         />
-        
+
         <FormDatePicker
           name="returnDate"
           label="返程日期"
@@ -46,7 +46,7 @@
           placeholder="请选择返程日期（可选）"
           :disabled-date="disabledReturnDate"
         />
-        
+
         <FormSelect
           name="trainType"
           label="车次类型"
@@ -56,7 +56,7 @@
           mode="multiple"
           :max-tag-count="3"
         />
-        
+
         <FormSelect
           name="seatType"
           label="座位类型"
@@ -66,23 +66,17 @@
           mode="multiple"
           :max-tag-count="3"
         />
-        
+
         <a-form-item label="高级选项" name="advancedOptions">
           <div class="advanced-options">
-            <a-checkbox v-model:checked="formData.onlyAvailable">
-              只看有票
-            </a-checkbox>
-            <a-checkbox v-model:checked="formData.includeTransfer">
-              包含中转
-            </a-checkbox>
-            <a-checkbox v-model:checked="formData.studentTicket">
-              学生票
-            </a-checkbox>
+            <a-checkbox v-model:checked="formData.onlyAvailable">只看有票</a-checkbox>
+            <a-checkbox v-model:checked="formData.includeTransfer">包含中转</a-checkbox>
+            <a-checkbox v-model:checked="formData.studentTicket">学生票</a-checkbox>
           </div>
         </a-form-item>
       </template>
     </BaseForm>
-    
+
     <!-- 热门路线快速选择 -->
     <div class="popular-routes">
       <h3>热门路线</h3>
@@ -97,7 +91,7 @@
         </a-button>
       </div>
     </div>
-    
+
     <!-- 站点互换按钮 -->
     <div class="station-swap">
       <a-button
@@ -204,12 +198,12 @@ const filterStation = (input, option) => {
 }
 
 // 禁用日期函数
-const disabledDate = (current) => {
+const disabledDate = current => {
   // 禁用今天之前的日期
   return current && current < dayjs().startOf('day')
 }
 
-const disabledReturnDate = (current) => {
+const disabledReturnDate = current => {
   // 禁用出发日期之前的日期
   const departureDate = formData.departureDate
   if (!departureDate) {
@@ -219,7 +213,7 @@ const disabledReturnDate = (current) => {
 }
 
 // 事件处理
-const handleSearch = async (values) => {
+const handleSearch = async values => {
   try {
     // 将前端字段映射到API参数
     const apiParams = {
@@ -227,7 +221,7 @@ const handleSearch = async (values) => {
       arrival_city: values.toStation,
       travel_date: values.departureDate ? dayjs(values.departureDate).format('YYYY-MM-DD') : null
     }
-    
+
     console.log('车票搜索API参数:', apiParams)
     console.log('前端筛选条件:', {
       trainType: values.trainType,
@@ -237,7 +231,7 @@ const handleSearch = async (values) => {
       studentTicket: values.studentTicket,
       returnDate: values.returnDate
     })
-    
+
     // 这里应该调用搜索API，只发送apiParams
     await new Promise(resolve => setTimeout(resolve, 1000)) // 模拟API调用
     message.success('搜索完成！')
@@ -246,7 +240,7 @@ const handleSearch = async (values) => {
   }
 }
 
-const selectRoute = (route) => {
+const selectRoute = route => {
   formData.fromStation = route.from
   formData.toStation = route.to
   message.success(`已选择路线：${route.fromName} → ${route.toName}`)
@@ -330,16 +324,16 @@ const swapStations = () => {
     margin: 16px;
     padding: 24px 16px;
   }
-  
+
   .advanced-options {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .route-buttons {
     justify-content: center;
   }
-  
+
   .station-swap {
     position: static;
     transform: none;

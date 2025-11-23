@@ -7,31 +7,39 @@
           <!-- 12306风格的火车站图标 -->
           <svg v-if="type === 'train'" viewBox="0 0 64 64" width="64" height="64">
             <g fill="var(--text-color-secondary)" opacity="0.4">
-              <path d="M32 8c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24S45.255 8 32 8zm0 44c-11.046 0-20-8.954-20-20s8.954-20 20-20 20 8.954 20 20-8.954 20-20 20z"/>
-              <path d="M32 16c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zm-8 20h4v-8h8v8h4v-12c0-2.209-1.791-4-4-4h-8c-2.209 0-4 1.791-4 4v12z"/>
+              <path
+                d="M32 8c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24S45.255 8 32 8zm0 44c-11.046 0-20-8.954-20-20s8.954-20 20-20 20 8.954 20 20-8.954 20-20 20z"
+              />
+              <path
+                d="M32 16c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zm-8 20h4v-8h8v8h4v-12c0-2.209-1.791-4-4-4h-8c-2.209 0-4 1.791-4 4v12z"
+              />
             </g>
           </svg>
-          
+
           <!-- 订单图标 -->
           <svg v-else-if="type === 'order'" viewBox="0 0 64 64" width="64" height="64">
             <g fill="var(--text-color-secondary)" opacity="0.4">
-              <path d="M48 12H16c-2.21 0-4 1.79-4 4v32c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V16c0-2.21-1.79-4-4-4zM44 44H20V20h24v24z"/>
-              <path d="M24 28h16v4H24zm0 8h12v4H24z"/>
+              <path
+                d="M48 12H16c-2.21 0-4 1.79-4 4v32c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V16c0-2.21-1.79-4-4-4zM44 44H20V20h24v24z"
+              />
+              <path d="M24 28h16v4H24zm0 8h12v4H24z" />
             </g>
           </svg>
-          
+
           <!-- 搜索图标 -->
           <svg v-else-if="type === 'search'" viewBox="0 0 64 64" width="64" height="64">
             <g fill="var(--text-color-secondary)" opacity="0.4">
-              <circle cx="26" cy="26" r="16" fill="none" stroke="currentColor" stroke-width="4"/>
-              <path d="M46 46l-8-8" stroke="currentColor" stroke-width="4"/>
+              <circle cx="26" cy="26" r="16" fill="none" stroke="currentColor" stroke-width="4" />
+              <path d="M46 46l-8-8" stroke="currentColor" stroke-width="4" />
             </g>
           </svg>
-          
+
           <!-- 默认图标 -->
           <svg v-else viewBox="0 0 64 64" width="64" height="64">
             <g fill="var(--text-color-secondary)" opacity="0.4">
-              <path d="M32 8L8 20v24l24 12 24-12V20L32 8zm0 8l16 8-16 8-16-8 16-8zm-20 12l16 8v16l-16-8V28zm40 0v16l-16 8V28l16-8z"/>
+              <path
+                d="M32 8L8 20v24l24 12 24-12V20L32 8zm0 8l16 8-16 8-16-8 16-8zm-20 12l16 8v16l-16-8V28zm40 0v16l-16 8V28l16-8z"
+              />
             </g>
           </svg>
         </slot>
@@ -186,7 +194,7 @@ export default {
   .empty-container {
     padding: var(--spacing-lg) var(--spacing-md);
   }
-  
+
   .empty-content {
     max-width: 300px;
   }

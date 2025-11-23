@@ -5,7 +5,10 @@
       <div v-if="type === 'train'" class="loading-train">
         <div class="train-icon">
           <svg viewBox="0 0 24 24" width="48" height="48">
-            <path fill="var(--primary-color)" d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9V7L15,1H9L3,7V9H4V15H3V16H5V20A1,1 0 0,0 6,21H8A1,1 0 0,0 9,20V16H15V20A1,1 0 0,0 16,21H18A1,1 0 0,0 19,20V16H21V15H20V9H21M8,7.5A1.5,1.5 0 0,1 9.5,9A1.5,1.5 0 0,1 8,10.5A1.5,1.5 0 0,1 6.5,9A1.5,1.5 0 0,1 8,7.5M16,7.5A1.5,1.5 0 0,1 17.5,9A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 14.5,9A1.5,1.5 0 0,1 16,7.5Z"/>
+            <path
+              fill="var(--primary-color)"
+              d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9V7L15,1H9L3,7V9H4V15H3V16H5V20A1,1 0 0,0 6,21H8A1,1 0 0,0 9,20V16H15V20A1,1 0 0,0 16,21H18A1,1 0 0,0 19,20V16H21V15H20V9H21M8,7.5A1.5,1.5 0 0,1 9.5,9A1.5,1.5 0 0,1 8,10.5A1.5,1.5 0 0,1 6.5,9A1.5,1.5 0 0,1 8,7.5M16,7.5A1.5,1.5 0 0,1 17.5,9A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 14.5,9A1.5,1.5 0 0,1 16,7.5Z"
+            />
           </svg>
         </div>
         <div class="train-track">
@@ -130,13 +133,22 @@ export default {
 }
 
 @keyframes trainMove {
-  0%, 100% { transform: translateX(-10px); }
-  50% { transform: translateX(10px); }
+  0%,
+  100% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
 }
 
 @keyframes trackFlow {
-  0% { left: -100%; }
-  100% { left: 100%; }
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 /* 圆形加载动画 */
@@ -155,7 +167,9 @@ export default {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* 点状加载动画 */
@@ -172,12 +186,20 @@ export default {
   animation: dotBounce 1.4s ease-in-out infinite both;
 }
 
-.dot:nth-child(1) { animation-delay: -0.32s; }
-.dot:nth-child(2) { animation-delay: -0.16s; }
-.dot:nth-child(3) { animation-delay: 0s; }
+.dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+.dot:nth-child(3) {
+  animation-delay: 0s;
+}
 
 @keyframes dotBounce {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: scale(0);
     opacity: 0.5;
   }

@@ -36,22 +36,22 @@
     <div class="user-type-switcher">
       <h2>用户类型切换测试</h2>
       <div class="switcher-buttons">
-        <button 
-          @click="switchUserType('guest')" 
+        <button
+          @click="switchUserType('guest')"
           :class="{ active: currentTestType === 'guest' }"
           class="btn btn-guest"
         >
           游客模式
         </button>
-        <button 
-          @click="switchUserType('adult')" 
+        <button
+          @click="switchUserType('adult')"
           :class="{ active: currentTestType === 'adult' }"
           class="btn btn-adult"
         >
           成人用户
         </button>
-        <button 
-          @click="switchUserType('student')" 
+        <button
+          @click="switchUserType('student')"
           :class="{ active: currentTestType === 'student' }"
           class="btn btn-student"
         >
@@ -69,10 +69,10 @@
           <p class="permission-desc">{{ permission.description }}</p>
           <div class="permission-result">
             <span class="permission-key">{{ permission.key }}</span>
-            <span 
-              :class="{ 
-                'result-success': hasPermissionTest(permission.key), 
-                'result-error': !hasPermissionTest(permission.key) 
+            <span
+              :class="{
+                'result-success': hasPermissionTest(permission.key),
+                'result-error': !hasPermissionTest(permission.key)
               }"
             >
               {{ hasPermissionTest(permission.key) ? '✓ 有权限' : '✗ 无权限' }}
@@ -89,10 +89,10 @@
         <div class="type-test-card" v-for="type in userTypes" :key="type.key">
           <h3>{{ type.name }}</h3>
           <div class="type-result">
-            <span 
-              :class="{ 
-                'result-success': hasUserTypeTest(type.key), 
-                'result-error': !hasUserTypeTest(type.key) 
+            <span
+              :class="{
+                'result-success': hasUserTypeTest(type.key),
+                'result-error': !hasUserTypeTest(type.key)
               }"
             >
               {{ hasUserTypeTest(type.key) ? '✓ 是' : '✗ 否' }}
@@ -119,10 +119,10 @@
             </span>
           </div>
           <div class="route-result">
-            <span 
-              :class="{ 
-                'result-success': canAccessRouteTest(route), 
-                'result-error': !canAccessRouteTest(route) 
+            <span
+              :class="{
+                'result-success': canAccessRouteTest(route),
+                'result-error': !canAccessRouteTest(route)
               }"
             >
               {{ canAccessRouteTest(route) ? '✓ 可访问' : '✗ 不可访问' }}
@@ -178,10 +178,10 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { 
-  hasPermission, 
-  hasUserType, 
-  canAccessRoute, 
+import {
+  hasPermission,
+  hasUserType,
+  canAccessRoute,
   getUserPermissions,
   isAuthenticated as checkAuthenticated,
   isStudent,
@@ -198,10 +198,10 @@ const testUser = ref(null)
 
 // 计算属性
 const user = computed(() => testUser.value || userStore.user)
-const isAuthenticated = computed(() => testUser.value ? true : userStore.isAuthenticated)
+const isAuthenticated = computed(() => (testUser.value ? true : userStore.isAuthenticated))
 
 // 用户类型标签映射
-const getUserTypeLabel = (type) => {
+const getUserTypeLabel = type => {
   const labels = {
     guest: '游客',
     adult: '成人用户',
@@ -211,7 +211,7 @@ const getUserTypeLabel = (type) => {
 }
 
 // 切换用户类型进行测试
-const switchUserType = (type) => {
+const switchUserType = type => {
   currentTestType.value = type
   if (type === 'guest') {
     testUser.value = null
@@ -258,7 +258,7 @@ const testRoutes = [
   {
     path: '/order/create',
     name: '创建订单',
-    meta: { 
+    meta: {
       requiresAuth: true,
       permissions: [PERMISSIONS.CREATE_ORDER]
     }
@@ -266,7 +266,7 @@ const testRoutes = [
   {
     path: '/user/profile',
     name: '个人信息',
-    meta: { 
+    meta: {
       requiresAuth: true,
       permissions: [PERMISSIONS.VIEW_PROFILE]
     }
@@ -274,7 +274,7 @@ const testRoutes = [
   {
     path: '/user/passengers',
     name: '乘客管理',
-    meta: { 
+    meta: {
       requiresAuth: true,
       permissions: [PERMISSIONS.MANAGE_PASSENGERS]
     }
@@ -282,7 +282,7 @@ const testRoutes = [
   {
     path: '/student/discount',
     name: '学生优惠',
-    meta: { 
+    meta: {
       requiresAuth: true,
       userTypes: ['student'],
       permissions: [PERMISSIONS.STUDENT_DISCOUNT]
@@ -291,15 +291,15 @@ const testRoutes = [
 ]
 
 // 权限检查函数
-const hasPermissionTest = (permission) => {
+const hasPermissionTest = permission => {
   return hasPermission(permission, user.value)
 }
 
-const hasUserTypeTest = (type) => {
+const hasUserTypeTest = type => {
   return hasUserType(type, user.value)
 }
 
-const canAccessRouteTest = (route) => {
+const canAccessRouteTest = route => {
   return canAccessRoute(route, user.value)
 }
 
@@ -335,12 +335,18 @@ switchUserType('guest')
   font-size: 16px;
 }
 
-.user-status, .user-type-switcher, .permission-tests, .user-type-tests, .route-tests, .directive-tests, .permission-details {
+.user-status,
+.user-type-switcher,
+.permission-tests,
+.user-type-tests,
+.route-tests,
+.directive-tests,
+.permission-details {
   margin-bottom: 30px;
   padding: 20px;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .status-card {
@@ -418,20 +424,29 @@ switchUserType('guest')
   border-color: #722ed1;
 }
 
-.test-grid, .type-test-grid, .route-test-grid, .directive-grid {
+.test-grid,
+.type-test-grid,
+.route-test-grid,
+.directive-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
 }
 
-.test-card, .type-test-card, .route-test-card, .directive-card {
+.test-card,
+.type-test-card,
+.route-test-card,
+.directive-card {
   padding: 15px;
   border: 1px solid #e8e8e8;
   border-radius: 6px;
   background: #fafafa;
 }
 
-.test-card h3, .type-test-card h3, .route-test-card h3, .directive-card h3 {
+.test-card h3,
+.type-test-card h3,
+.route-test-card h3,
+.directive-card h3 {
   margin: 0 0 10px 0;
   color: #333;
 }
@@ -442,7 +457,9 @@ switchUserType('guest')
   margin-bottom: 10px;
 }
 
-.permission-result, .type-result, .route-result {
+.permission-result,
+.type-result,
+.route-result {
   display: flex;
   justify-content: space-between;
   align-items: center;

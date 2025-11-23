@@ -16,15 +16,11 @@
 
           <!-- 使用权限组件 -->
           <PermissionWrapper :permissions="['user:create']">
-            <button class="btn btn-primary">
-              创建用户 (需要 user:create 权限)
-            </button>
+            <button class="btn btn-primary">创建用户 (需要 user:create 权限)</button>
           </PermissionWrapper>
 
           <PermissionWrapper :permissions="['user:delete']">
-            <button class="btn btn-danger">
-              删除用户 (需要 user:delete 权限)
-            </button>
+            <button class="btn btn-danger">删除用户 (需要 user:delete 权限)</button>
           </PermissionWrapper>
 
           <!-- 使用权限指令 -->
@@ -32,9 +28,7 @@
             编辑用户 (需要 user:update 权限)
           </button>
 
-          <button v-role="'admin'" class="btn btn-info">
-            管理员功能 (需要 admin 角色)
-          </button>
+          <button v-role="'admin'" class="btn btn-info">管理员功能 (需要 admin 角色)</button>
         </div>
       </div>
     </div>
@@ -42,7 +36,7 @@
 </template>
 
 <script setup>
-import PermissionWrapper from "@/components/Permission/PermissionWrapper.vue";
+import PermissionWrapper from '@/components/Permission/PermissionWrapper.vue'
 </script>
 
 <style scoped>

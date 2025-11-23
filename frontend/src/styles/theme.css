@@ -1,57 +1,57 @@
 /* 12306风格主题变量 */
 :root {
   /* 主色调 - 12306蓝色系 */
-  --primary-color: #4A90E2;
-  --primary-color-hover: #357ABD;
-  --primary-color-active: #2E6BA8;
-  --primary-gradient: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
-  
+  --primary-color: #4a90e2;
+  --primary-color-hover: #357abd;
+  --primary-color-active: #2e6ba8;
+  --primary-gradient: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+
   /* 辅助色 - 12306橙色系 */
-  --accent-color: #FF6600;
-  --accent-color-hover: #E55A00;
-  --accent-color-active: #CC5000;
-  
+  --accent-color: #ff6600;
+  --accent-color-hover: #e55a00;
+  --accent-color-active: #cc5000;
+
   /* 成功色 */
-  --success-color: #52C41A;
-  --success-color-hover: #73D13D;
-  --success-color-active: #389E0D;
-  
+  --success-color: #52c41a;
+  --success-color-hover: #73d13d;
+  --success-color-active: #389e0d;
+
   /* 警告色 */
-  --warning-color: #FAAD14;
-  --warning-color-hover: #FFC53D;
-  --warning-color-active: #D48806;
-  
+  --warning-color: #faad14;
+  --warning-color-hover: #ffc53d;
+  --warning-color-active: #d48806;
+
   /* 错误色 */
-  --error-color: #FF4D4F;
-  --error-color-hover: #FF7875;
-  --error-color-active: #D9363E;
-  
+  --error-color: #ff4d4f;
+  --error-color-hover: #ff7875;
+  --error-color-active: #d9363e;
+
   /* 文字颜色 */
   --text-color: #333333;
   --text-color-secondary: #666666;
   --text-color-disabled: #999999;
-  --text-color-inverse: #FFFFFF;
-  
+  --text-color-inverse: #ffffff;
+
   /* 背景色 */
-  --background-color: #F5F7FA;
-  --background-color-light: #FFFFFF;
-  --background-color-dark: #E8F4FD;
-  
+  --background-color: #f5f7fa;
+  --background-color-light: #ffffff;
+  --background-color-dark: #e8f4fd;
+
   /* 边框色 */
-  --border-color: #D9D9D9;
-  --border-color-light: #E8E8E8;
-  --border-color-dark: #BFBFBF;
-  
+  --border-color: #d9d9d9;
+  --border-color-light: #e8e8e8;
+  --border-color-dark: #bfbfbf;
+
   /* 阴影 */
   --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.06);
   --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
   --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.15);
-  
+
   /* 圆角 */
   --border-radius-small: 4px;
   --border-radius-medium: 6px;
   --border-radius-large: 8px;
-  
+
   /* 间距 */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -59,7 +59,7 @@
   --spacing-lg: 24px;
   --spacing-xl: 32px;
   --spacing-xxl: 48px;
-  
+
   /* 字体大小 */
   --font-size-xs: 12px;
   --font-size-sm: 14px;
@@ -67,12 +67,12 @@
   --font-size-lg: 18px;
   --font-size-xl: 20px;
   --font-size-xxl: 24px;
-  
+
   /* 行高 */
   --line-height-tight: 1.2;
   --line-height-normal: 1.5;
   --line-height-loose: 1.8;
-  
+
   /* 动画时长 */
   --transition-fast: 0.15s;
   --transition-normal: 0.3s;
@@ -133,7 +133,9 @@
   font-size: var(--font-size-sm);
 }
 
-.form-railway .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+.form-railway
+  .ant-form-item-label
+  > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
   color: var(--error-color);
 }
 
@@ -290,19 +292,19 @@
     padding-right: 0;
     padding-bottom: var(--spacing-xs);
   }
-  
+
   .form-railway--horizontal .ant-col-6 {
     width: 100%;
   }
-  
+
   .form-railway--horizontal .ant-col-18 {
     width: 100%;
   }
-  
+
   .form-railway__actions {
     text-align: center;
   }
-  
+
   .form-railway__actions .ant-btn {
     width: 100%;
     margin-left: 0;

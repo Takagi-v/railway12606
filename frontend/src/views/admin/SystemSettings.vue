@@ -15,15 +15,11 @@
           <h3>权限测试</h3>
 
           <PermissionWrapper :permissions="['system:manage']">
-            <button class="btn btn-primary">
-              系统管理 (需要 system:manage 权限)
-            </button>
+            <button class="btn btn-primary">系统管理 (需要 system:manage 权限)</button>
           </PermissionWrapper>
 
           <PermissionWrapper :permissions="['system:admin']">
-            <button class="btn btn-danger">
-              系统管理员 (需要 system:admin 权限)
-            </button>
+            <button class="btn btn-danger">系统管理员 (需要 system:admin 权限)</button>
           </PermissionWrapper>
 
           <button v-role="'super_admin'" class="btn btn-warning">
@@ -36,7 +32,7 @@
 </template>
 
 <script setup>
-import PermissionWrapper from "@/components/Permission/PermissionWrapper.vue";
+import PermissionWrapper from '@/components/Permission/PermissionWrapper.vue'
 </script>
 
 <style scoped>

@@ -13,89 +13,89 @@
 </template>
 
 <script>
-import { computed, defineComponent } from "vue";
-import { usePermissionStore } from "@/stores/permission";
-import { useUserStore } from "@/stores/user";
+import { computed, defineComponent } from 'vue'
+import { usePermissionStore } from '@/stores/permission'
+import { useUserStore } from '@/stores/user'
 
 export default defineComponent({
-  name: "PermissionWrapper",
+  name: 'PermissionWrapper',
   props: {
     // 所需权限
     permissions: {
       type: [String, Array],
-      default: null,
+      default: null
     },
     // 所需角色
     roles: {
       type: [String, Array],
-      default: null,
+      default: null
     },
     // 权限检查模式：'any' 或 'all'
     permissionMode: {
       type: String,
-      default: "any",
-      validator: (value) => ["any", "all"].includes(value),
+      default: 'any',
+      validator: value => ['any', 'all'].includes(value)
     },
     // 角色检查模式：'any' 或 'all'
     roleMode: {
       type: String,
-      default: "any",
-      validator: (value) => ["any", "all"].includes(value),
+      default: 'any',
+      validator: value => ['any', 'all'].includes(value)
     },
     // 是否显示无权限时的后备内容
     showFallback: {
       type: Boolean,
-      default: false,
+      default: false
     },
     // 无权限时的提示信息
     fallbackMessage: {
       type: String,
-      default: "您没有权限访问此内容",
+      default: '您没有权限访问此内容'
     },
     // 包装器样式类
     wrapperClass: {
       type: String,
-      default: "",
+      default: ''
     },
     // 后备内容样式类
     fallbackClass: {
       type: String,
-      default: "permission-fallback",
+      default: 'permission-fallback'
     },
     // 是否需要登录
     requireAuth: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   setup(props) {
-    const permissionStore = usePermissionStore();
-    const userStore = useUserStore();
+    const permissionStore = usePermissionStore()
+    const userStore = useUserStore()
 
     // 检查是否有访问权限
     const hasAccess = computed(() => {
       // 如果需要登录但用户未登录
       if (props.requireAuth && !userStore.isAuthenticated) {
-        return false;
+        return false
       }
 
       // 如果不需要任何权限或角色，直接允许访问
       if (!props.permissions && !props.roles) {
-        return true;
+        return true
       }
 
-      let hasPermission = true;
-      let hasRole = true;
+      let hasPermission = true
+      let hasRole = true
 
       // 检查权限
       if (props.permissions) {
         if (Array.isArray(props.permissions)) {
           hasPermission =
-            props.permissionMode === "all"
+            props.permissionMode === 'all'
               ? permissionStore.hasAllPermissions(props.permissions)
-              : permissionStore.hasAnyPermission(props.permissions);
+              : permissionStore.hasAnyPermission(props.permissions)
         } else {
-          hasPermission = permissionStore.hasPermission(props.permissions);
+          hasPermission = permissionStore.hasPermission(props.permissions)
         }
       }
 
@@ -103,22 +103,22 @@ export default defineComponent({
       if (props.roles) {
         if (Array.isArray(props.roles)) {
           hasRole =
-            props.roleMode === "all"
+            props.roleMode === 'all'
               ? permissionStore.hasAllRoles(props.roles)
-              : permissionStore.hasAnyRole(props.roles);
+              : permissionStore.hasAnyRole(props.roles)
         } else {
-          hasRole = permissionStore.hasRole(props.roles);
+          hasRole = permissionStore.hasRole(props.roles)
         }
       }
 
-      return hasPermission && hasRole;
-    });
+      return hasPermission && hasRole
+    })
 
     return {
-      hasAccess,
-    };
-  },
-});
+      hasAccess
+    }
+  }
+})
 </script>
 
 <style scoped>

@@ -5,7 +5,7 @@
         <h1>重点旅客预约</h1>
         <p class="subtitle">为行动不便的旅客提供专门的预约服务，确保您的出行更加便利</p>
       </div>
-      
+
       <!-- 成功提示 -->
       <div v-if="showSuccess" class="alert alert-success">
         <i class="icon">✓</i>
@@ -21,51 +21,63 @@
       <div class="service-content">
         <form @submit.prevent="submitForm" class="service-form">
           <div class="form-group">
-            <label for="name">姓名 <span class="required">*</span></label>
-            <input 
+            <label for="name">
+              姓名
+              <span class="required">*</span>
+            </label>
+            <input
               id="name"
               v-model="form.name"
-              type="text" 
+              type="text"
               placeholder="请输入真实姓名"
-              :class="{ 'error': errors.name }"
+              :class="{ error: errors.name }"
               @blur="validateField('name')"
             />
             <span v-if="errors.name" class="error-text">{{ errors.name }}</span>
           </div>
 
           <div class="form-group">
-            <label for="phone">联系电话 <span class="required">*</span></label>
-            <input 
+            <label for="phone">
+              联系电话
+              <span class="required">*</span>
+            </label>
+            <input
               id="phone"
               v-model="form.phone"
-              type="tel" 
+              type="tel"
               placeholder="请输入11位手机号码"
-              :class="{ 'error': errors.phone }"
+              :class="{ error: errors.phone }"
               @blur="validateField('phone')"
             />
             <span v-if="errors.phone" class="error-text">{{ errors.phone }}</span>
           </div>
 
           <div class="form-group">
-            <label for="date">出行日期 <span class="required">*</span></label>
-            <input 
+            <label for="date">
+              出行日期
+              <span class="required">*</span>
+            </label>
+            <input
               id="date"
               v-model="form.date"
-              type="date" 
+              type="date"
               :min="minDate"
-              :class="{ 'error': errors.date }"
+              :class="{ error: errors.date }"
               @blur="validateField('date')"
             />
             <span v-if="errors.date" class="error-text">{{ errors.date }}</span>
           </div>
 
           <div class="form-group">
-            <label for="requirements">特殊需求 <span class="required">*</span></label>
-            <textarea 
+            <label for="requirements">
+              特殊需求
+              <span class="required">*</span>
+            </label>
+            <textarea
               id="requirements"
               v-model="form.requirements"
               placeholder="请详细描述您的特殊需求，如：轮椅服务、担架服务、盲人引导等"
-              :class="{ 'error': errors.requirements }"
+              :class="{ error: errors.requirements }"
               @blur="validateField('requirements')"
             ></textarea>
             <span v-if="errors.requirements" class="error-text">{{ errors.requirements }}</span>
@@ -81,11 +93,7 @@
             </select>
           </div>
 
-          <button 
-            type="submit" 
-            class="submit-btn"
-            :disabled="isSubmitting"
-          >
+          <button type="submit" class="submit-btn" :disabled="isSubmitting">
             <span v-if="isSubmitting" class="loading-spinner"></span>
             {{ isSubmitting ? '提交中...' : '提交预约' }}
           </button>
@@ -130,9 +138,9 @@ const minDate = computed(() => {
 })
 
 // 表单验证规则
-const validateField = (field) => {
+const validateField = field => {
   errors.value[field] = ''
-  
+
   switch (field) {
     case 'name':
       if (!form.value.name.trim()) {
@@ -141,7 +149,7 @@ const validateField = (field) => {
         errors.value.name = '姓名至少需要2个字符'
       }
       break
-    
+
     case 'phone':
       const phoneRegex = /^1[3-9]\d{9}$/
       if (!form.value.phone.trim()) {
@@ -150,7 +158,7 @@ const validateField = (field) => {
         errors.value.phone = '请输入正确的11位手机号码'
       }
       break
-    
+
     case 'date':
       if (!form.value.date) {
         errors.value.date = '请选择出行日期'
@@ -158,7 +166,7 @@ const validateField = (field) => {
         errors.value.date = '出行日期不能早于今天'
       }
       break
-    
+
     case 'requirements':
       if (!form.value.requirements.trim()) {
         errors.value.requirements = '请描述您的特殊需求'
@@ -175,7 +183,7 @@ const validateForm = () => {
   validateField('phone')
   validateField('date')
   validateField('requirements')
-  
+
   return !Object.values(errors.value).some(error => error)
 }
 
@@ -196,7 +204,7 @@ const submitForm = async () => {
   try {
     // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 2000))
-    
+
     // 成功处理
     showSuccess.value = true
     form.value = {
@@ -207,12 +215,11 @@ const submitForm = async () => {
       contactTime: ''
     }
     errors.value = {}
-    
+
     // 3秒后隐藏成功提示
     setTimeout(() => {
       showSuccess.value = false
     }, 5000)
-    
   } catch (error) {
     showError.value = true
     errorMessage.value = '提交失败，请稍后重试'
@@ -243,7 +250,7 @@ onMounted(() => {
   background: white;
   padding: 40px;
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .header {
@@ -412,8 +419,12 @@ onMounted(() => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .service-info {
@@ -443,7 +454,7 @@ onMounted(() => {
 }
 
 .service-info li::before {
-  content: "•";
+  content: '•';
   color: #3498db;
   font-weight: bold;
   position: absolute;
@@ -455,33 +466,33 @@ onMounted(() => {
   .service-page {
     padding: 10px;
   }
-  
+
   .container {
     padding: 20px;
     margin: 0 10px;
   }
-  
+
   .header h1 {
     font-size: 1.8rem;
   }
-  
+
   .subtitle {
     font-size: 1rem;
   }
-  
+
   .form-group input,
   .form-group textarea,
   .form-group select {
     padding: 12px 14px;
     font-size: 16px; /* 防止iOS缩放 */
   }
-  
+
   .submit-btn {
     padding: 14px 24px;
     font-size: 1rem;
     width: 100%;
   }
-  
+
   .service-content {
     gap: 30px;
   }
@@ -492,16 +503,16 @@ onMounted(() => {
     padding: 16px;
     margin: 0 5px;
   }
-  
+
   .header h1 {
     font-size: 1.6rem;
   }
-  
+
   .alert {
     padding: 12px 16px;
     font-size: 0.9rem;
   }
-  
+
   .service-info {
     padding: 20px;
   }
@@ -524,7 +535,7 @@ onMounted(() => {
   .form-group select {
     border-width: 3px;
   }
-  
+
   .submit-btn {
     border: 2px solid #2c3e50;
   }

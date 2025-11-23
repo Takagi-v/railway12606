@@ -30,7 +30,7 @@
       @focus="handleFocus"
       @pressEnter="handlePressEnter"
     />
-    
+
     <a-input-password
       v-else-if="type === 'password'"
       v-model:value="inputValue"
@@ -47,7 +47,7 @@
       @focus="handleFocus"
       @pressEnter="handlePressEnter"
     />
-    
+
     <a-textarea
       v-else-if="type === 'textarea'"
       v-model:value="inputValue"
@@ -66,7 +66,7 @@
       @focus="handleFocus"
       @pressEnter="handlePressEnter"
     />
-    
+
     <a-input-number
       v-else-if="type === 'number'"
       v-model:value="inputValue"
@@ -107,7 +107,7 @@ const props = defineProps({
   type: {
     type: String,
     default: 'text',
-    validator: (value) => ['text', 'password', 'email', 'tel', 'textarea', 'number'].includes(value)
+    validator: value => ['text', 'password', 'email', 'tel', 'textarea', 'number'].includes(value)
   },
   // 输入值
   modelValue: {
@@ -138,7 +138,7 @@ const props = defineProps({
   validateStatus: {
     type: String,
     default: '',
-    validator: (value) => ['', 'success', 'warning', 'error', 'validating'].includes(value)
+    validator: value => ['', 'success', 'warning', 'error', 'validating'].includes(value)
   },
   // 是否显示反馈图标
   hasFeedback: {
@@ -159,7 +159,7 @@ const props = defineProps({
   size: {
     type: String,
     default: 'middle',
-    validator: (value) => ['small', 'middle', 'large'].includes(value)
+    validator: value => ['small', 'middle', 'large'].includes(value)
   },
   // 最大长度
   maxlength: {
@@ -248,50 +248,41 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits([
-  'update:modelValue',
-  'change',
-  'blur',
-  'focus',
-  'pressEnter'
-])
+const emit = defineEmits(['update:modelValue', 'change', 'blur', 'focus', 'pressEnter'])
 
 const inputValue = ref(props.modelValue)
 
 // 监听外部值变化
 watch(
   () => props.modelValue,
-  (newValue) => {
+  newValue => {
     inputValue.value = newValue
   }
 )
 
 // 监听内部值变化
-watch(
-  inputValue,
-  (newValue) => {
-    emit('update:modelValue', newValue)
-  }
-)
+watch(inputValue, newValue => {
+  emit('update:modelValue', newValue)
+})
 
 // 处理输入变化
-const handleChange = (e) => {
+const handleChange = e => {
   const value = e.target ? e.target.value : e
   emit('change', value)
 }
 
 // 处理失焦
-const handleBlur = (e) => {
+const handleBlur = e => {
   emit('blur', e)
 }
 
 // 处理聚焦
-const handleFocus = (e) => {
+const handleFocus = e => {
   emit('focus', e)
 }
 
 // 处理回车
-const handlePressEnter = (e) => {
+const handlePressEnter = e => {
   emit('pressEnter', e)
 }
 </script>

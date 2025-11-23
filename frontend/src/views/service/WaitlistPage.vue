@@ -4,7 +4,9 @@
       <!-- 页面头部 -->
       <div class="header">
         <h1>候补购票</h1>
-        <p class="subtitle">当您需要的车票暂时售完时，可提交候补订单，我们将在有退票时自动为您购买</p>
+        <p class="subtitle">
+          当您需要的车票暂时售完时，可提交候补订单，我们将在有退票时自动为您购买
+        </p>
       </div>
 
       <!-- 提示信息 -->
@@ -16,8 +18,8 @@
       <div class="content-section">
         <!-- 功能导航 -->
         <div class="nav-tabs">
-          <button 
-            v-for="tab in tabs" 
+          <button
+            v-for="tab in tabs"
             :key="tab.key"
             :class="['tab-btn', { active: activeTab === tab.key }]"
             @click="activeTab = tab.key"
@@ -32,27 +34,30 @@
           <div class="main-content">
             <div class="waitlist-form">
               <h2>提交候补订单</h2>
-              
+
               <form @submit.prevent="submitWaitlist">
                 <!-- 行程信息 -->
                 <div class="section-title">
                   <span class="icon">🚄</span>
                   <span>行程信息</span>
                 </div>
-                
+
                 <div class="form-row">
                   <div class="form-group">
-                    <label>出发城市 <span class="required">*</span></label>
-                    <input 
-                      type="text" 
+                    <label>
+                      出发城市
+                      <span class="required">*</span>
+                    </label>
+                    <input
+                      type="text"
                       v-model="form.departure"
                       :class="{ error: errors.departure }"
                       placeholder="请输入出发城市"
                       @input="searchStations('departure', $event.target.value)"
                     />
                     <div v-if="departureStations.length > 0" class="suggestions">
-                      <div 
-                        v-for="station in departureStations" 
+                      <div
+                        v-for="station in departureStations"
                         :key="station"
                         class="suggestion-item"
                         @click="selectStation('departure', station)"
@@ -62,19 +67,22 @@
                     </div>
                     <div v-if="errors.departure" class="error-text">{{ errors.departure }}</div>
                   </div>
-                  
+
                   <div class="form-group">
-                    <label>到达城市 <span class="required">*</span></label>
-                    <input 
-                      type="text" 
+                    <label>
+                      到达城市
+                      <span class="required">*</span>
+                    </label>
+                    <input
+                      type="text"
                       v-model="form.arrival"
                       :class="{ error: errors.arrival }"
                       placeholder="请输入到达城市"
                       @input="searchStations('arrival', $event.target.value)"
                     />
                     <div v-if="arrivalStations.length > 0" class="suggestions">
-                      <div 
-                        v-for="station in arrivalStations" 
+                      <div
+                        v-for="station in arrivalStations"
                         :key="station"
                         class="suggestion-item"
                         @click="selectStation('arrival', station)"
@@ -88,9 +96,12 @@
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label>出发日期 <span class="required">*</span></label>
-                    <input 
-                      type="date" 
+                    <label>
+                      出发日期
+                      <span class="required">*</span>
+                    </label>
+                    <input
+                      type="date"
                       v-model="form.date"
                       :class="{ error: errors.date }"
                       :min="minDate"
@@ -98,7 +109,7 @@
                     />
                     <div v-if="errors.date" class="error-text">{{ errors.date }}</div>
                   </div>
-                  
+
                   <div class="form-group">
                     <label>车次类型</label>
                     <select v-model="form.trainType">
@@ -118,18 +129,18 @@
                   <span class="icon">💺</span>
                   <span>座席选择</span>
                 </div>
-                
+
                 <div class="seat-types">
-                  <label 
-                    v-for="seat in seatTypes" 
+                  <label
+                    v-for="seat in seatTypes"
                     :key="seat.value"
                     :class="['seat-option', { selected: form.seatTypes.includes(seat.value) }]"
                   >
-                    <input 
-                      type="checkbox" 
-                      :value="seat.value" 
+                    <input
+                      type="checkbox"
+                      :value="seat.value"
                       v-model="form.seatTypes"
-                      style="display: none;"
+                      style="display: none"
                     />
                     <span class="seat-icon">{{ seat.icon }}</span>
                     <div class="seat-info">
@@ -145,30 +156,33 @@
                   <span class="icon">👥</span>
                   <span>乘客信息</span>
                 </div>
-                
+
                 <div class="passengers-section">
-                  <div 
-                    v-for="(passenger, index) in form.passengers" 
+                  <div
+                    v-for="(passenger, index) in form.passengers"
                     :key="index"
                     class="passenger-card"
                   >
                     <div class="passenger-header">
                       <span class="passenger-title">乘客 {{ index + 1 }}</span>
-                      <button 
+                      <button
                         v-if="form.passengers.length > 1"
-                        type="button" 
+                        type="button"
                         @click="removePassenger(index)"
                         class="remove-passenger"
                       >
                         删除
                       </button>
                     </div>
-                    
+
                     <div class="form-row">
                       <div class="form-group">
-                        <label>姓名 <span class="required">*</span></label>
-                        <input 
-                          type="text" 
+                        <label>
+                          姓名
+                          <span class="required">*</span>
+                        </label>
+                        <input
+                          type="text"
                           v-model="passenger.name"
                           :class="{ error: errors[`passenger_${index}_name`] }"
                           placeholder="请输入乘客姓名"
@@ -177,9 +191,12 @@
                           {{ errors[`passenger_${index}_name`] }}
                         </div>
                       </div>
-                      
+
                       <div class="form-group">
-                        <label>证件类型 <span class="required">*</span></label>
+                        <label>
+                          证件类型
+                          <span class="required">*</span>
+                        </label>
                         <select v-model="passenger.idType">
                           <option value="身份证">身份证</option>
                           <option value="护照">护照</option>
@@ -187,11 +204,14 @@
                           <option value="台湾通行证">台湾通行证</option>
                         </select>
                       </div>
-                      
+
                       <div class="form-group">
-                        <label>证件号码 <span class="required">*</span></label>
-                        <input 
-                          type="text" 
+                        <label>
+                          证件号码
+                          <span class="required">*</span>
+                        </label>
+                        <input
+                          type="text"
                           v-model="passenger.idNumber"
                           :class="{ error: errors[`passenger_${index}_idNumber`] }"
                           placeholder="请输入证件号码"
@@ -201,12 +221,15 @@
                         </div>
                       </div>
                     </div>
-                    
+
                     <div class="form-row">
                       <div class="form-group">
-                        <label>手机号码 <span class="required">*</span></label>
-                        <input 
-                          type="tel" 
+                        <label>
+                          手机号码
+                          <span class="required">*</span>
+                        </label>
+                        <input
+                          type="tel"
                           v-model="passenger.phone"
                           :class="{ error: errors[`passenger_${index}_phone`] }"
                           placeholder="请输入手机号码"
@@ -215,7 +238,7 @@
                           {{ errors[`passenger_${index}_phone`] }}
                         </div>
                       </div>
-                      
+
                       <div class="form-group">
                         <label>乘客类型</label>
                         <select v-model="passenger.type">
@@ -226,9 +249,9 @@
                       </div>
                     </div>
                   </div>
-                  
-                  <button 
-                    type="button" 
+
+                  <button
+                    type="button"
                     @click="addPassenger"
                     class="add-passenger-btn"
                     :disabled="form.passengers.length >= 5"
@@ -243,7 +266,7 @@
                   <span class="icon">⚙️</span>
                   <span>候补设置</span>
                 </div>
-                
+
                 <div class="waitlist-settings">
                   <div class="form-group">
                     <label>候补截止时间</label>
@@ -255,7 +278,7 @@
                       <option value="24">开车前1天</option>
                     </select>
                   </div>
-                  
+
                   <div class="form-group">
                     <label>自动支付</label>
                     <div class="auto-pay-options">
@@ -270,18 +293,12 @@
                         <span>关闭</span>
                       </label>
                     </div>
-                    <div class="auto-pay-note">
-                      开启后，候补成功将自动扣款，无需手动支付
-                    </div>
+                    <div class="auto-pay-note">开启后，候补成功将自动扣款，无需手动支付</div>
                   </div>
                 </div>
 
                 <!-- 提交按钮 -->
-                <button 
-                  type="submit" 
-                  :disabled="loading"
-                  class="submit-btn"
-                >
+                <button type="submit" :disabled="loading" class="submit-btn">
                   <div v-if="loading" class="loading-spinner"></div>
                   <span>{{ loading ? '提交中...' : '提交候补订单' }}</span>
                 </button>
@@ -291,10 +308,12 @@
             <!-- 候补说明 -->
             <div class="waitlist-guide">
               <h3>候补购票说明</h3>
-              
+
               <div class="guide-section">
                 <h4>📋 什么是候补购票</h4>
-                <p>当您需要购买的车票售完时，可以提交候补订单。如有退票、改签释放车票，系统将自动为您购买。</p>
+                <p>
+                  当您需要购买的车票售完时，可以提交候补订单。如有退票、改签释放车票，系统将自动为您购买。
+                </p>
               </div>
 
               <div class="guide-section">
@@ -348,25 +367,23 @@
             </div>
 
             <div v-else class="orders-list">
-              <div 
-                v-for="order in filteredOrders" 
-                :key="order.id"
-                class="order-card"
-              >
+              <div v-for="order in filteredOrders" :key="order.id" class="order-card">
                 <div class="order-header">
                   <div class="order-info">
                     <span class="order-number">订单号：{{ order.orderNumber }}</span>
-                    <span :class="['order-status', order.status]">{{ getStatusText(order.status) }}</span>
+                    <span :class="['order-status', order.status]">
+                      {{ getStatusText(order.status) }}
+                    </span>
                   </div>
                   <div class="order-actions">
-                    <button 
+                    <button
                       v-if="order.status === 'waiting'"
                       @click="cancelOrder(order.id)"
                       class="cancel-btn"
                     >
                       取消候补
                     </button>
-                    <button 
+                    <button
                       v-if="order.status === 'success'"
                       @click="payOrder(order.id)"
                       class="pay-btn"
@@ -410,7 +427,9 @@
                     <div class="progress-bar">
                       <div class="progress-fill" :style="{ width: order.progress + '%' }"></div>
                     </div>
-                    <div class="progress-text">{{ order.progress }}% - {{ order.progressText }}</div>
+                    <div class="progress-text">
+                      {{ order.progress }}% - {{ order.progressText }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -422,7 +441,7 @@
         <div v-if="activeTab === 'rules'" class="tab-content">
           <div class="rules-section">
             <h2>候补购票规则</h2>
-            
+
             <div class="rule-category">
               <h3>📝 基本规则</h3>
               <div class="rule-list">
@@ -544,9 +563,24 @@ const seatTypes = [
 
 // 常用车站
 const commonStations = [
-  '北京南', '北京西', '上海虹桥', '上海', '广州南', '深圳北',
-  '杭州东', '南京南', '武汉', '成都东', '重庆北', '西安北',
-  '郑州东', '长沙南', '济南西', '青岛', '厦门北', '福州南'
+  '北京南',
+  '北京西',
+  '上海虹桥',
+  '上海',
+  '广州南',
+  '深圳北',
+  '杭州东',
+  '南京南',
+  '武汉',
+  '成都东',
+  '重庆北',
+  '西安北',
+  '郑州东',
+  '长沙南',
+  '济南西',
+  '青岛',
+  '厦门北',
+  '福州南'
 ]
 
 // 表单数据
@@ -556,13 +590,15 @@ const form = reactive({
   date: '',
   trainType: '',
   seatTypes: ['second'],
-  passengers: [{
-    name: '',
-    idType: '身份证',
-    idNumber: '',
-    phone: '',
-    type: '成人'
-  }],
+  passengers: [
+    {
+      name: '',
+      idType: '身份证',
+      idNumber: '',
+      phone: '',
+      type: '成人'
+    }
+  ],
   deadline: '2',
   autoPay: 'true'
 })
@@ -629,9 +665,7 @@ const searchStations = (type, query) => {
     return
   }
 
-  const filtered = commonStations.filter(station => 
-    station.includes(query)
-  ).slice(0, 5)
+  const filtered = commonStations.filter(station => station.includes(query)).slice(0, 5)
 
   if (type === 'departure') {
     departureStations.value = filtered
@@ -663,7 +697,7 @@ const addPassenger = () => {
   }
 }
 
-const removePassenger = (index) => {
+const removePassenger = index => {
   form.passengers.splice(index, 1)
 }
 
@@ -740,7 +774,7 @@ const submitWaitlist = async () => {
   try {
     // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 2000))
-    
+
     // 生成新订单
     const newOrder = {
       id: Date.now(),
@@ -748,16 +782,18 @@ const submitWaitlist = async () => {
       departure: form.departure,
       arrival: form.arrival,
       date: form.date,
-      seatTypes: form.seatTypes.map(type => seatTypes.find(s => s.value === type)?.label).filter(Boolean),
+      seatTypes: form.seatTypes
+        .map(type => seatTypes.find(s => s.value === type)?.label)
+        .filter(Boolean),
       passengerCount: form.passengers.length,
       status: 'waiting',
       submitTime: new Date().toLocaleString('zh-CN'),
       progress: 0,
       progressText: '候补订单已提交，正在排队中'
     }
-    
+
     waitlistOrders.value.unshift(newOrder)
-    
+
     // 重置表单
     Object.assign(form, {
       departure: '',
@@ -765,20 +801,21 @@ const submitWaitlist = async () => {
       date: '',
       trainType: '',
       seatTypes: ['second'],
-      passengers: [{
-        name: '',
-        idType: '身份证',
-        idNumber: '',
-        phone: '',
-        type: '成人'
-      }],
+      passengers: [
+        {
+          name: '',
+          idType: '身份证',
+          idNumber: '',
+          phone: '',
+          type: '成人'
+        }
+      ],
       deadline: '2',
       autoPay: 'true'
     })
-    
+
     showAlertMessage('候补订单提交成功！请在"我的候补"中查看进度', 'alert-success')
     activeTab.value = 'orders'
-    
   } catch (error) {
     showAlertMessage('提交失败，请稍后重试', 'alert-error')
   } finally {
@@ -787,7 +824,7 @@ const submitWaitlist = async () => {
 }
 
 // 获取状态文本
-const getStatusText = (status) => {
+const getStatusText = status => {
   const statusMap = {
     waiting: '候补中',
     success: '候补成功',
@@ -798,7 +835,7 @@ const getStatusText = (status) => {
 }
 
 // 取消订单
-const cancelOrder = async (orderId) => {
+const cancelOrder = async orderId => {
   if (!confirm('确定要取消这个候补订单吗？')) {
     return
   }
@@ -806,12 +843,12 @@ const cancelOrder = async (orderId) => {
   try {
     // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 1000))
-    
+
     const order = waitlistOrders.value.find(o => o.id === orderId)
     if (order) {
       order.status = 'cancelled'
     }
-    
+
     showAlertMessage('候补订单已取消', 'alert-success')
   } catch (error) {
     showAlertMessage('取消失败，请稍后重试', 'alert-error')
@@ -819,7 +856,7 @@ const cancelOrder = async (orderId) => {
 }
 
 // 支付订单
-const payOrder = (orderId) => {
+const payOrder = orderId => {
   showAlertMessage('跳转到支付页面...', 'alert-success')
   // 这里可以跳转到支付页面
 }
@@ -841,7 +878,7 @@ onMounted(() => {
   margin: 0 auto;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
@@ -916,7 +953,7 @@ onMounted(() => {
   margin-bottom: 30px;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .tab-btn {
@@ -1219,7 +1256,7 @@ onMounted(() => {
   cursor: pointer;
 }
 
-.radio-option input[type="radio"] {
+.radio-option input[type='radio'] {
   width: auto;
   margin: 0;
 }
@@ -1271,8 +1308,12 @@ onMounted(() => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 候补指南样式 */
@@ -1323,7 +1364,7 @@ onMounted(() => {
 }
 
 .guide-section li::before {
-  content: "•";
+  content: '•';
   color: #667eea;
   font-weight: bold;
   position: absolute;
@@ -1631,7 +1672,7 @@ onMounted(() => {
     grid-template-columns: 1fr;
     gap: 30px;
   }
-  
+
   .waitlist-guide {
     position: static;
     order: -1;
@@ -1642,69 +1683,69 @@ onMounted(() => {
   .service-page {
     padding: 10px;
   }
-  
+
   .container {
     margin: 0 10px;
     border-radius: 12px;
   }
-  
+
   .header {
     padding: 30px 20px;
   }
-  
+
   .header h1 {
     font-size: 2rem;
   }
-  
+
   .content-section {
     padding: 20px;
   }
-  
+
   .alert {
     margin: 20px;
   }
-  
+
   .nav-tabs {
     flex-direction: column;
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   .seat-types {
     grid-template-columns: 1fr;
   }
-  
+
   .waitlist-settings {
     grid-template-columns: 1fr;
   }
-  
+
   .orders-header {
     flex-direction: column;
     gap: 15px;
     align-items: stretch;
   }
-  
+
   .order-header {
     flex-direction: column;
     gap: 15px;
     align-items: stretch;
   }
-  
+
   .order-info {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
-  
+
   .route-info {
     flex-direction: column;
     gap: 10px;
     align-items: flex-start;
   }
-  
+
   .order-details {
     grid-template-columns: 1fr;
   }
@@ -1714,20 +1755,20 @@ onMounted(() => {
   .header h1 {
     font-size: 1.8rem;
   }
-  
+
   .subtitle {
     font-size: 1rem;
   }
-  
+
   .waitlist-form,
   .waitlist-guide {
     padding: 20px;
   }
-  
+
   .passenger-card {
     padding: 15px;
   }
-  
+
   .auto-pay-options {
     flex-direction: column;
     gap: 10px;
@@ -1753,7 +1794,7 @@ onMounted(() => {
   .order-card {
     border-width: 2px;
   }
-  
+
   .submit-btn,
   .tab-btn.active {
     border: 2px solid white;
@@ -1766,17 +1807,17 @@ onMounted(() => {
     background: white;
     padding: 0;
   }
-  
+
   .container {
     box-shadow: none;
     border-radius: 0;
   }
-  
+
   .header {
     background: white;
     color: black;
   }
-  
+
   .submit-btn,
   .alert,
   .nav-tabs,

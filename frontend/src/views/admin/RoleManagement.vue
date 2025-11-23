@@ -15,15 +15,11 @@
           <h3>权限测试</h3>
 
           <PermissionWrapper :permissions="['role:create']">
-            <button class="btn btn-primary">
-              创建角色 (需要 role:create 权限)
-            </button>
+            <button class="btn btn-primary">创建角色 (需要 role:create 权限)</button>
           </PermissionWrapper>
 
           <PermissionWrapper :permissions="['role:delete']">
-            <button class="btn btn-danger">
-              删除角色 (需要 role:delete 权限)
-            </button>
+            <button class="btn btn-danger">删除角色 (需要 role:delete 权限)</button>
           </PermissionWrapper>
 
           <button v-permission="'role:update'" class="btn btn-secondary">
@@ -36,7 +32,7 @@
 </template>
 
 <script setup>
-import PermissionWrapper from "@/components/Permission/PermissionWrapper.vue";
+import PermissionWrapper from '@/components/Permission/PermissionWrapper.vue'
 </script>
 
 <style scoped>

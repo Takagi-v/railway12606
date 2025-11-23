@@ -261,12 +261,12 @@ export default {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .card-extra {
     margin-left: 0;
     margin-top: var(--spacing-sm);
   }
-  
+
   .card-body {
     padding: var(--spacing-md);
   }

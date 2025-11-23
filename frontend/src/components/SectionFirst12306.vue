@@ -2,10 +2,7 @@
   <div class="section-first">
     <!-- 轮播图 -->
     <div class="fullSlide">
-      <div
-        class="bd"
-        :style="bdStyle"
-      >
+      <div class="bd" :style="bdStyle">
         <ul
           class="sowingMap"
           :style="{
@@ -15,7 +12,7 @@
             left: -currentIndex * slideWidth + 'px',
             padding: '0',
             margin: '0',
-            transition: transitionEnabled ? 'all 0.4s ease' : 'none',
+            transition: transitionEnabled ? 'all 0.4s ease' : 'none'
           }"
           @mouseenter="pauseAuto"
           @mouseleave="resumeAuto"
@@ -27,7 +24,7 @@
               background: `url(${img}) center center no-repeat`,
               float: 'left',
               width: slideWidth + 'px',
-              height: '450px',
+              height: '450px'
             }"
           >
             <a :href="linkFor(idx)" target="_blank"></a>
@@ -52,17 +49,20 @@
       <ul class="search-side">
         <li :class="{ active: activeSide === 'ticket' }" @click="setSide('ticket')">
           <a href="javascript:;">
-            <i class="icon icon-huochepiao"></i>车票
+            <i class="icon icon-huochepiao"></i>
+            车票
           </a>
         </li>
         <li :class="{ active: activeSide === 'common' }" @click="setSide('common')">
           <a href="javascript:;">
-            <i class="icon icon-cycx"></i>常用查询
+            <i class="icon icon-cycx"></i>
+            常用查询
           </a>
         </li>
         <li :class="['last', { active: activeSide === 'cater' }]" @click="setSide('cater')">
           <a href="javascript:;">
-            <i class="icon icon-dingcan"></i>订餐
+            <i class="icon icon-dingcan"></i>
+            订餐
           </a>
         </li>
       </ul>
@@ -76,22 +76,26 @@
               <ul>
                 <li :class="{ active: activeTab === 'single' }">
                   <a href="javascript:void(0)" @click="activeTab = 'single'">
-                    <i class="icon icon-dancheng"></i>单程
+                    <i class="icon icon-dancheng"></i>
+                    单程
                   </a>
                 </li>
                 <li :class="{ active: activeTab === 'round' }">
                   <a href="javascript:void(0)" @click="activeTab = 'round'">
-                    <i class="icon icon-wangfan"></i>往返
+                    <i class="icon icon-wangfan"></i>
+                    往返
                   </a>
                 </li>
                 <li :class="{ active: activeTab === 'transfer' }">
                   <a href="javascript:void(0)" @click="activeTab = 'transfer'">
-                    <i class="icon icon-huancheng"></i>中转换乘
+                    <i class="icon icon-huancheng"></i>
+                    中转换乘
                   </a>
                 </li>
                 <li :class="{ active: activeTab === 'change' }">
                   <a href="javascript:void(0)" @click="activeTab = 'change'">
-                    <i class="icon icon-chepiao"></i>退改签
+                    <i class="icon icon-chepiao"></i>
+                    退改签
                   </a>
                 </li>
               </ul>
@@ -137,7 +141,12 @@
                       </div>
                     </div>
                     <div class="city-change">
-                      <i class="icon icon-qiehuan" title="切换" id="danChange" @click="swapStations('single')"></i>
+                      <i
+                        class="icon icon-qiehuan"
+                        title="切换"
+                        id="danChange"
+                        @click="swapStations('single')"
+                      ></i>
                     </div>
                   </div>
 
@@ -161,14 +170,25 @@
                   <div class="form-item form-item-check">
                     <div class="form-bd">
                       <ul class="check-list check-list-right">
-                        <li id="isStudentDan" @click="single.student = !single.student">学生<i></i></li>
-                        <li id="isHighDan" @click="single.highSpeed = !single.highSpeed">高铁/动车<i></i></li>
+                        <li id="isStudentDan" @click="single.student = !single.student">
+                          学生
+                          <i></i>
+                        </li>
+                        <li id="isHighDan" @click="single.highSpeed = !single.highSpeed">
+                          高铁/动车
+                          <i></i>
+                        </li>
                       </ul>
                     </div>
                   </div>
 
                   <div class="form-item form-item-btn">
-                    <a href="javascript:void(0)" class="btn btn-primary form-block" id="search_one" @click="submitSingle">
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-primary form-block"
+                      id="search_one"
+                      @click="submitSingle"
+                    >
                       查&nbsp;&nbsp;&nbsp;&nbsp;询
                     </a>
                   </div>
@@ -176,11 +196,21 @@
 
                 <div id="search-history" style="display: block">
                   <div class="search-history-bd">
-                    <i id="iconLeftHos" class="history-prev icon icon-caret-left" @click="prevHistory"></i>
-                    <i id="iconRightHos" class="history-next icon icon-caret-right" @click="nextHistory"></i>
+                    <i
+                      id="iconLeftHos"
+                      class="history-prev icon icon-caret-left"
+                      @click="prevHistory"
+                    ></i>
+                    <i
+                      id="iconRightHos"
+                      class="history-next icon icon-caret-right"
+                      @click="nextHistory"
+                    ></i>
                     <div class="history-list-wrap">
                       <ul class="history-list" id="history_ul" style="position: relative">
-                        <li v-for="(h, i) in showHistory" :key="i" @click="applyHistory(h)">{{ h }}</li>
+                        <li v-for="(h, i) in showHistory" :key="i" @click="applyHistory(h)">
+                          {{ h }}
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -229,7 +259,12 @@
                       </div>
                     </div>
                     <div class="city-change">
-                      <i class="icon icon-qiehuan" title="切换" id="returnChange" @click="swapStations('round')"></i>
+                      <i
+                        class="icon icon-qiehuan"
+                        title="切换"
+                        id="returnChange"
+                        @click="swapStations('round')"
+                      ></i>
                     </div>
                   </div>
 
@@ -237,7 +272,13 @@
                     <label for="go_date" class="form-label">出发日期</label>
                     <div class="form-bd">
                       <div class="input-box input-data">
-                        <input type="text" class="input" v-model="round.goDate" id="go_date" aria-label="请输入日期，例如2021杠01杠01" />
+                        <input
+                          type="text"
+                          class="input"
+                          v-model="round.goDate"
+                          id="go_date"
+                          aria-label="请输入日期，例如2021杠01杠01"
+                        />
                         <i class="icon icon-date" data-click="go_date"></i>
                       </div>
                     </div>
@@ -246,7 +287,13 @@
                     <label for="from_date" class="form-label">返程日期</label>
                     <div class="form-bd">
                       <div class="input-box input-data">
-                        <input type="text" class="input" v-model="round.backDate" id="from_date" aria-label="请输入日期，例如2021杠01杠01" />
+                        <input
+                          type="text"
+                          class="input"
+                          v-model="round.backDate"
+                          id="from_date"
+                          aria-label="请输入日期，例如2021杠01杠01"
+                        />
                         <i class="icon icon-date" data-click="from_date"></i>
                       </div>
                     </div>
@@ -254,13 +301,26 @@
                   <div class="form-item form-item-check">
                     <div class="form-bd">
                       <ul class="check-list check-list-right">
-                        <li id="isStudent" @click="round.student = !round.student">学生<i></i></li>
-                        <li id="isHigh" @click="round.highSpeed = !round.highSpeed">高铁/动车<i></i></li>
+                        <li id="isStudent" @click="round.student = !round.student">
+                          学生
+                          <i></i>
+                        </li>
+                        <li id="isHigh" @click="round.highSpeed = !round.highSpeed">
+                          高铁/动车
+                          <i></i>
+                        </li>
                       </ul>
                     </div>
                   </div>
                   <div class="form-item form-item-btn">
-                    <a href="javascript:void(0)" class="btn btn-primary form-block" id="search_two" @click="submitRound">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-primary form-block"
+                      id="search_two"
+                      @click="submitRound"
+                    >
+                      查&nbsp;&nbsp;&nbsp;&nbsp;询
+                    </a>
                   </div>
                 </div>
               </div>
@@ -270,31 +330,57 @@
                 <div class="search-form">
                   <div class="form-item-group">
                     <div class="form-item">
-                      <label for="fromStationSerialText" class="form-label"><b class="required">*</b>出发地</label>
+                      <label for="fromStationSerialText" class="form-label">
+                        <b class="required">*</b>
+                        出发地
+                      </label>
                       <div class="form-bd">
                         <div class="input-box input-city">
                           <input id="fromStationSerial" type="hidden" name="from_station_serial" />
-                          <input type="text" class="input" id="fromStationSerialText" v-model="transfer.fromStation" autocomplete="off" />
+                          <input
+                            type="text"
+                            class="input"
+                            id="fromStationSerialText"
+                            v-model="transfer.fromStation"
+                            autocomplete="off"
+                          />
                           <i class="icon icon-place" data-click="fromStationSerialText"></i>
                         </div>
                       </div>
                     </div>
                     <div class="form-item">
-                      <label for="toStationSerialText" class="form-label"><b class="required">*</b>到达地</label>
+                      <label for="toStationSerialText" class="form-label">
+                        <b class="required">*</b>
+                        到达地
+                      </label>
                       <div class="form-bd">
                         <div class="input-box input-city">
                           <input id="toStationSerial" type="hidden" name="to_station_serial" />
-                          <input type="text" class="input" id="toStationSerialText" v-model="transfer.toStation" autocomplete="off" />
+                          <input
+                            type="text"
+                            class="input"
+                            id="toStationSerialText"
+                            v-model="transfer.toStation"
+                            autocomplete="off"
+                          />
                           <i class="icon icon-place" data-click="toStationSerialText"></i>
                         </div>
                       </div>
                     </div>
                     <div class="city-change">
-                      <i class="icon icon-qiehuan" title="切换" id="serialChange" @click="swapStations('transfer')"></i>
+                      <i
+                        class="icon icon-qiehuan"
+                        title="切换"
+                        id="serialChange"
+                        @click="swapStations('transfer')"
+                      ></i>
                     </div>
                   </div>
                   <div class="form-item">
-                    <label for="serial_date" class="form-label"><b class="required">*</b>乘车日期</label>
+                    <label for="serial_date" class="form-label">
+                      <b class="required">*</b>
+                      乘车日期
+                    </label>
                     <div class="form-bd">
                       <div class="input-box input-data">
                         <input type="text" class="input" id="serial_date" v-model="transfer.date" />
@@ -305,12 +391,22 @@
                   <div class="form-item form-item-check">
                     <div class="form-bd">
                       <ul class="check-list check-list-right">
-                        <li id="isStudentLian" @click="transfer.student = !transfer.student">学生<i></i></li>
+                        <li id="isStudentLian" @click="transfer.student = !transfer.student">
+                          学生
+                          <i></i>
+                        </li>
                       </ul>
                     </div>
                   </div>
                   <div class="form-item form-item-btn">
-                    <a href="javascript:void(0)" class="btn btn-primary form-block" id="search_three" @click="submitTransfer">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-primary form-block"
+                      id="search_three"
+                      @click="submitTransfer"
+                    >
+                      查&nbsp;&nbsp;&nbsp;&nbsp;询
+                    </a>
                   </div>
                 </div>
               </div>
@@ -320,24 +416,48 @@
                 <div class="search-form">
                   <div class="form-item">
                     <span class="form-label">查询类型</span>
-                  <div class="form-bd">
-                    <ul class="radio-list radio-list-ding">
-                        <li id="dingqiaoID" :class="{ active: change.type === 'order' }" @click="change.type = 'order'"><i></i>订票日期</li>
-                        <li :class="{ active: change.type === 'ride' }" @click="change.type = 'ride'"><i></i>乘车日期</li>
+                    <div class="form-bd">
+                      <ul class="radio-list radio-list-ding">
+                        <li
+                          id="dingqiaoID"
+                          :class="{ active: change.type === 'order' }"
+                          @click="change.type = 'order'"
+                        >
+                          <i></i>
+                          订票日期
+                        </li>
+                        <li
+                          :class="{ active: change.type === 'ride' }"
+                          @click="change.type = 'ride'"
+                        >
+                          <i></i>
+                          乘车日期
+                        </li>
                       </ul>
+                    </div>
                   </div>
-                </div>
                   <div class="form-item">
-                    <label for="refund_start" class="form-label"><b class="required">*</b>开始日期</label>
+                    <label for="refund_start" class="form-label">
+                      <b class="required">*</b>
+                      开始日期
+                    </label>
                     <div class="form-bd">
                       <div class="input-box input-data">
-                        <input type="text" class="input" id="refund_start" v-model="change.startDate" />
+                        <input
+                          type="text"
+                          class="input"
+                          id="refund_start"
+                          v-model="change.startDate"
+                        />
                         <i class="icon icon-date" data-click="refund_start"></i>
                       </div>
                     </div>
                   </div>
                   <div class="form-item">
-                    <label for="refund_end" class="form-label"><b class="required">*</b>结束日期</label>
+                    <label for="refund_end" class="form-label">
+                      <b class="required">*</b>
+                      结束日期
+                    </label>
                     <div class="form-bd">
                       <div class="input-box input-data">
                         <input type="text" class="input" id="refund_end" v-model="change.endDate" />
@@ -346,15 +466,31 @@
                     </div>
                   </div>
                   <div class="form-item">
-                    <label for="refund_code" class="form-label"><b class="required"></b>关键字</label>
+                    <label for="refund_code" class="form-label">
+                      <b class="required"></b>
+                      关键字
+                    </label>
                     <div class="form-bd">
                       <div class="input-box">
-                        <input type="text" class="input search-input" id="refund_code" placeholder="订单号/车次/乘客姓名" v-model="change.keyword" />
+                        <input
+                          type="text"
+                          class="input search-input"
+                          id="refund_code"
+                          placeholder="订单号/车次/乘客姓名"
+                          v-model="change.keyword"
+                        />
                       </div>
                     </div>
                   </div>
                   <div class="form-item form-item-btn mt-mlg">
-                    <a href="javascript:;" class="btn btn-primary form-block" id="refund_button" @click="submitChange">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+                    <a
+                      href="javascript:;"
+                      class="btn btn-primary form-block"
+                      id="refund_button"
+                      @click="submitChange"
+                    >
+                      查&nbsp;&nbsp;&nbsp;&nbsp;询
+                    </a>
                   </div>
                 </div>
               </div>
@@ -369,22 +505,26 @@
               <ul>
                 <li :class="{ active: activeCommonTab === 'zwd' }">
                   <a href="javascript:void(0)" @click="activeCommonTab = 'zwd'">
-                    <i class="icon icon-shijian"></i>正晚点
+                    <i class="icon icon-shijian"></i>
+                    正晚点
                   </a>
                 </li>
                 <li :class="{ active: activeCommonTab === 'checkin' }">
                   <a href="javascript:void(0)" @click="activeCommonTab = 'checkin'">
-                    <i class="icon icon-jianpiaokou"></i>检票口
+                    <i class="icon icon-jianpiaokou"></i>
+                    检票口
                   </a>
                 </li>
                 <li :class="{ active: activeCommonTab === 'sale' }">
                   <a href="javascript:void(0)" @click="activeCommonTab = 'sale'">
-                    <i class="icon icon-qishou"></i>起售时间
+                    <i class="icon icon-qishou"></i>
+                    起售时间
                   </a>
                 </li>
                 <li :class="{ active: activeCommonTab === 'weather' }">
                   <a href="javascript:void(0)" @click="activeCommonTab = 'weather'">
-                    <i class="icon icon-tianqi"></i>天气查询
+                    <i class="icon icon-tianqi"></i>
+                    天气查询
                   </a>
                 </li>
               </ul>
@@ -397,8 +537,21 @@
                     <span class="form-label">查询类型</span>
                     <div class="form-bd">
                       <ul class="radio-list radio-list-station">
-                        <li id="destination_station" :class="{ active: commonZwd.type === 'arrival' }" @click="commonZwd.type = 'arrival'"><i></i>到达站</li>
-                        <li :class="{ active: commonZwd.type === 'departure' }" @click="commonZwd.type = 'departure'"><i></i>出发站</li>
+                        <li
+                          id="destination_station"
+                          :class="{ active: commonZwd.type === 'arrival' }"
+                          @click="commonZwd.type = 'arrival'"
+                        >
+                          <i></i>
+                          到达站
+                        </li>
+                        <li
+                          :class="{ active: commonZwd.type === 'departure' }"
+                          @click="commonZwd.type = 'departure'"
+                        >
+                          <i></i>
+                          出发站
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -407,7 +560,14 @@
                     <div class="form-bd">
                       <div class="input-box">
                         <input id="stationValue" type="hidden" name="stationValue" />
-                        <input type="text" class="input" id="stationValueText" placeholder="简拼／全拼／汉字" autocomplete="off" v-model="commonZwd.station" />
+                        <input
+                          type="text"
+                          class="input"
+                          id="stationValueText"
+                          placeholder="简拼／全拼／汉字"
+                          autocomplete="off"
+                          v-model="commonZwd.station"
+                        />
                       </div>
                     </div>
                   </div>
@@ -415,13 +575,27 @@
                     <label for="numberValue" class="form-label">车次</label>
                     <div class="form-bd">
                       <div class="input-box late_poit">
-                        <input type="text" class="input" placeholder="请输入车次" id="numberValue" autocomplete="off" v-model="commonZwd.trainNo" />
-                        <ul class="active" name="makeupCoSe" id="train_hide" style="width:270px;z-index: 1;"></ul>
+                        <input
+                          type="text"
+                          class="input"
+                          placeholder="请输入车次"
+                          id="numberValue"
+                          autocomplete="off"
+                          v-model="commonZwd.trainNo"
+                        />
+                        <ul
+                          class="active"
+                          name="makeupCoSe"
+                          id="train_hide"
+                          style="width: 270px; z-index: 1"
+                        ></ul>
                       </div>
                     </div>
                   </div>
                   <div class="form-item form-item-btn mt-mlg">
-                    <a href="javascript:void(0)" class="btn btn-primary form-block" id="bie_button">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+                    <a href="javascript:void(0)" class="btn btn-primary form-block" id="bie_button">
+                      查&nbsp;&nbsp;&nbsp;&nbsp;询
+                    </a>
                   </div>
                 </div>
               </div>
@@ -430,7 +604,10 @@
               <div class="search-tab-item" :class="{ active: activeCommonTab === 'checkin' }">
                 <div class="search-form">
                   <div class="form-item">
-                    <label for="check_in" class="form-label"><b class="required">*</b>乘车日期</label>
+                    <label for="check_in" class="form-label">
+                      <b class="required">*</b>
+                      乘车日期
+                    </label>
                     <div class="form-bd">
                       <div class="input-box input-data">
                         <input type="text" class="input" id="check_in" />
@@ -439,29 +616,59 @@
                     </div>
                   </div>
                   <div class="form-item">
-                    <label for="train_num" class="form-label"><b class="required">*</b>车次</label>
+                    <label for="train_num" class="form-label">
+                      <b class="required">*</b>
+                      车次
+                    </label>
                     <div class="form-bd">
                       <div class="input-box">
-                        <input type="text" class="input search-input" placeholder="请输入车次" autocomplete="off" id="train_num" style="text-transform:uppercase;" />
+                        <input
+                          type="text"
+                          class="input search-input"
+                          placeholder="请输入车次"
+                          autocomplete="off"
+                          id="train_num"
+                          style="text-transform: uppercase"
+                        />
                         <input class="input" type="hidden" id="topicId" />
                       </div>
                     </div>
                   </div>
                   <div class="form-item">
-                    <label for="ticketEntranceSel" class="form-label"><b class="required">*</b>乘车站</label>
+                    <label for="ticketEntranceSel" class="form-label">
+                      <b class="required">*</b>
+                      乘车站
+                    </label>
                     <div class="form-bd">
                       <div class="input-box">
                         <div class="model-select-box">
-                          <div class="model-select-text" id="ticketEntranceSel" tabindex="0">请选择车站</div>
-                          <div class="station-loading" id="station_loading" style="display: none"></div>
-                          <ul class="model-select-option train_hide" id="check_model_select" style="display: none"></ul>
-                          <input type="hidden" class="selected-input" name="cityID" id="selected_input" />
+                          <div class="model-select-text" id="ticketEntranceSel" tabindex="0">
+                            请选择车站
+                          </div>
+                          <div
+                            class="station-loading"
+                            id="station_loading"
+                            style="display: none"
+                          ></div>
+                          <ul
+                            class="model-select-option train_hide"
+                            id="check_model_select"
+                            style="display: none"
+                          ></ul>
+                          <input
+                            type="hidden"
+                            class="selected-input"
+                            name="cityID"
+                            id="selected_input"
+                          />
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="form-item form-item-btn mt-mlg">
-                    <a href="javascript:;" class="btn btn-primary form-block" id="check_button">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+                    <a href="javascript:;" class="btn btn-primary form-block" id="check_button">
+                      查&nbsp;&nbsp;&nbsp;&nbsp;询
+                    </a>
                   </div>
                 </div>
               </div>
@@ -470,7 +677,10 @@
               <div class="search-tab-item" :class="{ active: activeCommonTab === 'sale' }">
                 <div class="search-form">
                   <div class="form-item">
-                    <label for="sale_time" class="form-label"><b class="required">*</b>起售日期</label>
+                    <label for="sale_time" class="form-label">
+                      <b class="required">*</b>
+                      起售日期
+                    </label>
                     <div class="form-bd">
                       <div class="input-box input-data">
                         <input type="text" class="input" id="sale_time" />
@@ -479,7 +689,10 @@
                     </div>
                   </div>
                   <div class="form-item">
-                    <label for="start_sellText" class="form-label"><b class="required">*</b>起售车站</label>
+                    <label for="start_sellText" class="form-label">
+                      <b class="required">*</b>
+                      起售车站
+                    </label>
                     <div class="form-bd">
                       <div class="input-box">
                         <input id="start_sell" type="hidden" name="start_sell" />
@@ -488,7 +701,13 @@
                     </div>
                   </div>
                   <div class="form-item form-item-btn mt-mlg">
-                    <a href="javascript:void(0)" class="btn btn-primary form-block" id="sell_button">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-primary form-block"
+                      id="sell_button"
+                    >
+                      查&nbsp;&nbsp;&nbsp;&nbsp;询
+                    </a>
                   </div>
                 </div>
               </div>
@@ -497,16 +716,31 @@
               <div class="search-tab-item" :class="{ active: activeCommonTab === 'weather' }">
                 <div class="search-form">
                   <div class="form-item">
-                    <label for="destinationText" class="form-label"><b class="required">*</b>目的地</label>
+                    <label for="destinationText" class="form-label">
+                      <b class="required">*</b>
+                      目的地
+                    </label>
                     <div class="form-bd">
                       <div class="input-box">
                         <input id="destination" type="hidden" name="destination" />
-                        <input type="text" class="input" id="destinationText" placeholder="简拼／全拼／汉字" autocomplete="off" />
+                        <input
+                          type="text"
+                          class="input"
+                          id="destinationText"
+                          placeholder="简拼／全拼／汉字"
+                          autocomplete="off"
+                        />
                       </div>
                     </div>
                   </div>
                   <div class="form-item form-item-btn mt-mlg">
-                    <a href="javascript:void(0)" class="btn btn-primary form-block" id="weather_button">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-primary form-block"
+                      id="weather_button"
+                    >
+                      查&nbsp;&nbsp;&nbsp;&nbsp;询
+                    </a>
                   </div>
                 </div>
               </div>
@@ -521,17 +755,24 @@
               <ul>
                 <li :class="{ active: activeCaterTab === 'reserve' }" style="width: 50%">
                   <a href="javascript:;" @click="activeCaterTab = 'reserve'">
-                    <i class="icon icon-shijian"></i>预订
+                    <i class="icon icon-shijian"></i>
+                    预订
                   </a>
                 </li>
                 <li style="width: 50%">
-                  <a href="https://exservice.12306.cn/excater/queryMyOrder.html" target="_blank"><i class="icon icon-jianpiaokou"></i>餐饮订单</a>
+                  <a href="https://exservice.12306.cn/excater/queryMyOrder.html" target="_blank">
+                    <i class="icon icon-jianpiaokou"></i>
+                    餐饮订单
+                  </a>
                 </li>
               </ul>
             </div>
             <div class="search-tab-bd">
               <!-- 订餐 -->
-              <div class="search-tab-item dinner-yuding" :class="{ active: activeCaterTab === 'reserve' }">
+              <div
+                class="search-tab-item dinner-yuding"
+                :class="{ active: activeCaterTab === 'reserve' }"
+              >
                 <div class="search-form">
                   <div class="form-item">
                     <label for="dinner_date" class="form-label">出发日期</label>
@@ -546,13 +787,26 @@
                     <label for="dinner_sub_mun" class="form-label">出发车次</label>
                     <div class="form-bd">
                       <div class="input-box">
-                        <input type="text" class="input search-input" placeholder="仅支持G、D字头的动车组列车" autocomplete="off" id="dinner_sub_mun" style="text-transform:uppercase;" />
+                        <input
+                          type="text"
+                          class="input search-input"
+                          placeholder="仅支持G、D字头的动车组列车"
+                          autocomplete="off"
+                          id="dinner_sub_mun"
+                          style="text-transform: uppercase"
+                        />
                         <input class="input" type="hidden" id="dinner_sub_code" />
                       </div>
                     </div>
                   </div>
                   <div class="form-item form-item-btn mt-mlg dinner-search">
-                    <a href="javascript:void(0)" class="btn btn-primary form-block" id="search_four">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-primary form-block"
+                      id="search_four"
+                    >
+                      查&nbsp;&nbsp;&nbsp;&nbsp;询
+                    </a>
                   </div>
                 </div>
               </div>
@@ -562,8 +816,6 @@
       </div>
     </div>
   </div>
-  
-  
 </template>
 
 <script setup>
@@ -579,7 +831,7 @@ const slides = ref([
   '/assets/12306/pic/banner20200707.jpg',
   '/assets/12306/pic/banner0619.jpg',
   '/assets/12306/pic/banner26.jpg',
-  '/assets/12306/pic/banner10.jpg',
+  '/assets/12306/pic/banner10.jpg'
 ])
 
 const slideLinks = ref([
@@ -588,7 +840,7 @@ const slideLinks = ref([
   '',
   '',
   'https://exservice.12306.cn/excater/index.html',
-  'https://cx.12306.cn/tlcx/index.html',
+  'https://cx.12306.cn/tlcx/index.html'
 ])
 
 // 无限循环：首尾克隆
@@ -610,14 +862,14 @@ const indicatorIndex = computed(() => {
   return currentIndex.value - 1
 })
 
-const linkFor = (idx) => {
+const linkFor = idx => {
   const sLen = slides.value.length
   if (idx === 0) return slideLinks.value[sLen - 1] || ''
   if (idx === sLen + 1) return slideLinks.value[0] || ''
   return slideLinks.value[idx - 1] || ''
 }
 
-const goSlide = (idx) => {
+const goSlide = idx => {
   transitionEnabled.value = true
   currentIndex.value = idx + 1
 }
@@ -656,13 +908,14 @@ onUnmounted(() => {
 })
 
 // 使用内联字符串样式以 `!important` 强制容器宽度
-const bdStyle = computed(() =>
-  `width: ${slideWidth.value}px !important; height: 450px; margin: 0 auto; position: relative; overflow: hidden;`
+const bdStyle = computed(
+  () =>
+    `width: ${slideWidth.value}px !important; height: 450px; margin: 0 auto; position: relative; overflow: hidden;`
 )
 
 // 左侧菜单（默认车票）
 const activeSide = ref('ticket')
-const setSide = (side) => {
+const setSide = side => {
   activeSide.value = side
   if (side === 'ticket') {
     activeTab.value = 'single'
@@ -682,7 +935,7 @@ const single = ref({
   toStation: '上海',
   date: new Date().toISOString().slice(0, 10),
   student: false,
-  highSpeed: false,
+  highSpeed: false
 })
 
 // 往返表单
@@ -692,7 +945,7 @@ const round = ref({
   goDate: new Date().toISOString().slice(0, 10),
   backDate: new Date().toISOString().slice(0, 10),
   student: false,
-  highSpeed: false,
+  highSpeed: false
 })
 
 // 接续换乘表单（占位）
@@ -700,7 +953,7 @@ const transfer = ref({
   fromStation: '北京',
   toStation: '上海',
   date: new Date().toISOString().slice(0, 10),
-  student: false,
+  student: false
 })
 
 // 退改签查询（占位）
@@ -708,7 +961,7 @@ const change = ref({
   type: 'order',
   startDate: new Date().toISOString().slice(0, 10),
   endDate: new Date().toISOString().slice(0, 10),
-  keyword: '',
+  keyword: ''
 })
 
 // 常用查询子标签
@@ -720,7 +973,7 @@ const activeCaterTab = ref('reserve')
 // 历史记录（简单实现）
 const history = ref(['北京-上海'])
 const showHistory = computed(() => history.value.slice(0, 10))
-const applyHistory = (h) => {
+const applyHistory = h => {
   const [from, to] = h.split('-')
   single.value.fromStation = from
   single.value.toStation = to
@@ -729,13 +982,22 @@ const clearHistory = () => (history.value = [])
 const prevHistory = () => history.value.unshift(history.value.pop())
 const nextHistory = () => history.value.push(history.value.shift())
 
-const swapStations = (which) => {
+const swapStations = which => {
   if (which === 'single') {
-    ;[single.value.fromStation, single.value.toStation] = [single.value.toStation, single.value.fromStation]
+    ;[single.value.fromStation, single.value.toStation] = [
+      single.value.toStation,
+      single.value.fromStation
+    ]
   } else if (which === 'round') {
-    ;[round.value.fromStation, round.value.toStation] = [round.value.toStation, round.value.fromStation]
+    ;[round.value.fromStation, round.value.toStation] = [
+      round.value.toStation,
+      round.value.fromStation
+    ]
   } else {
-    ;[transfer.value.fromStation, transfer.value.toStation] = [transfer.value.toStation, transfer.value.fromStation]
+    ;[transfer.value.fromStation, transfer.value.toStation] = [
+      transfer.value.toStation,
+      transfer.value.fromStation
+    ]
   }
 }
 
@@ -749,8 +1011,8 @@ const submitSingle = () => {
       departure_city: single.value.fromStation,
       arrival_city: single.value.toStation,
       travel_date: single.value.date,
-      type: 'single',
-    },
+      type: 'single'
+    }
   })
 }
 
@@ -762,8 +1024,8 @@ const submitRound = () => {
       arrival_city: round.value.toStation,
       travel_date: round.value.goDate,
       return_date: round.value.backDate,
-      type: 'round',
-    },
+      type: 'round'
+    }
   })
 }
 
@@ -774,8 +1036,8 @@ const submitTransfer = () => {
       departure_city: transfer.value.fromStation,
       arrival_city: transfer.value.toStation,
       travel_date: transfer.value.date,
-      type: 'transfer',
-    },
+      type: 'transfer'
+    }
   })
 }
 

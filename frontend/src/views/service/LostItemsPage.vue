@@ -5,7 +5,7 @@
         <h1>遗失物品查找</h1>
         <p class="subtitle">帮助您查找在车站或列车上遗失的物品，我们将尽力协助您找回失物</p>
       </div>
-      
+
       <!-- 成功提示 -->
       <div v-if="showSuccess" class="alert alert-success">
         <i class="icon">✓</i>
@@ -21,50 +21,62 @@
       <div class="service-content">
         <form @submit.prevent="submitForm" class="service-form">
           <div class="form-group">
-            <label for="contact-name">联系人姓名 <span class="required">*</span></label>
-            <input 
+            <label for="contact-name">
+              联系人姓名
+              <span class="required">*</span>
+            </label>
+            <input
               id="contact-name"
               v-model="form.contactName"
-              type="text" 
+              type="text"
               placeholder="请输入联系人姓名"
-              :class="{ 'error': errors.contactName }"
+              :class="{ error: errors.contactName }"
               @blur="validateField('contactName')"
             />
             <span v-if="errors.contactName" class="error-text">{{ errors.contactName }}</span>
           </div>
 
           <div class="form-group">
-            <label for="phone">联系电话 <span class="required">*</span></label>
-            <input 
+            <label for="phone">
+              联系电话
+              <span class="required">*</span>
+            </label>
+            <input
               id="phone"
               v-model="form.phone"
-              type="tel" 
+              type="tel"
               placeholder="请输入11位手机号码"
-              :class="{ 'error': errors.phone }"
+              :class="{ error: errors.phone }"
               @blur="validateField('phone')"
             />
             <span v-if="errors.phone" class="error-text">{{ errors.phone }}</span>
           </div>
 
           <div class="form-group">
-            <label for="lost-date">遗失日期 <span class="required">*</span></label>
-            <input 
+            <label for="lost-date">
+              遗失日期
+              <span class="required">*</span>
+            </label>
+            <input
               id="lost-date"
               v-model="form.lostDate"
-              type="date" 
+              type="date"
               :max="maxDate"
-              :class="{ 'error': errors.lostDate }"
+              :class="{ error: errors.lostDate }"
               @blur="validateField('lostDate')"
             />
             <span v-if="errors.lostDate" class="error-text">{{ errors.lostDate }}</span>
           </div>
 
           <div class="form-group">
-            <label for="lost-location">遗失地点 <span class="required">*</span></label>
-            <select 
-              id="lost-location" 
+            <label for="lost-location">
+              遗失地点
+              <span class="required">*</span>
+            </label>
+            <select
+              id="lost-location"
               v-model="form.lostLocation"
-              :class="{ 'error': errors.lostLocation }"
+              :class="{ error: errors.lostLocation }"
               @blur="validateField('lostLocation')"
             >
               <option value="">请选择遗失地点</option>
@@ -81,34 +93,39 @@
 
           <div v-if="form.lostLocation === 'other'" class="form-group">
             <label for="other-location">请详细说明遗失地点</label>
-            <input 
+            <input
               id="other-location"
               v-model="form.otherLocation"
-              type="text" 
+              type="text"
               placeholder="请详细描述遗失地点"
             />
           </div>
 
           <div v-if="form.lostLocation === 'train-carriage'" class="form-group">
             <label for="train-number">车次号</label>
-            <input 
+            <input
               id="train-number"
               v-model="form.trainNumber"
-              type="text" 
+              type="text"
               placeholder="如：G123、D456等"
             />
           </div>
 
           <div class="form-group">
-            <label for="item-description">物品描述 <span class="required">*</span></label>
-            <textarea 
+            <label for="item-description">
+              物品描述
+              <span class="required">*</span>
+            </label>
+            <textarea
               id="item-description"
               v-model="form.itemDescription"
               placeholder="请详细描述遗失物品的特征，如：颜色、大小、品牌、型号等"
-              :class="{ 'error': errors.itemDescription }"
+              :class="{ error: errors.itemDescription }"
               @blur="validateField('itemDescription')"
             ></textarea>
-            <span v-if="errors.itemDescription" class="error-text">{{ errors.itemDescription }}</span>
+            <span v-if="errors.itemDescription" class="error-text">
+              {{ errors.itemDescription }}
+            </span>
           </div>
 
           <div class="form-group">
@@ -122,11 +139,7 @@
             </select>
           </div>
 
-          <button 
-            type="submit" 
-            class="submit-btn"
-            :disabled="isSubmitting"
-          >
+          <button type="submit" class="submit-btn" :disabled="isSubmitting">
             <span v-if="isSubmitting" class="loading-spinner"></span>
             {{ isSubmitting ? '提交中...' : '提交查找申请' }}
           </button>
@@ -141,10 +154,13 @@
             <li>找到物品后，请携带有效身份证件前来认领</li>
             <li>物品保管期限为30天，逾期将按相关规定处理</li>
           </ul>
-          
+
           <div class="contact-info">
             <h4>紧急联系</h4>
-            <p>如需紧急查找贵重物品，请直接拨打客服热线：<strong>12306</strong></p>
+            <p>
+              如需紧急查找贵重物品，请直接拨打客服热线：
+              <strong>12306</strong>
+            </p>
           </div>
         </div>
       </div>
@@ -180,9 +196,9 @@ const maxDate = computed(() => {
 })
 
 // 表单验证规则
-const validateField = (field) => {
+const validateField = field => {
   errors.value[field] = ''
-  
+
   switch (field) {
     case 'contactName':
       if (!form.value.contactName.trim()) {
@@ -191,7 +207,7 @@ const validateField = (field) => {
         errors.value.contactName = '姓名至少需要2个字符'
       }
       break
-    
+
     case 'phone':
       const phoneRegex = /^1[3-9]\d{9}$/
       if (!form.value.phone.trim()) {
@@ -200,7 +216,7 @@ const validateField = (field) => {
         errors.value.phone = '请输入正确的11位手机号码'
       }
       break
-    
+
     case 'lostDate':
       if (!form.value.lostDate) {
         errors.value.lostDate = '请选择遗失日期'
@@ -208,13 +224,13 @@ const validateField = (field) => {
         errors.value.lostDate = '遗失日期不能晚于今天'
       }
       break
-    
+
     case 'lostLocation':
       if (!form.value.lostLocation) {
         errors.value.lostLocation = '请选择遗失地点'
       }
       break
-    
+
     case 'itemDescription':
       if (!form.value.itemDescription.trim()) {
         errors.value.itemDescription = '请描述遗失物品'
@@ -232,7 +248,7 @@ const validateForm = () => {
   validateField('lostDate')
   validateField('lostLocation')
   validateField('itemDescription')
-  
+
   return !Object.values(errors.value).some(error => error)
 }
 
@@ -253,7 +269,7 @@ const submitForm = async () => {
   try {
     // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 2000))
-    
+
     // 成功处理
     showSuccess.value = true
     form.value = {
@@ -267,12 +283,11 @@ const submitForm = async () => {
       itemValue: ''
     }
     errors.value = {}
-    
+
     // 5秒后隐藏成功提示
     setTimeout(() => {
       showSuccess.value = false
     }, 5000)
-    
   } catch (error) {
     showError.value = true
     errorMessage.value = '提交失败，请稍后重试'
@@ -297,7 +312,7 @@ const submitForm = async () => {
   margin: 0 auto;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
@@ -467,8 +482,12 @@ const submitForm = async () => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 服务信息样式 */
@@ -507,7 +526,7 @@ const submitForm = async () => {
 }
 
 .service-info li::before {
-  content: "•";
+  content: '•';
   color: #667eea;
   font-weight: bold;
   position: absolute;
@@ -538,30 +557,30 @@ const submitForm = async () => {
   .service-page {
     padding: 10px;
   }
-  
+
   .container {
     margin: 0 10px;
     border-radius: 12px;
   }
-  
+
   .header {
     padding: 30px 20px;
   }
-  
+
   .header h1 {
     font-size: 2rem;
   }
-  
+
   .service-content {
     grid-template-columns: 1fr;
     padding: 20px;
     gap: 30px;
   }
-  
+
   .alert {
     margin: 20px;
   }
-  
+
   .service-info {
     order: -1;
   }
@@ -571,15 +590,15 @@ const submitForm = async () => {
   .header h1 {
     font-size: 1.8rem;
   }
-  
+
   .subtitle {
     font-size: 1rem;
   }
-  
+
   .service-content {
     padding: 15px;
   }
-  
+
   .form-group input,
   .form-group select,
   .form-group textarea {
@@ -603,7 +622,7 @@ const submitForm = async () => {
   .form-group textarea {
     border-width: 2px;
   }
-  
+
   .submit-btn {
     border: 2px solid white;
   }

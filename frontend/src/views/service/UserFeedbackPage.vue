@@ -38,22 +38,25 @@
           <!-- 反馈表单 -->
           <div class="feedback-form">
             <h2>提交反馈</h2>
-            
+
             <form @submit.prevent="submitFeedback">
               <!-- 反馈类型 -->
               <div class="form-group">
-                <label>反馈类型 <span class="required">*</span></label>
+                <label>
+                  反馈类型
+                  <span class="required">*</span>
+                </label>
                 <div class="feedback-types">
-                  <label 
-                    v-for="type in feedbackTypes" 
+                  <label
+                    v-for="type in feedbackTypes"
                     :key="type.value"
                     :class="['type-option', { selected: form.type === type.value }]"
                   >
-                    <input 
-                      type="radio" 
-                      :value="type.value" 
+                    <input
+                      type="radio"
+                      :value="type.value"
                       v-model="form.type"
-                      style="display: none;"
+                      style="display: none"
                     />
                     <span class="type-icon">{{ type.icon }}</span>
                     <span class="type-label">{{ type.label }}</span>
@@ -64,11 +67,14 @@
 
               <!-- 服务评分 -->
               <div class="form-group">
-                <label>服务评分 <span class="required">*</span></label>
+                <label>
+                  服务评分
+                  <span class="required">*</span>
+                </label>
                 <div class="rating-section">
                   <div class="stars">
-                    <span 
-                      v-for="star in 5" 
+                    <span
+                      v-for="star in 5"
                       :key="star"
                       :class="['star', { active: star <= form.rating }]"
                       @click="form.rating = star"
@@ -86,20 +92,26 @@
               <!-- 联系信息 -->
               <div class="form-row">
                 <div class="form-group">
-                  <label>姓名 <span class="required">*</span></label>
-                  <input 
-                    type="text" 
+                  <label>
+                    姓名
+                    <span class="required">*</span>
+                  </label>
+                  <input
+                    type="text"
                     v-model="form.name"
                     :class="{ error: errors.name }"
                     placeholder="请输入您的姓名"
                   />
                   <div v-if="errors.name" class="error-text">{{ errors.name }}</div>
                 </div>
-                
+
                 <div class="form-group">
-                  <label>联系电话 <span class="required">*</span></label>
-                  <input 
-                    type="tel" 
+                  <label>
+                    联系电话
+                    <span class="required">*</span>
+                  </label>
+                  <input
+                    type="tel"
                     v-model="form.phone"
                     :class="{ error: errors.phone }"
                     placeholder="请输入手机号码"
@@ -110,8 +122,8 @@
 
               <div class="form-group">
                 <label>电子邮箱</label>
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   v-model="form.email"
                   :class="{ error: errors.email }"
                   placeholder="请输入邮箱地址（选填）"
@@ -121,8 +133,11 @@
 
               <!-- 反馈内容 -->
               <div class="form-group">
-                <label>反馈内容 <span class="required">*</span></label>
-                <textarea 
+                <label>
+                  反馈内容
+                  <span class="required">*</span>
+                </label>
+                <textarea
                   v-model="form.content"
                   :class="{ error: errors.content }"
                   placeholder="请详细描述您的问题、建议或意见..."
@@ -136,19 +151,16 @@
               <div class="form-row">
                 <div class="form-group">
                   <label>相关车次/车站</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     v-model="form.relatedInfo"
                     placeholder="如：G1234次列车、北京南站"
                   />
                 </div>
-                
+
                 <div class="form-group">
                   <label>发生时间</label>
-                  <input 
-                    type="datetime-local" 
-                    v-model="form.occurTime"
-                  />
+                  <input type="datetime-local" v-model="form.occurTime" />
                 </div>
               </div>
 
@@ -156,13 +168,13 @@
               <div class="form-group">
                 <label>相关图片</label>
                 <div class="upload-area" @click="triggerFileUpload">
-                  <input 
+                  <input
                     ref="fileInput"
-                    type="file" 
-                    multiple 
+                    type="file"
+                    multiple
                     accept="image/*"
                     @change="handleFileUpload"
-                    style="display: none;"
+                    style="display: none"
                   />
                   <div class="upload-content">
                     <span class="upload-icon">📷</span>
@@ -170,14 +182,10 @@
                     <span class="upload-hint">支持 JPG、PNG 格式，最多3张</span>
                   </div>
                 </div>
-                
+
                 <!-- 已上传文件预览 -->
                 <div v-if="uploadedFiles.length > 0" class="uploaded-files">
-                  <div 
-                    v-for="(file, index) in uploadedFiles" 
-                    :key="index"
-                    class="file-preview"
-                  >
+                  <div v-for="(file, index) in uploadedFiles" :key="index" class="file-preview">
                     <img :src="file.preview" :alt="file.name" />
                     <button type="button" @click="removeFile(index)" class="remove-file">×</button>
                   </div>
@@ -187,23 +195,21 @@
               <!-- 隐私协议 -->
               <div class="form-group">
                 <label class="checkbox-label">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     v-model="form.agreePrivacy"
                     :class="{ error: errors.agreePrivacy }"
                   />
                   <span class="checkmark"></span>
-                  我已阅读并同意 <a href="#" class="privacy-link">隐私政策</a> 和服务条款
+                  我已阅读并同意
+                  <a href="#" class="privacy-link">隐私政策</a>
+                  和服务条款
                 </label>
                 <div v-if="errors.agreePrivacy" class="error-text">{{ errors.agreePrivacy }}</div>
               </div>
 
               <!-- 提交按钮 -->
-              <button 
-                type="submit" 
-                :disabled="loading"
-                class="submit-btn"
-              >
+              <button type="submit" :disabled="loading" class="submit-btn">
                 <div v-if="loading" class="loading-spinner"></div>
                 <span>{{ loading ? '提交中...' : '提交反馈' }}</span>
               </button>
@@ -213,7 +219,7 @@
           <!-- 反馈指南 -->
           <div class="feedback-guide">
             <h3>反馈指南</h3>
-            
+
             <div class="guide-section">
               <h4>📝 如何写好反馈</h4>
               <ul>
@@ -357,7 +363,7 @@ const validateForm = () => {
 }
 
 // 获取评分文本
-const getRatingText = (rating) => {
+const getRatingText = rating => {
   const texts = ['', '很不满意', '不满意', '一般', '满意', '非常满意']
   return texts[rating] || ''
 }
@@ -367,9 +373,9 @@ const triggerFileUpload = () => {
   fileInput.value?.click()
 }
 
-const handleFileUpload = (event) => {
+const handleFileUpload = event => {
   const files = Array.from(event.target.files)
-  
+
   if (uploadedFiles.value.length + files.length > 3) {
     showAlertMessage('最多只能上传3张图片', 'alert-error')
     return
@@ -382,7 +388,7 @@ const handleFileUpload = (event) => {
     }
 
     const reader = new FileReader()
-    reader.onload = (e) => {
+    reader.onload = e => {
       uploadedFiles.value.push({
         name: file.name,
         preview: e.target.result,
@@ -393,7 +399,7 @@ const handleFileUpload = (event) => {
   })
 }
 
-const removeFile = (index) => {
+const removeFile = index => {
   uploadedFiles.value.splice(index, 1)
 }
 
@@ -419,7 +425,7 @@ const submitFeedback = async () => {
   try {
     // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 2000))
-    
+
     // 重置表单
     Object.keys(form).forEach(key => {
       if (typeof form[key] === 'boolean') {
@@ -431,12 +437,11 @@ const submitFeedback = async () => {
       }
     })
     uploadedFiles.value = []
-    
+
     showAlertMessage('反馈提交成功！我们会尽快处理您的反馈', 'alert-success')
-    
+
     // 更新统计数据
     stats.totalFeedback++
-    
   } catch (error) {
     showAlertMessage('提交失败，请稍后重试', 'alert-error')
   } finally {
@@ -457,7 +462,7 @@ const submitFeedback = async () => {
   margin: 0 auto;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
@@ -766,7 +771,7 @@ const submitFeedback = async () => {
   width: 24px;
   height: 24px;
   border: none;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   color: white;
   border-radius: 50%;
   cursor: pointer;
@@ -785,7 +790,7 @@ const submitFeedback = async () => {
   font-weight: normal !important;
 }
 
-.checkbox-label input[type="checkbox"] {
+.checkbox-label input[type='checkbox'] {
   width: auto;
   margin: 0;
 }
@@ -839,8 +844,12 @@ const submitFeedback = async () => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 反馈指南样式 */
@@ -885,7 +894,7 @@ const submitFeedback = async () => {
 }
 
 .guide-section li::before {
-  content: "•";
+  content: '•';
   color: #667eea;
   font-weight: bold;
   position: absolute;
@@ -928,12 +937,12 @@ const submitFeedback = async () => {
     grid-template-columns: 1fr;
     gap: 30px;
   }
-  
+
   .feedback-guide {
     position: static;
     order: -1;
   }
-  
+
   .stats-section {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -943,41 +952,41 @@ const submitFeedback = async () => {
   .service-page {
     padding: 10px;
   }
-  
+
   .container {
     margin: 0 10px;
     border-radius: 12px;
   }
-  
+
   .header {
     padding: 30px 20px;
   }
-  
+
   .header h1 {
     font-size: 2rem;
   }
-  
+
   .content-section {
     padding: 20px;
   }
-  
+
   .alert {
     margin: 20px;
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   .feedback-types {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .stats-section {
     grid-template-columns: 1fr;
   }
-  
+
   .rating-section {
     flex-direction: column;
     align-items: flex-start;
@@ -989,35 +998,35 @@ const submitFeedback = async () => {
   .header h1 {
     font-size: 1.8rem;
   }
-  
+
   .subtitle {
     font-size: 1rem;
   }
-  
+
   .feedback-form,
   .feedback-guide {
     padding: 20px;
   }
-  
+
   .feedback-types {
     grid-template-columns: 1fr;
   }
-  
+
   .type-option {
     flex-direction: row;
     justify-content: flex-start;
     padding: 15px;
   }
-  
+
   .type-icon {
     margin-bottom: 0;
     margin-right: 10px;
   }
-  
+
   .contact-methods {
     gap: 10px;
   }
-  
+
   .contact-item {
     padding: 12px;
   }
@@ -1041,7 +1050,7 @@ const submitFeedback = async () => {
   .upload-area {
     border-width: 2px;
   }
-  
+
   .submit-btn {
     border: 2px solid white;
   }
@@ -1053,17 +1062,17 @@ const submitFeedback = async () => {
     background: white;
     padding: 0;
   }
-  
+
   .container {
     box-shadow: none;
     border-radius: 0;
   }
-  
+
   .header {
     background: white;
     color: black;
   }
-  
+
   .submit-btn,
   .alert,
   .upload-area {

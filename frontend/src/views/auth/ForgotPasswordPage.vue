@@ -10,9 +10,7 @@
         </div>
         <div class="header-nav">
           <a-button type="link" @click="$router.push('/login')">登录</a-button>
-          <a-button type="link" @click="$router.push('/register')"
-            >注册</a-button
-          >
+          <a-button type="link" @click="$router.push('/register')">注册</a-button>
         </div>
       </div>
     </div>
@@ -55,7 +53,9 @@
             <div class="qr-content">
               <h3 class="recovery-title">人脸找回</h3>
               <p class="recovery-subtitle">
-                扫描二维码，使用<span class="app-name">12306APP</span>找回密码
+                扫描二维码，使用
+                <span class="app-name">12306APP</span>
+                找回密码
               </p>
 
               <div class="qr-code-container">
@@ -156,12 +156,8 @@
               </div>
 
               <div class="qr-instructions">
-                <p class="instruction-text">
-                  请使用中国铁路12306手机客户端扫描上方二维码
-                </p>
-                <p class="instruction-note">
-                  扫码后按照APP提示完成身份验证即可找回密码
-                </p>
+                <p class="instruction-text">请使用中国铁路12306手机客户端扫描上方二维码</p>
+                <p class="instruction-note">扫码后按照APP提示完成身份验证即可找回密码</p>
               </div>
             </div>
           </div>
@@ -169,26 +165,17 @@
           <!-- 手机找回 -->
           <div v-if="activeTab === 'phone'" class="phone-recovery">
             <div class="step-indicator">
-              <div
-                class="step"
-                :class="{ active: phoneStep >= 1, completed: phoneStep > 1 }"
-              >
+              <div class="step" :class="{ active: phoneStep >= 1, completed: phoneStep > 1 }">
                 <div class="step-number">1</div>
                 <div class="step-text">填写账户信息</div>
               </div>
               <div class="step-line"></div>
-              <div
-                class="step"
-                :class="{ active: phoneStep >= 2, completed: phoneStep > 2 }"
-              >
+              <div class="step" :class="{ active: phoneStep >= 2, completed: phoneStep > 2 }">
                 <div class="step-number">2</div>
                 <div class="step-text">获取验证码</div>
               </div>
               <div class="step-line"></div>
-              <div
-                class="step"
-                :class="{ active: phoneStep >= 3, completed: phoneStep > 3 }"
-              >
+              <div class="step" :class="{ active: phoneStep >= 3, completed: phoneStep > 3 }">
                 <div class="step-number">3</div>
                 <div class="step-text">设置新密码</div>
               </div>
@@ -200,11 +187,7 @@
             </div>
 
             <div class="form-content">
-              <a-form
-                :model="phoneForm"
-                layout="vertical"
-                class="recovery-form"
-              >
+              <a-form :model="phoneForm" layout="vertical" class="recovery-form">
                 <a-form-item label="手机号码：" required>
                   <a-input
                     v-model:value="phoneForm.phone"
@@ -223,12 +206,8 @@
                   >
                     <a-select-option value="身份证">居民身份证</a-select-option>
                     <a-select-option value="护照">护照</a-select-option>
-                    <a-select-option value="港澳通行证"
-                      >港澳居民来往内地通行证</a-select-option
-                    >
-                    <a-select-option value="台胞证"
-                      >台湾居民来往大陆通行证</a-select-option
-                    >
+                    <a-select-option value="港澳通行证">港澳居民来往内地通行证</a-select-option>
+                    <a-select-option value="台胞证">台湾居民来往大陆通行证</a-select-option>
                   </a-select>
                   <div class="form-hint">请选择证件类型</div>
                 </a-form-item>
@@ -256,7 +235,8 @@
               </a-form>
 
               <div class="help-text">
-                手机号未通过核验？<a href="#" class="help-link">试试邮箱找回</a>
+                手机号未通过核验？
+                <a href="#" class="help-link">试试邮箱找回</a>
               </div>
             </div>
           </div>
@@ -264,11 +244,7 @@
           <!-- 邮箱找回 -->
           <div v-if="activeTab === 'email'" class="email-recovery">
             <div class="email-form-content">
-              <a-form
-                :model="emailForm"
-                layout="vertical"
-                class="email-recovery-form"
-              >
+              <a-form :model="emailForm" layout="vertical" class="email-recovery-form">
                 <a-form-item required>
                   <template #label>
                     <span class="form-label">
@@ -299,12 +275,8 @@
                   >
                     <a-select-option value="身份证">居民身份证</a-select-option>
                     <a-select-option value="护照">护照</a-select-option>
-                    <a-select-option value="港澳通行证"
-                      >港澳居民来往内地通行证</a-select-option
-                    >
-                    <a-select-option value="台胞证"
-                      >台湾居民来往大陆通行证</a-select-option
-                    >
+                    <a-select-option value="港澳通行证">港澳居民来往内地通行证</a-select-option>
+                    <a-select-option value="台胞证">台湾居民来往大陆通行证</a-select-option>
                   </a-select>
                 </a-form-item>
 
@@ -344,231 +316,231 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
-import { useRouter } from "vue-router";
-import { message } from "ant-design-vue";
+import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { message } from 'ant-design-vue'
 import {
   submitFaceRecovery,
   submitPhoneRecovery,
   submitEmailRecovery,
   verifyRecoveryCode,
-  setNewPassword,
-} from "@/api/auth";
+  setNewPassword
+} from '@/api/auth'
 
-const router = useRouter();
+const router = useRouter()
 
 // 当前激活的选项卡
-const activeTab = ref("face");
+const activeTab = ref('face')
 
 // 步骤状态
-const faceStep = ref(1);
-const phoneStep = ref(1);
-const emailStep = ref(1);
+const faceStep = ref(1)
+const phoneStep = ref(1)
+const emailStep = ref(1)
 
 // 加载状态
-const loading = ref(false);
+const loading = ref(false)
 
 // 恢复令牌
-const recoveryToken = ref("");
+const recoveryToken = ref('')
 
 // 表单数据
 const faceForm = reactive({
-  email: "",
-  idType: "",
-  idNumber: "",
-});
+  email: '',
+  idType: '',
+  idNumber: ''
+})
 
 const phoneForm = reactive({
-  phone: "",
-  idType: "",
-  idNumber: "",
-});
+  phone: '',
+  idType: '',
+  idNumber: ''
+})
 
 const emailForm = reactive({
-  email: "",
-  idType: "",
-  idNumber: "",
-});
+  email: '',
+  idType: '',
+  idNumber: ''
+})
 
 // 验证码表单
 const verificationForm = reactive({
-  code: "",
-});
+  code: ''
+})
 
 // 新密码表单
 const passwordForm = reactive({
-  newPassword: "",
-  confirmPassword: "",
-});
+  newPassword: '',
+  confirmPassword: ''
+})
 
 // 表单验证
 const validateForm = (form, type) => {
-  if (type === "face" || type === "email") {
+  if (type === 'face' || type === 'email') {
     if (!form.email) {
-      message.error("请输入邮箱地址");
-      return false;
+      message.error('请输入邮箱地址')
+      return false
     }
   }
-  if (type === "phone") {
+  if (type === 'phone') {
     if (!form.phone) {
-      message.error("请输入手机号码");
-      return false;
+      message.error('请输入手机号码')
+      return false
     }
   }
   if (!form.idType) {
-    message.error("请选择证件类型");
-    return false;
+    message.error('请选择证件类型')
+    return false
   }
   if (!form.idNumber) {
-    message.error("请输入证件号码");
-    return false;
+    message.error('请输入证件号码')
+    return false
   }
-  return true;
-};
+  return true
+}
 
 // 处理人脸找回提交
 const handleFaceSubmit = async () => {
-  if (!validateForm(faceForm, "face")) return;
+  if (!validateForm(faceForm, 'face')) return
 
   try {
-    loading.value = true;
-    const response = await submitFaceRecovery(faceForm);
+    loading.value = true
+    const response = await submitFaceRecovery(faceForm)
 
     if (response.code === 200) {
-      recoveryToken.value = response.data.token;
-      message.success("验证信息已提交，请按照提示完成后续步骤");
-      faceStep.value = 2;
+      recoveryToken.value = response.data.token
+      message.success('验证信息已提交，请按照提示完成后续步骤')
+      faceStep.value = 2
     } else {
-      message.error(response.message || "提交失败，请重试");
+      message.error(response.message || '提交失败，请重试')
     }
   } catch (error) {
-    console.error("人脸找回提交失败:", error);
-    message.error("提交失败，请重试");
+    console.error('人脸找回提交失败:', error)
+    message.error('提交失败，请重试')
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 // 处理手机找回提交
 const handlePhoneSubmit = async () => {
-  if (!validateForm(phoneForm, "phone")) return;
+  if (!validateForm(phoneForm, 'phone')) return
 
   try {
-    loading.value = true;
-    const response = await submitPhoneRecovery(phoneForm);
+    loading.value = true
+    const response = await submitPhoneRecovery(phoneForm)
 
     if (response.code === 200) {
-      recoveryToken.value = response.data.token;
-      message.success("验证码已发送到您的手机");
-      phoneStep.value = 2;
+      recoveryToken.value = response.data.token
+      message.success('验证码已发送到您的手机')
+      phoneStep.value = 2
     } else {
-      message.error(response.message || "提交失败，请重试");
+      message.error(response.message || '提交失败，请重试')
     }
   } catch (error) {
-    console.error("手机找回提交失败:", error);
-    message.error("提交失败，请重试");
+    console.error('手机找回提交失败:', error)
+    message.error('提交失败，请重试')
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 // 处理邮箱找回提交
 const handleEmailSubmit = async () => {
-  if (!validateForm(emailForm, "email")) return;
+  if (!validateForm(emailForm, 'email')) return
 
   try {
-    loading.value = true;
-    const response = await submitEmailRecovery(emailForm);
+    loading.value = true
+    const response = await submitEmailRecovery(emailForm)
 
     if (response.code === 200) {
-      recoveryToken.value = response.data.token;
-      message.success("验证码已发送到您的邮箱");
-      emailStep.value = 2;
+      recoveryToken.value = response.data.token
+      message.success('验证码已发送到您的邮箱')
+      emailStep.value = 2
     } else {
-      message.error(response.message || "提交失败，请重试");
+      message.error(response.message || '提交失败，请重试')
     }
   } catch (error) {
-    console.error("邮箱找回提交失败:", error);
-    message.error("提交失败，请重试");
+    console.error('邮箱找回提交失败:', error)
+    message.error('提交失败，请重试')
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 // 验证验证码
-const handleVerifyCode = async (type) => {
+const handleVerifyCode = async type => {
   if (!verificationForm.code) {
-    message.error("请输入验证码");
-    return;
+    message.error('请输入验证码')
+    return
   }
 
   try {
-    loading.value = true;
+    loading.value = true
     const response = await verifyRecoveryCode({
       token: recoveryToken.value,
       verificationCode: verificationForm.code,
-      type,
-    });
+      type
+    })
 
     if (response.code === 200) {
-      message.success("验证码验证成功");
-      if (type === "face") faceStep.value = 3;
-      if (type === "phone") phoneStep.value = 3;
-      if (type === "email") emailStep.value = 3;
+      message.success('验证码验证成功')
+      if (type === 'face') faceStep.value = 3
+      if (type === 'phone') phoneStep.value = 3
+      if (type === 'email') emailStep.value = 3
     } else {
-      message.error(response.message || "验证码错误");
+      message.error(response.message || '验证码错误')
     }
   } catch (error) {
-    console.error("验证码验证失败:", error);
-    message.error("验证失败，请重试");
+    console.error('验证码验证失败:', error)
+    message.error('验证失败，请重试')
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 // 设置新密码
-const handleSetNewPassword = async (type) => {
+const handleSetNewPassword = async type => {
   if (!passwordForm.newPassword) {
-    message.error("请输入新密码");
-    return;
+    message.error('请输入新密码')
+    return
   }
   if (!passwordForm.confirmPassword) {
-    message.error("请确认新密码");
-    return;
+    message.error('请确认新密码')
+    return
   }
   if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-    message.error("两次输入的密码不一致");
-    return;
+    message.error('两次输入的密码不一致')
+    return
   }
 
   try {
-    loading.value = true;
+    loading.value = true
     const response = await setNewPassword({
       token: recoveryToken.value,
       newPassword: passwordForm.newPassword,
-      confirmPassword: passwordForm.confirmPassword,
-    });
+      confirmPassword: passwordForm.confirmPassword
+    })
 
     if (response.code === 200) {
-      message.success("密码重置成功，请使用新密码登录");
-      if (type === "face") faceStep.value = 4;
-      if (type === "phone") phoneStep.value = 4;
-      if (type === "email") emailStep.value = 4;
+      message.success('密码重置成功，请使用新密码登录')
+      if (type === 'face') faceStep.value = 4
+      if (type === 'phone') phoneStep.value = 4
+      if (type === 'email') emailStep.value = 4
 
       // 3秒后跳转到登录页面
       setTimeout(() => {
-        router.push("/login");
-      }, 3000);
+        router.push('/login')
+      }, 3000)
     } else {
-      message.error(response.message || "密码重置失败");
+      message.error(response.message || '密码重置失败')
     }
   } catch (error) {
-    console.error("密码重置失败:", error);
-    message.error("密码重置失败，请重试");
+    console.error('密码重置失败:', error)
+    message.error('密码重置失败，请重试')
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 </script>
 
 <style scoped>
@@ -580,7 +552,7 @@ const handleSetNewPassword = async (type) => {
 }
 
 .forgot-password-page::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -700,15 +672,15 @@ const handleSetNewPassword = async (type) => {
 }
 
 .icon-face::before {
-  content: "👤";
+  content: '👤';
 }
 
 .icon-phone::before {
-  content: "📱";
+  content: '📱';
 }
 
 .icon-email::before {
-  content: "📧";
+  content: '📧';
 }
 
 .tab-content {

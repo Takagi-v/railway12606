@@ -19,7 +19,7 @@
           class="bg-track"
           :style="{
             width: `${bgImages.length * 100}%`,
-            transform: `translateX(-${(currentSlide / bgImages.length) * 100}%)`,
+            transform: `translateX(-${(currentSlide / bgImages.length) * 100}%)`
           }"
         >
           <div
@@ -28,7 +28,7 @@
             class="bg-slide"
             :style="{
               backgroundImage: `url('${img}')`,
-              width: `${100 / bgImages.length}%`,
+              width: `${100 / bgImages.length}%`
             }"
           ></div>
         </div>
@@ -99,18 +99,10 @@
               </a-form>
 
               <div class="login-links">
-                <a-button
-                  type="link"
-                  class="register-link"
-                  @click="router.push('/register')"
-                >
+                <a-button type="link" class="register-link" @click="router.push('/register')">
                   注册新用户
                 </a-button>
-                <a-button
-                  type="link"
-                  class="forgot-link"
-                  @click="router.push('/forgot-password')"
-                >
+                <a-button type="link" class="forgot-link" @click="router.push('/forgot-password')">
                   忘记密码？
                 </a-button>
               </div>
@@ -132,9 +124,7 @@
 
             <!-- 服务时间提示 -->
             <div class="service-time">
-              <p>
-                铁路12306每日5:00至次日1:00（周二为5:00至24:00）为您提供服务
-              </p>
+              <p>铁路12306每日5:00至次日1:00（周二为5:00至24:00）为您提供服务</p>
             </div>
           </div>
         </div>
@@ -155,415 +145,410 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { ref, reactive, computed, onMounted, onUnmounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import LoginFooter from '@/components/LoginFooter.vue'
-import { useUserStore } from "@/stores/user";
-import { message } from "ant-design-vue";
+import { useUserStore } from '@/stores/user'
+import { message } from 'ant-design-vue'
 
-const router = useRouter();
-const route = useRoute();
-const userStore = useUserStore();
+const router = useRouter()
+const route = useRoute()
+const userStore = useUserStore()
 
 // 响应式数据
-const activeTab = ref("account");
-const loading = ref(false);
-const loginFormRef = ref();
-const errorMessage = ref("");
-const loginAttempts = ref(0);
-const maxAttempts = 5;
+const activeTab = ref('account')
+const loading = ref(false)
+const loginFormRef = ref()
+const errorMessage = ref('')
+const loginAttempts = ref(0)
+const maxAttempts = 5
 
 const bgImages = [
-  new URL("../../../pics/banner-login-20200629.jpg", import.meta.url).href,
-  new URL("../../../pics/banner-login-20200924.jpg", import.meta.url).href,
-];
-const logoImage = new URL("../../../pics/logo@2x.png", import.meta.url).href;
-const currentSlide = ref(0);
-const setSlide = (i) => {
-  currentSlide.value = i;
-};
+  new URL('../../../pics/banner-login-20200629.jpg', import.meta.url).href,
+  new URL('../../../pics/banner-login-20200924.jpg', import.meta.url).href
+]
+const logoImage = new URL('../../../pics/logo@2x.png', import.meta.url).href
+const currentSlide = ref(0)
+const setSlide = i => {
+  currentSlide.value = i
+}
 
 // 验证码相关
-const showCaptcha = ref(false);
-const captchaImage = ref("");
-const captchaToken = ref("");
-const captchaLoading = ref(false);
+const showCaptcha = ref(false)
+const captchaImage = ref('')
+const captchaToken = ref('')
+const captchaLoading = ref(false)
 
 // 二维码登录相关
-const qrStatus = ref("loading"); // loading, active, scanned, expired, error
-const qrImage = ref("");
-const qrToken = ref("");
-const qrTimeLeft = ref(120);
-const qrTimer = ref(null);
-const qrCheckTimer = ref(null);
+const qrStatus = ref('loading') // loading, active, scanned, expired, error
+const qrImage = ref('')
+const qrToken = ref('')
+const qrTimeLeft = ref(120)
+const qrTimer = ref(null)
+const qrCheckTimer = ref(null)
 
 // 忘记密码相关
-const forgotPasswordVisible = ref(false);
-const forgotLoading = ref(false);
-const forgotCaptchaImage = ref("");
-const forgotCaptchaToken = ref("");
+const forgotPasswordVisible = ref(false)
+const forgotLoading = ref(false)
+const forgotCaptchaImage = ref('')
+const forgotCaptchaToken = ref('')
 
 // 登录表单数据
 const loginForm = reactive({
-  username: "",
-  password: "",
-  captcha: "",
-  remember: false,
-});
+  username: '',
+  password: '',
+  captcha: '',
+  remember: false
+})
 
 // 忘记密码表单
 const forgotForm = reactive({
-  identifier: "",
-  captcha: "",
-});
+  identifier: '',
+  captcha: ''
+})
 
 // 表单验证规则
 const rules = {
   username: [
-    { required: true, message: "请输入用户名/邮箱/手机号", trigger: "blur" },
+    { required: true, message: '请输入用户名/邮箱/手机号', trigger: 'blur' },
     {
       validator: (rule, value) => {
-        if (!value) return Promise.resolve();
+        if (!value) return Promise.resolve()
 
         // 手机号验证
-        const phoneRegex = /^1[3-9]\d{9}$/;
+        const phoneRegex = /^1[3-9]\d{9}$/
         // 用户名验证（字母、数字、下划线，4-20位）
-        const usernameRegex = /^[a-zA-Z0-9_]{4,20}$/;
+        const usernameRegex = /^[a-zA-Z0-9_]{4,20}$/
         // 邮箱验证
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-        if (
-          !phoneRegex.test(value) &&
-          !usernameRegex.test(value) &&
-          !emailRegex.test(value)
-        ) {
-          return Promise.reject("请输入正确的手机号、用户名或邮箱");
+        if (!phoneRegex.test(value) && !usernameRegex.test(value) && !emailRegex.test(value)) {
+          return Promise.reject('请输入正确的手机号、用户名或邮箱')
         }
-        return Promise.resolve();
+        return Promise.resolve()
       },
-      trigger: "blur",
-    },
+      trigger: 'blur'
+    }
   ],
   password: [
-    { required: true, message: "请输入密码", trigger: "blur" },
-    { min: 6, max: 20, message: "密码长度为6-20位", trigger: "blur" },
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    { min: 6, max: 20, message: '密码长度为6-20位', trigger: 'blur' },
     {
       validator: (rule, value) => {
-        if (!value) return Promise.resolve();
+        if (!value) return Promise.resolve()
 
         // 密码强度验证：至少包含字母和数字
-        const hasLetter = /[a-zA-Z]/.test(value);
-        const hasNumber = /\d/.test(value);
+        const hasLetter = /[a-zA-Z]/.test(value)
+        const hasNumber = /\d/.test(value)
 
         if (!hasLetter || !hasNumber) {
-          return Promise.reject("密码必须包含字母和数字");
+          return Promise.reject('密码必须包含字母和数字')
         }
-        return Promise.resolve();
+        return Promise.resolve()
       },
-      trigger: "blur",
-    },
+      trigger: 'blur'
+    }
   ],
   captcha: [
     {
       required: true,
-      message: "请输入验证码",
-      trigger: "blur",
+      message: '请输入验证码',
+      trigger: 'blur',
       validator: (rule, value) => {
         if (showCaptcha.value && !value) {
-          return Promise.reject("请输入验证码");
+          return Promise.reject('请输入验证码')
         }
         if (showCaptcha.value && value && value.length !== 4) {
-          return Promise.reject("验证码为4位");
+          return Promise.reject('验证码为4位')
         }
-        return Promise.resolve();
-      },
-    },
-  ],
-};
+        return Promise.resolve()
+      }
+    }
+  ]
+}
 
 // 忘记密码验证规则
 const forgotRules = {
   identifier: [
-    { required: true, message: "请输入手机号或邮箱", trigger: "blur" },
+    { required: true, message: '请输入手机号或邮箱', trigger: 'blur' },
     {
       validator: (rule, value) => {
-        if (!value) return Promise.resolve();
+        if (!value) return Promise.resolve()
 
-        const phoneRegex = /^1[3-9]\d{9}$/;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^1[3-9]\d{9}$/
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
         if (!phoneRegex.test(value) && !emailRegex.test(value)) {
-          return Promise.reject("请输入正确的手机号或邮箱");
+          return Promise.reject('请输入正确的手机号或邮箱')
         }
-        return Promise.resolve();
+        return Promise.resolve()
       },
-      trigger: "blur",
-    },
+      trigger: 'blur'
+    }
   ],
-  captcha: [{ required: true, message: "请输入验证码", trigger: "blur" }],
-};
+  captcha: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+}
 
 // 计算属性
 const isFormValid = computed(() => {
-  const hasUsername = loginForm.username.trim().length > 0;
-  const hasPassword = loginForm.password.trim().length >= 6;
-  const hasCaptcha =
-    !showCaptcha.value || loginForm.captcha.trim().length === 4;
+  const hasUsername = loginForm.username.trim().length > 0
+  const hasPassword = loginForm.password.trim().length >= 6
+  const hasCaptcha = !showCaptcha.value || loginForm.captcha.trim().length === 4
 
-  return hasUsername && hasPassword && hasCaptcha && !loading.value;
-});
+  return hasUsername && hasPassword && hasCaptcha && !loading.value
+})
 
 // 方法
 const clearErrors = () => {
-  errorMessage.value = "";
+  errorMessage.value = ''
   if (loginFormRef.value) {
-    loginFormRef.value.clearValidate();
+    loginFormRef.value.clearValidate()
   }
-};
+}
 
-const clearFieldError = (field) => {
+const clearFieldError = field => {
   if (loginFormRef.value) {
-    loginFormRef.value.clearValidate(field);
+    loginFormRef.value.clearValidate(field)
   }
   if (errorMessage.value) {
-    errorMessage.value = "";
+    errorMessage.value = ''
   }
-};
+}
 
 const validateUsername = () => {
   if (loginFormRef.value) {
-    loginFormRef.value.validateFields(["username"]);
+    loginFormRef.value.validateFields(['username'])
   }
-};
+}
 
 // 获取验证码
 const getCaptchaImage = async () => {
   try {
-    captchaLoading.value = true;
+    captchaLoading.value = true
     // 模拟API调用
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 500))
     captchaImage.value =
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
-    captchaToken.value = "mock-token-" + Date.now();
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+    captchaToken.value = 'mock-token-' + Date.now()
   } catch (error) {
-    console.error("获取验证码失败:", error);
-    message.error("获取验证码失败");
+    console.error('获取验证码失败:', error)
+    message.error('获取验证码失败')
   } finally {
-    captchaLoading.value = false;
+    captchaLoading.value = false
   }
-};
+}
 
 const refreshCaptcha = () => {
-  loginForm.captcha = "";
-  getCaptchaImage();
-};
+  loginForm.captcha = ''
+  getCaptchaImage()
+}
 
 // 生成二维码
 const generateQrCode = async () => {
   try {
-    qrStatus.value = "loading";
+    qrStatus.value = 'loading'
     // 模拟API调用
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1000))
     qrImage.value =
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
-    qrToken.value = "qr-token-" + Date.now();
-    qrStatus.value = "active";
-    qrTimeLeft.value = 120;
-    startQrTimer();
-    startQrPolling();
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+    qrToken.value = 'qr-token-' + Date.now()
+    qrStatus.value = 'active'
+    qrTimeLeft.value = 120
+    startQrTimer()
+    startQrPolling()
   } catch (error) {
-    console.error("生成二维码失败:", error);
-    qrStatus.value = "error";
+    console.error('生成二维码失败:', error)
+    qrStatus.value = 'error'
   }
-};
+}
 
 // 二维码倒计时
 const startQrTimer = () => {
   if (qrTimer.value) {
-    clearInterval(qrTimer.value);
+    clearInterval(qrTimer.value)
   }
 
   qrTimer.value = setInterval(() => {
-    qrTimeLeft.value--;
+    qrTimeLeft.value--
     if (qrTimeLeft.value <= 0) {
-      qrStatus.value = "expired";
-      stopQrPolling();
-      clearInterval(qrTimer.value);
+      qrStatus.value = 'expired'
+      stopQrPolling()
+      clearInterval(qrTimer.value)
     }
-  }, 1000);
-};
+  }, 1000)
+}
 
 // 轮询二维码状态
 const startQrPolling = () => {
   if (qrCheckTimer.value) {
-    clearInterval(qrCheckTimer.value);
+    clearInterval(qrCheckTimer.value)
   }
 
   qrCheckTimer.value = setInterval(async () => {
     try {
       // 模拟检查二维码状态
-      const random = Math.random();
+      const random = Math.random()
       if (random < 0.1) {
         // 10%概率扫码成功
-        qrStatus.value = "scanned";
+        qrStatus.value = 'scanned'
         setTimeout(() => {
           // 模拟确认登录
-          message.success("扫码登录成功");
-          router.push("/");
-          stopQrPolling();
-        }, 2000);
+          message.success('扫码登录成功')
+          router.push('/')
+          stopQrPolling()
+        }, 2000)
       }
     } catch (error) {
-      console.error("检查二维码状态失败:", error);
+      console.error('检查二维码状态失败:', error)
     }
-  }, 2000);
-};
+  }, 2000)
+}
 
 const stopQrPolling = () => {
   if (qrCheckTimer.value) {
-    clearInterval(qrCheckTimer.value);
-    qrCheckTimer.value = null;
+    clearInterval(qrCheckTimer.value)
+    qrCheckTimer.value = null
   }
   if (qrTimer.value) {
-    clearInterval(qrTimer.value);
-    qrTimer.value = null;
+    clearInterval(qrTimer.value)
+    qrTimer.value = null
   }
-};
+}
 
 // 处理登录
 const handleLogin = async () => {
   try {
-    loading.value = true;
-    errorMessage.value = "";
+    loading.value = true
+    errorMessage.value = ''
 
     const loginData = {
       username: loginForm.username.trim(),
       password: loginForm.password,
-      loginType: /^1[3-9]\d{9}$/.test(loginForm.username) ? "phone" : "account",
-      remember: loginForm.remember,
-    };
+      loginType: /^1[3-9]\d{9}$/.test(loginForm.username) ? 'phone' : 'account',
+      remember: loginForm.remember
+    }
 
     // 如果需要验证码
     if (showCaptcha.value) {
-      loginData.captcha = loginForm.captcha;
-      loginData.captchaToken = captchaToken.value;
+      loginData.captcha = loginForm.captcha
+      loginData.captchaToken = captchaToken.value
     }
 
-    await userStore.login(loginData);
+    await userStore.login(loginData)
 
-    message.success("登录成功");
+    message.success('登录成功')
 
     // 重置登录尝试次数
-    loginAttempts.value = 0;
+    loginAttempts.value = 0
 
     // 跳转到目标页面或首页
-    const redirect = route.query.redirect || "/";
-    router.push(redirect);
+    const redirect = route.query.redirect || '/'
+    router.push(redirect)
   } catch (error) {
-    console.error("登录失败:", error);
+    console.error('登录失败:', error)
 
-    loginAttempts.value++;
+    loginAttempts.value++
 
     // 处理不同类型的错误
     if (error.response?.status === 401) {
-      errorMessage.value = "用户名或密码错误";
+      errorMessage.value = '用户名或密码错误'
     } else if (error.response?.status === 429) {
-      errorMessage.value = "登录尝试过于频繁，请稍后再试";
-    } else if (error.response?.data?.code === "CAPTCHA_REQUIRED") {
-      showCaptcha.value = true;
-      getCaptchaImage();
-      errorMessage.value = "请输入验证码";
-    } else if (error.response?.data?.code === "CAPTCHA_INVALID") {
-      errorMessage.value = "验证码错误";
-      refreshCaptcha();
+      errorMessage.value = '登录尝试过于频繁，请稍后再试'
+    } else if (error.response?.data?.code === 'CAPTCHA_REQUIRED') {
+      showCaptcha.value = true
+      getCaptchaImage()
+      errorMessage.value = '请输入验证码'
+    } else if (error.response?.data?.code === 'CAPTCHA_INVALID') {
+      errorMessage.value = '验证码错误'
+      refreshCaptcha()
     } else {
-      errorMessage.value = error.message || "登录失败，请检查用户名和密码";
+      errorMessage.value = error.message || '登录失败，请检查用户名和密码'
     }
 
     // 多次失败后显示验证码
     if (loginAttempts.value >= 3 && !showCaptcha.value) {
-      showCaptcha.value = true;
-      getCaptchaImage();
+      showCaptcha.value = true
+      getCaptchaImage()
     }
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
-const handleLoginFailed = (errorInfo) => {
-  console.log("表单验证失败:", errorInfo);
-  const firstError = errorInfo.errorFields[0];
+const handleLoginFailed = errorInfo => {
+  console.log('表单验证失败:', errorInfo)
+  const firstError = errorInfo.errorFields[0]
   if (firstError) {
-    errorMessage.value = firstError.errors[0];
+    errorMessage.value = firstError.errors[0]
   }
-};
+}
 
 // 忘记密码
 const handleForgotPassword = () => {
-  forgotPasswordVisible.value = true;
+  forgotPasswordVisible.value = true
   // 获取忘记密码验证码
-  refreshForgotCaptcha();
-};
+  refreshForgotCaptcha()
+}
 
 const refreshForgotCaptcha = async () => {
   try {
     // 模拟获取验证码
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 500))
     forgotCaptchaImage.value =
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
-    forgotCaptchaToken.value = "forgot-token-" + Date.now();
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+    forgotCaptchaToken.value = 'forgot-token-' + Date.now()
   } catch (error) {
-    console.error("获取验证码失败:", error);
+    console.error('获取验证码失败:', error)
   }
-};
+}
 
 const handleForgotSubmit = async () => {
   try {
-    forgotLoading.value = true;
+    forgotLoading.value = true
 
     // 模拟发送重置链接
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1000))
 
-    message.success("重置链接已发送，请查收");
-    forgotPasswordVisible.value = false;
+    message.success('重置链接已发送，请查收')
+    forgotPasswordVisible.value = false
 
     // 重置表单
-    forgotForm.identifier = "";
-    forgotForm.captcha = "";
+    forgotForm.identifier = ''
+    forgotForm.captcha = ''
   } catch (error) {
-    console.error("发送重置链接失败:", error);
-    message.error(error.message || "发送失败，请重试");
-    refreshForgotCaptcha();
+    console.error('发送重置链接失败:', error)
+    message.error(error.message || '发送失败，请重试')
+    refreshForgotCaptcha()
   } finally {
-    forgotLoading.value = false;
+    forgotLoading.value = false
   }
-};
+}
 
 // 生命周期
 onMounted(() => {
   // 检查URL参数
-  if (route.query.reason === "session_expired") {
-    message.warning("会话已过期，请重新登录");
+  if (route.query.reason === 'session_expired') {
+    message.warning('会话已过期，请重新登录')
   }
 
   // 如果已登录，直接跳转
   if (userStore.isAuthenticated) {
-    router.push("/");
+    router.push('/')
   }
-});
+})
 
 onUnmounted(() => {
-  stopQrPolling();
-});
+  stopQrPolling()
+})
 
 // 监听activeTab变化
-watch(activeTab, (newTab) => {
-  if (newTab === "qr") {
-    generateQrCode();
+watch(activeTab, newTab => {
+  if (newTab === 'qr') {
+    generateQrCode()
   } else {
-    stopQrPolling();
+    stopQrPolling()
   }
-});
+})
 </script>
 
 <style scoped>

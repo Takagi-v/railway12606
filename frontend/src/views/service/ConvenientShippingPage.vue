@@ -5,7 +5,7 @@
         <h1>便民托运</h1>
         <p class="subtitle">为您提供安全、便捷、高效的行李托运服务，让您的出行更加轻松</p>
       </div>
-      
+
       <!-- 成功提示 -->
       <div v-if="showSuccess" class="alert alert-success">
         <i class="icon">✓</i>
@@ -21,29 +21,35 @@
       <div class="service-content">
         <form @submit.prevent="submitForm" class="service-form">
           <div class="section-title">寄件人信息</div>
-          
+
           <div class="form-row">
             <div class="form-group">
-              <label for="sender-name">寄件人姓名 <span class="required">*</span></label>
-              <input 
+              <label for="sender-name">
+                寄件人姓名
+                <span class="required">*</span>
+              </label>
+              <input
                 id="sender-name"
                 v-model="form.senderName"
-                type="text" 
+                type="text"
                 placeholder="请输入寄件人姓名"
-                :class="{ 'error': errors.senderName }"
+                :class="{ error: errors.senderName }"
                 @blur="validateField('senderName')"
               />
               <span v-if="errors.senderName" class="error-text">{{ errors.senderName }}</span>
             </div>
 
             <div class="form-group">
-              <label for="sender-phone">联系电话 <span class="required">*</span></label>
-              <input 
+              <label for="sender-phone">
+                联系电话
+                <span class="required">*</span>
+              </label>
+              <input
                 id="sender-phone"
                 v-model="form.senderPhone"
-                type="tel" 
+                type="tel"
                 placeholder="请输入11位手机号码"
-                :class="{ 'error': errors.senderPhone }"
+                :class="{ error: errors.senderPhone }"
                 @blur="validateField('senderPhone')"
               />
               <span v-if="errors.senderPhone" class="error-text">{{ errors.senderPhone }}</span>
@@ -51,41 +57,50 @@
           </div>
 
           <div class="form-group">
-            <label for="sender-address">寄件地址 <span class="required">*</span></label>
-            <textarea 
+            <label for="sender-address">
+              寄件地址
+              <span class="required">*</span>
+            </label>
+            <textarea
               id="sender-address"
               v-model="form.senderAddress"
               placeholder="请输入详细的寄件地址"
-              :class="{ 'error': errors.senderAddress }"
+              :class="{ error: errors.senderAddress }"
               @blur="validateField('senderAddress')"
             ></textarea>
             <span v-if="errors.senderAddress" class="error-text">{{ errors.senderAddress }}</span>
           </div>
 
           <div class="section-title">收件人信息</div>
-          
+
           <div class="form-row">
             <div class="form-group">
-              <label for="receiver-name">收件人姓名 <span class="required">*</span></label>
-              <input 
+              <label for="receiver-name">
+                收件人姓名
+                <span class="required">*</span>
+              </label>
+              <input
                 id="receiver-name"
                 v-model="form.receiverName"
-                type="text" 
+                type="text"
                 placeholder="请输入收件人姓名"
-                :class="{ 'error': errors.receiverName }"
+                :class="{ error: errors.receiverName }"
                 @blur="validateField('receiverName')"
               />
               <span v-if="errors.receiverName" class="error-text">{{ errors.receiverName }}</span>
             </div>
 
             <div class="form-group">
-              <label for="receiver-phone">联系电话 <span class="required">*</span></label>
-              <input 
+              <label for="receiver-phone">
+                联系电话
+                <span class="required">*</span>
+              </label>
+              <input
                 id="receiver-phone"
                 v-model="form.receiverPhone"
-                type="tel" 
+                type="tel"
                 placeholder="请输入11位手机号码"
-                :class="{ 'error': errors.receiverPhone }"
+                :class="{ error: errors.receiverPhone }"
                 @blur="validateField('receiverPhone')"
               />
               <span v-if="errors.receiverPhone" class="error-text">{{ errors.receiverPhone }}</span>
@@ -93,26 +108,34 @@
           </div>
 
           <div class="form-group">
-            <label for="receiver-address">收件地址 <span class="required">*</span></label>
-            <textarea 
+            <label for="receiver-address">
+              收件地址
+              <span class="required">*</span>
+            </label>
+            <textarea
               id="receiver-address"
               v-model="form.receiverAddress"
               placeholder="请输入详细的收件地址"
-              :class="{ 'error': errors.receiverAddress }"
+              :class="{ error: errors.receiverAddress }"
               @blur="validateField('receiverAddress')"
             ></textarea>
-            <span v-if="errors.receiverAddress" class="error-text">{{ errors.receiverAddress }}</span>
+            <span v-if="errors.receiverAddress" class="error-text">
+              {{ errors.receiverAddress }}
+            </span>
           </div>
 
           <div class="section-title">物品信息</div>
-          
+
           <div class="form-row">
             <div class="form-group">
-              <label for="item-type">物品类型 <span class="required">*</span></label>
-              <select 
-                id="item-type" 
+              <label for="item-type">
+                物品类型
+                <span class="required">*</span>
+              </label>
+              <select
+                id="item-type"
                 v-model="form.itemType"
-                :class="{ 'error': errors.itemType }"
+                :class="{ error: errors.itemType }"
                 @blur="validateField('itemType')"
               >
                 <option value="">请选择物品类型</option>
@@ -128,11 +151,14 @@
             </div>
 
             <div class="form-group">
-              <label for="item-weight">预估重量 <span class="required">*</span></label>
-              <select 
-                id="item-weight" 
+              <label for="item-weight">
+                预估重量
+                <span class="required">*</span>
+              </label>
+              <select
+                id="item-weight"
                 v-model="form.itemWeight"
-                :class="{ 'error': errors.itemWeight }"
+                :class="{ error: errors.itemWeight }"
                 @blur="validateField('itemWeight')"
               >
                 <option value="">请选择重量范围</option>
@@ -148,7 +174,7 @@
 
           <div class="form-group">
             <label for="item-description">物品描述</label>
-            <textarea 
+            <textarea
               id="item-description"
               v-model="form.itemDescription"
               placeholder="请详细描述托运物品的内容、数量等信息"
@@ -157,24 +183,30 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="pickup-date">期望取件日期 <span class="required">*</span></label>
-              <input 
+              <label for="pickup-date">
+                期望取件日期
+                <span class="required">*</span>
+              </label>
+              <input
                 id="pickup-date"
                 v-model="form.pickupDate"
-                type="date" 
+                type="date"
                 :min="minDate"
-                :class="{ 'error': errors.pickupDate }"
+                :class="{ error: errors.pickupDate }"
                 @blur="validateField('pickupDate')"
               />
               <span v-if="errors.pickupDate" class="error-text">{{ errors.pickupDate }}</span>
             </div>
 
             <div class="form-group">
-              <label for="pickup-time">期望取件时间 <span class="required">*</span></label>
-              <select 
-                id="pickup-time" 
+              <label for="pickup-time">
+                期望取件时间
+                <span class="required">*</span>
+              </label>
+              <select
+                id="pickup-time"
                 v-model="form.pickupTime"
-                :class="{ 'error': errors.pickupTime }"
+                :class="{ error: errors.pickupTime }"
                 @blur="validateField('pickupTime')"
               >
                 <option value="">请选择时间段</option>
@@ -188,7 +220,7 @@
 
           <div class="form-group">
             <label for="special-requirements">特殊要求</label>
-            <textarea 
+            <textarea
               id="special-requirements"
               v-model="form.specialRequirements"
               placeholder="如有特殊包装、运输要求等，请在此说明"
@@ -203,11 +235,7 @@
             </div>
           </div>
 
-          <button 
-            type="submit" 
-            class="submit-btn"
-            :disabled="isSubmitting"
-          >
+          <button type="submit" class="submit-btn" :disabled="isSubmitting">
             <span v-if="isSubmitting" class="loading-spinner"></span>
             {{ isSubmitting ? '提交中...' : '提交托运申请' }}
           </button>
@@ -222,7 +250,7 @@
             <li>支持代收货款服务</li>
             <li>提供保价服务，最高保额10万元</li>
           </ul>
-          
+
           <div class="pricing-info">
             <h4>收费标准</h4>
             <div class="pricing-table">
@@ -244,10 +272,13 @@
               </div>
             </div>
           </div>
-          
+
           <div class="contact-info">
             <h4>客服热线</h4>
-            <p>如有疑问，请拨打：<strong>400-1234-567</strong></p>
+            <p>
+              如有疑问，请拨打：
+              <strong>400-1234-567</strong>
+            </p>
             <p>服务时间：7:00-22:00</p>
           </div>
         </div>
@@ -291,7 +322,7 @@ const minDate = computed(() => {
 // 预估价格计算
 const estimatedPrice = computed(() => {
   if (!form.value.itemWeight) return null
-  
+
   const priceMap = {
     '0-5': 15,
     '5-10': 25,
@@ -299,19 +330,22 @@ const estimatedPrice = computed(() => {
     '20-50': 50,
     '50+': 80
   }
-  
+
   return priceMap[form.value.itemWeight] || null
 })
 
 // 监听重量变化，更新价格
-watch(() => form.value.itemWeight, () => {
-  // 价格会自动通过computed更新
-})
+watch(
+  () => form.value.itemWeight,
+  () => {
+    // 价格会自动通过computed更新
+  }
+)
 
 // 表单验证规则
-const validateField = (field) => {
+const validateField = field => {
   errors.value[field] = ''
-  
+
   switch (field) {
     case 'senderName':
     case 'receiverName':
@@ -321,7 +355,7 @@ const validateField = (field) => {
         errors.value[field] = '姓名至少需要2个字符'
       }
       break
-    
+
     case 'senderPhone':
     case 'receiverPhone':
       const phoneRegex = /^1[3-9]\d{9}$/
@@ -331,7 +365,7 @@ const validateField = (field) => {
         errors.value[field] = '请输入正确的11位手机号码'
       }
       break
-    
+
     case 'senderAddress':
     case 'receiverAddress':
       if (!form.value[field].trim()) {
@@ -340,19 +374,19 @@ const validateField = (field) => {
         errors.value[field] = '请输入详细地址（至少10个字符）'
       }
       break
-    
+
     case 'itemType':
       if (!form.value.itemType) {
         errors.value.itemType = '请选择物品类型'
       }
       break
-    
+
     case 'itemWeight':
       if (!form.value.itemWeight) {
         errors.value.itemWeight = '请选择重量范围'
       }
       break
-    
+
     case 'pickupDate':
       if (!form.value.pickupDate) {
         errors.value.pickupDate = '请选择取件日期'
@@ -360,7 +394,7 @@ const validateField = (field) => {
         errors.value.pickupDate = '取件日期不能早于明天'
       }
       break
-    
+
     case 'pickupTime':
       if (!form.value.pickupTime) {
         errors.value.pickupTime = '请选择取件时间'
@@ -372,13 +406,20 @@ const validateField = (field) => {
 // 验证整个表单
 const validateForm = () => {
   const requiredFields = [
-    'senderName', 'senderPhone', 'senderAddress',
-    'receiverName', 'receiverPhone', 'receiverAddress',
-    'itemType', 'itemWeight', 'pickupDate', 'pickupTime'
+    'senderName',
+    'senderPhone',
+    'senderAddress',
+    'receiverName',
+    'receiverPhone',
+    'receiverAddress',
+    'itemType',
+    'itemWeight',
+    'pickupDate',
+    'pickupTime'
   ]
-  
+
   requiredFields.forEach(field => validateField(field))
-  
+
   return !Object.values(errors.value).some(error => error)
 }
 
@@ -399,7 +440,7 @@ const submitForm = async () => {
   try {
     // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 2000))
-    
+
     // 成功处理
     showSuccess.value = true
     form.value = {
@@ -417,12 +458,11 @@ const submitForm = async () => {
       specialRequirements: ''
     }
     errors.value = {}
-    
+
     // 5秒后隐藏成功提示
     setTimeout(() => {
       showSuccess.value = false
     }, 5000)
-    
   } catch (error) {
     showError.value = true
     errorMessage.value = '提交失败，请稍后重试'
@@ -447,7 +487,7 @@ const submitForm = async () => {
   margin: 0 auto;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
@@ -675,8 +715,12 @@ const submitForm = async () => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 服务信息样式 */
@@ -717,7 +761,7 @@ const submitForm = async () => {
 }
 
 .service-info li::before {
-  content: "•";
+  content: '•';
   color: #667eea;
   font-weight: bold;
   position: absolute;
@@ -782,7 +826,7 @@ const submitForm = async () => {
     grid-template-columns: 1fr;
     gap: 30px;
   }
-  
+
   .service-info {
     position: static;
     order: -1;
@@ -793,33 +837,33 @@ const submitForm = async () => {
   .service-page {
     padding: 10px;
   }
-  
+
   .container {
     margin: 0 10px;
     border-radius: 12px;
   }
-  
+
   .header {
     padding: 30px 20px;
   }
-  
+
   .header h1 {
     font-size: 2rem;
   }
-  
+
   .service-content {
     padding: 20px;
   }
-  
+
   .alert {
     margin: 20px;
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   .section-title {
     font-size: 1.2rem;
   }
@@ -829,25 +873,25 @@ const submitForm = async () => {
   .header h1 {
     font-size: 1.8rem;
   }
-  
+
   .subtitle {
     font-size: 1rem;
   }
-  
+
   .service-content {
     padding: 15px;
   }
-  
+
   .form-group input,
   .form-group select,
   .form-group textarea {
     font-size: 16px; /* 防止iOS缩放 */
   }
-  
+
   .price {
     font-size: 1.5rem;
   }
-  
+
   .price-info {
     flex-direction: column;
     align-items: flex-start;
@@ -871,11 +915,11 @@ const submitForm = async () => {
   .form-group textarea {
     border-width: 2px;
   }
-  
+
   .submit-btn {
     border: 2px solid white;
   }
-  
+
   .section-title {
     border-bottom-width: 3px;
   }
@@ -887,17 +931,17 @@ const submitForm = async () => {
     background: white;
     padding: 0;
   }
-  
+
   .container {
     box-shadow: none;
     border-radius: 0;
   }
-  
+
   .header {
     background: white;
     color: black;
   }
-  
+
   .submit-btn,
   .alert {
     display: none;

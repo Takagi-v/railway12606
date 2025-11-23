@@ -107,29 +107,12 @@ const loginRules = {
 
 // 注册表单验证规则
 const registerRules = {
-  userType: [
-    createRequiredRule('请选择用户类型')
-  ],
-  loginName: [
-    createRequiredRule('请输入登录名'),
-    commonRules.username
-  ],
-  email: [
-    createRequiredRule('请输入邮箱'),
-    commonRules.email
-  ],
-  realName: [
-    createRequiredRule('请输入真实姓名'),
-    commonRules.realName
-  ],
-  phone: [
-    createRequiredRule('请输入手机号'),
-    commonRules.phone
-  ],
-  password: [
-    createRequiredRule('请输入密码'),
-    commonRules.password
-  ],
+  userType: [createRequiredRule('请选择用户类型')],
+  loginName: [createRequiredRule('请输入登录名'), commonRules.username],
+  email: [createRequiredRule('请输入邮箱'), commonRules.email],
+  realName: [createRequiredRule('请输入真实姓名'), commonRules.realName],
+  phone: [createRequiredRule('请输入手机号'), commonRules.phone],
+  password: [createRequiredRule('请输入密码'), commonRules.password],
   confirmPassword: [
     createRequiredRule('请确认密码'),
     {
@@ -159,21 +142,19 @@ const registerRules = {
 
 // 车票搜索表单验证规则
 const ticketSearchRules = {
-  fromStation: [
-    createRequiredRule('请选择出发站')
-  ],
-  toStation: [
-    createRequiredRule('请选择到达站')
-  ],
-  departureDate: [
-    createRequiredRule('请选择出发日期')
-  ],
+  fromStation: [createRequiredRule('请选择出发站')],
+  toStation: [createRequiredRule('请选择到达站')],
+  departureDate: [createRequiredRule('请选择出发日期')],
   returnDate: [
     {
       validator: (rule, value, callback, source) => {
         if (source.tripType === 'round-trip' && !value) {
           callback(new Error('往返票请选择返程日期'))
-        } else if (value && source.departureDate && new Date(value) <= new Date(source.departureDate)) {
+        } else if (
+          value &&
+          source.departureDate &&
+          new Date(value) <= new Date(source.departureDate)
+        ) {
           callback(new Error('返程日期应晚于出发日期'))
         } else {
           callback()
@@ -186,13 +167,8 @@ const ticketSearchRules = {
 
 // 乘客信息验证规则
 const passengerRules = {
-  name: [
-    createRequiredRule('请输入乘客姓名'),
-    commonRules.realName
-  ],
-  id_type: [
-    createRequiredRule('请选择证件类型')
-  ],
+  name: [createRequiredRule('请输入乘客姓名'), commonRules.realName],
+  id_type: [createRequiredRule('请选择证件类型')],
   id_number: [
     createRequiredRule('请输入证件号码'),
     {
@@ -201,11 +177,11 @@ const passengerRules = {
           callback()
           return
         }
-        
+
         const idType = source.id_type
         let pattern
         let message
-        
+
         switch (idType) {
           case 'ID_CARD':
             pattern = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
@@ -227,7 +203,7 @@ const passengerRules = {
             callback()
             return
         }
-        
+
         if (!pattern.test(value)) {
           callback(new Error(message))
         } else {
@@ -237,35 +213,20 @@ const passengerRules = {
       trigger: 'blur'
     }
   ],
-  phone: [
-    createRequiredRule('请输入手机号'),
-    commonRules.phone
-  ],
-  passenger_type: [
-    createRequiredRule('请选择乘客类型')
-  ]
+  phone: [createRequiredRule('请输入手机号'), commonRules.phone],
+  passenger_type: [createRequiredRule('请选择乘客类型')]
 }
 
 // 订单相关验证规则
 const orderRules = {
-  contactName: [
-    createRequiredRule('请输入联系人姓名'),
-    commonRules.realName
-  ],
-  contactPhone: [
-    createRequiredRule('请输入联系人手机号'),
-    commonRules.phone
-  ],
-  contactEmail: [
-    commonRules.email
-  ]
+  contactName: [createRequiredRule('请输入联系人姓名'), commonRules.realName],
+  contactPhone: [createRequiredRule('请输入联系人手机号'), commonRules.phone],
+  contactEmail: [commonRules.email]
 }
 
 // 支付相关验证规则
 const paymentRules = {
-  paymentMethod: [
-    createRequiredRule('请选择支付方式')
-  ],
+  paymentMethod: [createRequiredRule('请选择支付方式')],
   paymentPassword: [
     createRequiredRule('请输入支付密码'),
     {

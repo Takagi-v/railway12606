@@ -4,12 +4,7 @@ import FormInput from './FormInput.vue'
 import FormSelect from './FormSelect.vue'
 import FormDatePicker from './FormDatePicker.vue'
 
-export {
-  BaseForm,
-  FormInput,
-  FormSelect,
-  FormDatePicker
-}
+export { BaseForm, FormInput, FormSelect, FormDatePicker }
 
 export default {
   BaseForm,

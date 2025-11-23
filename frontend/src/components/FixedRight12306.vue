@@ -22,12 +22,14 @@
           <h4 class="menu-code-name">铁路12306</h4>
           <div class="menu-code-pic">
             <img :src="downloadImage" alt="铁路12306 APP 下载二维码" />
-            <div class="code-tips">官方APP下载，目前铁路未授权其他网站或APP开展类似服务内容，敬请广大用户注意。</div>
+            <div class="code-tips">
+              官方APP下载，目前铁路未授权其他网站或APP开展类似服务内容，敬请广大用户注意。
+            </div>
           </div>
         </div>
       </li>
       <li class="menu-item" id="close-right">
-        <a href="javascript:;" class="menu-hd" @click.prevent="visible=false">
+        <a href="javascript:;" class="menu-hd" @click.prevent="visible = false">
           <i class="icon icon-close"></i>
           <h4 class="menu-name">关闭</h4>
         </a>
@@ -87,7 +89,9 @@ const goServiceNumber = () => {
   color: #666;
   text-decoration: none;
 }
-.menu-hd:hover { color: #3b99fc; }
+.menu-hd:hover {
+  color: #3b99fc;
+}
 
 .menu-name {
   margin: 4px 0 0;
@@ -104,10 +108,14 @@ const goServiceNumber = () => {
   color: #666; /* 官网图标为中性灰 */
   background: transparent; /* 防止出现色块背景 */
 }
-.menu-hd:hover .icon { color: #3b99fc; }
+.menu-hd:hover .icon {
+  color: #3b99fc;
+}
 
 /* APP下载 - 二维码面板（hover显示） */
-.menu-item--hoverable { position: relative; }
+.menu-item--hoverable {
+  position: relative;
+}
 .menu-code {
   position: absolute;
   left: -260px; /* 面板在按钮左侧展开 */
@@ -116,7 +124,7 @@ const goServiceNumber = () => {
   padding: 12px;
   background: #fff;
   border: 1px solid #e5e5e5;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   visibility: hidden;
   opacity: 0;
   transform: translateX(8px);
@@ -127,10 +135,27 @@ const goServiceNumber = () => {
   opacity: 1;
   transform: translateX(0);
 }
-.menu-code-name { margin: 0 0 8px; font-size: 14px; color: #333; }
-.menu-code-pic { display: block; width: 100%; position: relative; }
-.menu-code-pic img { width: 100%; height: auto; display: block; }
-.code-tips { margin-top: 8px; font-size: 12px; color: #888; line-height: 1.4; }
+.menu-code-name {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #333;
+}
+.menu-code-pic {
+  display: block;
+  width: 100%;
+  position: relative;
+}
+.menu-code-pic img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.code-tips {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #888;
+  line-height: 1.4;
+}
 
 /* 关闭按钮样式：与其他项一致（灰色，hover 蓝色），不做额外覆盖 */
 </style>

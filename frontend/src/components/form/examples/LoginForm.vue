@@ -19,7 +19,7 @@
           placeholder="请输入用户名或手机号"
           prefix="user"
         />
-        
+
         <FormInput
           name="password"
           label="密码"
@@ -28,7 +28,7 @@
           placeholder="请输入密码"
           prefix="lock"
         />
-        
+
         <FormInput
           name="captcha"
           label="验证码"
@@ -38,15 +38,10 @@
           show-count
         >
           <template #addonAfter>
-            <img 
-              :src="captchaUrl" 
-              alt="验证码" 
-              class="captcha-image"
-              @click="refreshCaptcha"
-            />
+            <img :src="captchaUrl" alt="验证码" class="captcha-image" @click="refreshCaptcha" />
           </template>
         </FormInput>
-        
+
         <a-form-item>
           <div class="login-options">
             <a href="#" class="forgot-password">忘记密码？</a>
@@ -54,9 +49,12 @@
         </a-form-item>
       </template>
     </BaseForm>
-    
+
     <div class="login-footer">
-      <p>还没有账号？<a href="/register">立即注册</a></p>
+      <p>
+        还没有账号？
+        <a href="/register">立即注册</a>
+      </p>
     </div>
   </div>
 </template>
@@ -79,13 +77,15 @@ const formData = reactive({
 const loading = ref(false)
 
 // 验证码URL
-const captchaUrl = ref('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjQwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iNDAiIGZpbGw9IiNmNWY1ZjUiLz48dGV4dCB4PSI1MCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzMzMzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+MTIzNDwvdGV4dD48L3N2Zz4=')
+const captchaUrl = ref(
+  'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjQwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iNDAiIGZpbGw9IiNmNWY1ZjUiLz48dGV4dCB4PSI1MCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzMzMzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+MTIzNDwvdGV4dD48L3N2Zz4='
+)
 
 // 验证规则
 const loginRules = formRules.login
 
 // 事件处理
-const handleSubmit = async (values) => {
+const handleSubmit = async values => {
   loading.value = true
   try {
     console.log('登录数据:', values)
@@ -184,7 +184,7 @@ const refreshCaptcha = () => {
     margin: 16px;
     padding: 24px 16px;
   }
-  
+
   .login-options {
     flex-direction: column;
     align-items: flex-start;

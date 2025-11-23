@@ -146,12 +146,12 @@ export default {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .page-extra {
     margin-left: 0;
     margin-top: var(--spacing-md);
   }
-  
+
   .page-content {
     padding: var(--spacing-md);
   }

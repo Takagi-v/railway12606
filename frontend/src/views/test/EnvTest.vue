@@ -90,7 +90,7 @@ const testResult = ref('')
 const testApiRequest = async () => {
   try {
     testResult.value = '正在测试API请求...'
-    
+
     // 如果启用了Mock模式，显示Mock测试结果
     if (envConfig.USE_MOCK) {
       testResult.value = `Mock模式测试成功！\n模拟用户数据: {
@@ -101,7 +101,7 @@ const testApiRequest = async () => {
 }`
       return
     }
-    
+
     // 真实API测试
     const response = await getUserProfile()
     testResult.value = `API请求测试成功！\n响应数据: ${JSON.stringify(response, null, 2)}`
@@ -121,18 +121,18 @@ const testApiRequest = async () => {
 const testNetworkConnection = async () => {
   try {
     testResult.value = '正在测试网络连接...'
-    
+
     // 创建一个带超时的fetch请求
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 5000)
-    
+
     const response = await fetch(`${envConfig.API_BASE_URL.replace('/api', '')}/health`, {
       signal: controller.signal,
       method: 'GET'
     })
-    
+
     clearTimeout(timeoutId)
-    
+
     if (response.ok) {
       const data = await response.json()
       testResult.value = `网络连接测试成功！✅
