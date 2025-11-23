@@ -61,7 +61,6 @@
             <div v-if="activeTab === 'account'" class="login-form-container">
               <a-form
                 :model="loginForm"
-                :rules="rules"
                 layout="vertical"
                 class="login-form"
                 @finish="handleLogin"
@@ -72,7 +71,11 @@
                     placeholder="用户名/邮箱/手机号"
                     size="large"
                     class="login-input"
-                  />
+                  >
+                    <template #prefix>
+                      <span class="input-prefix user-icon"></span>
+                    </template>
+                  </a-input>
                 </a-form-item>
 
                 <a-form-item name="password">
@@ -81,15 +84,21 @@
                     placeholder="密码"
                     size="large"
                     class="login-input"
-                  />
+                    :visibilityToggle="false"
+                  >
+                    <template #prefix>
+                      <span class="input-prefix pwd-icon"></span>
+                    </template>
+                  </a-input-password>
                 </a-form-item>
+
+                <div v-if="submitError" class="submit-error"><i class="icon icon-plaint-fill error-icon"></i>{{ submitError }}</div>
 
                 <a-form-item>
                   <a-button
                     type="primary"
                     html-type="submit"
                     size="large"
-                    block
                     :loading="loading"
                     class="login-button"
                   >
@@ -104,8 +113,9 @@
                   class="register-link"
                   @click="router.push('/register')"
                 >
-                  注册新用户
+                  注册12306账号
                 </a-button>
+                <span class="links-sep">|</span>
                 <a-button
                   type="link"
                   class="forgot-link"
@@ -133,7 +143,7 @@
             <!-- 服务时间提示 -->
             <div class="service-time">
               <p>
-                铁路12306每日5:00至次日1:00（周二为5:00至24:00）为您提供服务
+                铁路12306每日5:00至次日1:00（周二为5:00至24:00）提供购票、改签、变更到站业务办理， 全天均可办理退票等其他服务。
               </p>
             </div>
           </div>
@@ -150,7 +160,60 @@
       </div>
     </main>
 
-    <LoginFooter />
+    <div class="page-footer">
+      <LoginFooter />
+      <div class="footer-txt">
+        <div class="footer-txt-inner">
+          <p class="footer-line">版权所有©2008-2025 中国铁道科学研究院集团有限公司 技术支持：铁旅科技有限公司</p>
+          <p class="footer-line"><img :src="imgGongan" alt="公安备案" class="footer-icon" />京公网安备 11010802038392号  |  京ICP备05020493号-4  |  ICP证：京B2-20202537</p>
+          <div class="footer-right"><img :src="imgFooterSlh" alt="适老化 无障碍服务" class="footer-slh" /></div>
+        </div>
+      </div>
+    </div>
+    <a-modal
+      v-model:open="verifyVisible"
+      :maskClosable="false"
+      :closable="true"
+      centered
+      :footer="null"
+      width="380"
+      class="verify-modal"
+    >
+      <div class="verify-header"><span class="verify-header-text">选择验证方式</span></div>
+      <div class="verify-subheader">短信验证</div>
+      <div class="verify-form">
+        <div class="verify-row">
+          <a-input
+            v-model:value="verify.idLast4"
+            placeholder="请输入登录账号绑定的证件号后4位"
+            maxlength="4"
+            class="verify-input"
+          />
+        </div>
+        <div class="verify-row">
+          <div class="verify-code-row">
+            <a-input
+              v-model:value="verify.code"
+              placeholder="输入验证码"
+              maxlength="6"
+              class="verify-input"
+            />
+            <a-button
+              type="default"
+              class="verify-send"
+              :disabled="codeCooldown > 0"
+              :loading="codeSending"
+              @click="sendSmsCode"
+            >
+              {{ codeCooldown > 0 ? `${codeCooldown}s` : '获取验证码' }}
+            </a-button>
+          </div>
+        </div>
+        <div class="verify-actions">
+          <a-button type="primary" class="verify-confirm" @click="confirmVerify" :loading="loading">确定</a-button>
+        </div>
+      </div>
+    </a-modal>
   </div>
 </template>
 
@@ -178,10 +241,14 @@ const bgImages = [
   new URL("../../../pics/banner-login-20200924.jpg", import.meta.url).href,
 ];
 const logoImage = new URL("../../../pics/logo@2x.png", import.meta.url).href;
+const imgGongan = new URL("../../../pics/gongan.png", import.meta.url).href;
+const imgFooterSlh = new URL("../../../pics/footer-slh.jpg", import.meta.url).href;
+ 
 const currentSlide = ref(0);
 const setSlide = (i) => {
   currentSlide.value = i;
 };
+const bgTimer = ref(null);
 
 // 验证码相关
 const showCaptcha = ref(false);
@@ -431,40 +498,43 @@ const stopQrPolling = () => {
 };
 
 // 处理登录
+const submitError = ref("");
+
 const handleLogin = async () => {
   try {
-    loading.value = true;
+    submitError.value = "";
+
+    const uname = loginForm.username.trim();
+    const pwd = loginForm.password;
+
+    if (!uname) {
+      submitError.value = "请输入用户名/邮箱/手机号";
+      return;
+    }
+    if (!pwd) {
+      submitError.value = "请输入密码";
+      return;
+    }
+
     errorMessage.value = "";
 
     const loginData = {
-      username: loginForm.username.trim(),
-      password: loginForm.password,
-      loginType: /^1[3-9]\d{9}$/.test(loginForm.username) ? "phone" : "account",
+      username: uname,
+      password: pwd,
+      loginType: /^1[3-9]\d{9}$/.test(uname) ? "phone" : "account",
       remember: loginForm.remember,
     };
 
-    // 如果需要验证码
     if (showCaptcha.value) {
       loginData.captcha = loginForm.captcha;
       loginData.captchaToken = captchaToken.value;
     }
-
-    await userStore.login(loginData);
-
-    message.success("登录成功");
-
-    // 重置登录尝试次数
-    loginAttempts.value = 0;
-
-    // 跳转到目标页面或首页
-    const redirect = route.query.redirect || "/";
-    router.push(redirect);
+    openVerifyModal(loginData);
   } catch (error) {
     console.error("登录失败:", error);
 
     loginAttempts.value++;
 
-    // 处理不同类型的错误
     if (error.response?.status === 401) {
       errorMessage.value = "用户名或密码错误";
     } else if (error.response?.status === 429) {
@@ -480,7 +550,6 @@ const handleLogin = async () => {
       errorMessage.value = error.message || "登录失败，请检查用户名和密码";
     }
 
-    // 多次失败后显示验证码
     if (loginAttempts.value >= 3 && !showCaptcha.value) {
       showCaptcha.value = true;
       getCaptchaImage();
@@ -550,10 +619,22 @@ onMounted(() => {
   if (userStore.isAuthenticated) {
     router.push("/");
   }
+
+  bgTimer.value = setInterval(() => {
+    currentSlide.value = (currentSlide.value + 1) % bgImages.length;
+  }, 15000);
 });
 
 onUnmounted(() => {
   stopQrPolling();
+  if (bgTimer.value) {
+    clearInterval(bgTimer.value);
+    bgTimer.value = null;
+  }
+  if (codeTimerRef.value) {
+    clearInterval(codeTimerRef.value);
+    codeTimerRef.value = null;
+  }
 });
 
 // 监听activeTab变化
@@ -562,6 +643,91 @@ watch(activeTab, (newTab) => {
     generateQrCode();
   } else {
     stopQrPolling();
+  }
+});
+
+watch(
+  [() => loginForm.username, () => loginForm.password],
+  () => {
+    if (submitError.value) submitError.value = "";
+  }
+);
+
+const verifyVisible = ref(false);
+const verify = reactive({ idLast4: "", code: "" });
+const codeSending = ref(false);
+const codeCooldown = ref(0);
+const codeTimerRef = ref(null);
+const pendingLoginData = ref(null);
+
+const openVerifyModal = (data) => {
+  pendingLoginData.value = data;
+  verifyVisible.value = true;
+};
+
+const closeVerifyModal = () => {
+  verifyVisible.value = false;
+  verify.idLast4 = "";
+  verify.code = "";
+};
+
+const sendSmsCode = async () => {
+  if (codeCooldown.value > 0) return;
+  try {
+    codeSending.value = true;
+    await new Promise((r) => setTimeout(r, 500));
+    message.success("验证码已发送");
+    codeCooldown.value = 60;
+    if (codeTimerRef.value) clearInterval(codeTimerRef.value);
+    codeTimerRef.value = setInterval(() => {
+      codeCooldown.value--;
+      if (codeCooldown.value <= 0) {
+        clearInterval(codeTimerRef.value);
+        codeTimerRef.value = null;
+      }
+    }, 1000);
+  } finally {
+    codeSending.value = false;
+  }
+};
+
+const confirmVerify = async () => {
+  const id4 = verify.idLast4.trim();
+  const code = verify.code.trim();
+  if (!/^\d{4}$/.test(id4)) {
+    message.error("请输入证件后4位");
+    return;
+  }
+  if (!/^\d{4,6}$/.test(code)) {
+    message.error("请输入验证码");
+    return;
+  }
+  try {
+    loading.value = true;
+    const data = { ...pendingLoginData.value, idLast4: id4, smsCode: code };
+    await userStore.login(data);
+    message.success("登录成功");
+    loginAttempts.value = 0;
+    const redirect = route.query.redirect || "/";
+    closeVerifyModal();
+    router.push(redirect);
+  } catch (error) {
+    console.error("登录失败:", error);
+    message.error(error.message || "登录失败，请检查信息");
+  } finally {
+    loading.value = false;
+  }
+};
+
+watch(verifyVisible, (v) => {
+  if (!v) {
+    verify.idLast4 = "";
+    verify.code = "";
+    if (codeTimerRef.value) {
+      clearInterval(codeTimerRef.value);
+      codeTimerRef.value = null;
+    }
+    codeCooldown.value = 0;
   }
 });
 </script>
@@ -598,7 +764,7 @@ watch(activeTab, (newTab) => {
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 30px;
 }
 
 .logo-icon {
@@ -643,9 +809,10 @@ watch(activeTab, (newTab) => {
 
 /* 主体区域样式 */
 .login-main {
-  flex: 1;
+  flex: 0 0 600px;
   position: relative;
   overflow: hidden;
+  height: 600px;
 }
 
 .bg-slider {
@@ -653,7 +820,7 @@ watch(activeTab, (newTab) => {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  height: 600px;
   z-index: 0;
 }
 
@@ -669,7 +836,8 @@ watch(activeTab, (newTab) => {
 .bg-slide {
   position: relative;
   height: 100%;
-  background-size: cover;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
   background-position: center;
   pointer-events: none;
 }
@@ -704,7 +872,7 @@ watch(activeTab, (newTab) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: calc(100vh - 60px - 120px);
+  min-height: 600px;
   position: relative;
   z-index: 1;
 }
@@ -796,7 +964,7 @@ watch(activeTab, (newTab) => {
 
 .login-card {
   background: white;
-  border-radius: 6px;
+  border-radius: 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 }
@@ -804,6 +972,17 @@ watch(activeTab, (newTab) => {
 .login-tabs {
   display: flex;
   border-bottom: 1px solid #e8e8e8;
+  position: relative;
+}
+
+.login-tabs::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  background: #e8e8e8;
 }
 
 .tab-item {
@@ -818,8 +997,8 @@ watch(activeTab, (newTab) => {
 }
 
 .tab-item.active {
-  color: #ff6600;
-  border-bottom-color: #ff6600;
+  color: #1890ff;
+  border-bottom-color: transparent;
 }
 
 .tab-item:hover {
@@ -828,6 +1007,33 @@ watch(activeTab, (newTab) => {
 
 .login-form-container {
   padding: 24px;
+}
+
+.login-form .ant-input-affix-wrapper,
+.login-form .ant-input {
+  height: 44px;
+  border-color: #e8e8e8;
+  border-radius: 0;
+}
+
+.login-form :deep(.ant-input-password .ant-input-suffix) {
+  display: none;
+}
+
+.input-prefix {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.user-icon {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23999'><path d='M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z'/></svg>");
+}
+
+.pwd-icon {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23999'><path d='M17 8h-1V6a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zm-5 8a2 2 0 1 1 2-2 2 2 0 0 1-2 2z'/></svg>");
 }
 
 .login-form .ant-form-item {
@@ -849,7 +1055,7 @@ watch(activeTab, (newTab) => {
   width: 100px;
   height: 40px;
   border: 1px solid #d9d9d9;
-  border-radius: 6px;
+  border-radius: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -866,7 +1072,7 @@ watch(activeTab, (newTab) => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
 .captcha-placeholder {
@@ -890,7 +1096,7 @@ watch(activeTab, (newTab) => {
   padding: 8px 12px;
   background: #fff2f0;
   border: 1px solid #ffccc7;
-  border-radius: 6px;
+  border-radius: 0;
   color: #ff4d4f;
   font-size: 14px;
   margin-bottom: 16px;
@@ -901,20 +1107,33 @@ watch(activeTab, (newTab) => {
 }
 
 .login-input {
-  border-radius: 4px;
+  border-radius: 0;
+}
+
+.submit-error {
+  color: #ff4d4f;
+  font-size: 13px;
+  margin: 8px 0 12px;
+}
+
+.error-icon {
+  color: #ff4d4f;
+  margin-right: 6px;
+  font-size: 14px;
 }
 
 .login-button {
-  background: #ff6600;
-  border-color: #ff6600;
-  border-radius: 4px;
+  background: #ff7a00;
+  border-color: #ff7a00;
+  border-radius: 0;
   font-size: 16px;
   height: 44px;
+  width: 320px;
 }
 
 .login-button:hover {
-  background: #e55a00;
-  border-color: #e55a00;
+  background: #f26c02;
+  border-color: #f26c02;
 }
 
 .login-button:disabled {
@@ -925,16 +1144,26 @@ watch(activeTab, (newTab) => {
 
 .login-links {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 6px;
   margin-top: 16px;
 }
 
 .register-link {
   color: #1890ff;
+  font-size: 12px;
 }
 
 .forgot-link {
   color: #999;
+  font-size: 12px;
+}
+
+.links-sep {
+  color: #d9d9d9;
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
 }
 
 /* 二维码登录样式 */
@@ -958,7 +1187,7 @@ watch(activeTab, (newTab) => {
   align-items: center;
   justify-content: center;
   border: 1px solid #e8e8e8;
-  border-radius: 8px;
+  border-radius: 0;
   background: #fafafa;
   transition: all 0.3s ease;
 }
@@ -997,7 +1226,7 @@ watch(activeTab, (newTab) => {
   width: 100%;
   height: 100%;
   background: #f5f5f5;
-  border-radius: 4px;
+  border-radius: 0;
   padding: 16px;
 }
 
@@ -1034,8 +1263,11 @@ watch(activeTab, (newTab) => {
 
 /* 页脚样式 */
 .login-footer {
-  background: #f5f5f5;
-  padding: 30px 0;
+  background: #ffffff;
+  height: 194px;
+  padding: 0;
+  display: flex;
+  align-items: center;
   border-top: 1px solid #e8e8e8;
 }
 
@@ -1106,6 +1338,8 @@ watch(activeTab, (newTab) => {
   flex-direction: column;
   align-items: center;
 }
+
+ 
 
 .qr-code-small {
   width: 120px;
@@ -1380,20 +1614,133 @@ watch(activeTab, (newTab) => {
     width: 180px;
     height: 180px;
   }
-
-  .tab-item {
-    font-size: 15px;
-    padding: 12px 16px;
-  }
-
-  .main-title {
-    font-size: 26px;
-  }
-
-  .sub-title {
-    font-size: 19px;
-  }
 }
+
+.verify-modal :deep(.ant-modal) {
+}
+.verify-modal :deep(.ant-modal-content) {
+  border-radius: 8px !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18), 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid #e6f4ff !important;
+  overflow: hidden;
+  position: relative;
+  background: #ffffff !important;
+  height: 294px !important;
+}
+.verify-modal :deep(.ant-modal-content)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #69b1ff 0%, #e6f4ff 100%);
+}
+.verify-modal :deep(.ant-modal-body) {
+  padding: 16px 24px !important;
+}
+.verify-modal :deep(.ant-modal-close) {
+  top: 12px !important;
+  right: 12px !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  color: #555 !important;
+  font-size: 16px !important;
+}
+.verify-modal :deep(.ant-modal-close:hover) {
+  background: rgba(0,0,0,0.06) !important;
+  color: #666 !important;
+}
+.verify-header {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  color: #333;
+  margin-bottom: 8px;
+}
+.verify-header-text {
+  display: inline-block;
+  /* transform: translateX(-8px); */
+}
+.verify-subheader {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 16px;
+  color: #1890ff;
+}
+.verify-form {
+  padding: 4px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.verify-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  margin-bottom: 16px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.verify-label {
+  display: none;
+}
+.verify-input {
+  flex: 1;
+  min-width: 0;
+}
+.verify-form :deep(.ant-input) {
+  height: 40px;
+  border-radius: 0;
+  border-color: #d9d9d9;
+}
+.verify-form :deep(.ant-input::placeholder) {
+  color: #bfbfbf;
+}
+.verify-code-row {
+  display: grid;
+  grid-template-columns: 3fr 1.75fr;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+}
+.verify-send {
+  width: 120px;
+  height: 40px;
+  flex: 0 0 120px;
+  background: #f5f5f5;
+  border-color: #d9d9d9;
+  color: #666;
+  border-radius: 6px;
+}
+.verify-send[disabled] {
+  background: #d9d9d9;
+  border-color: #d9d9d9;
+  color: #fff;
+}
+.verify-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.verify-confirm {
+  width: 90%;
+  height: 44px;
+  background: #ff7a00;
+  border-color: #ff7a00;
+  border-radius: 10px;
+}
+.verify-confirm:hover {
+  background: #f26c02;
+  border-color: #f26c02;
+}
+
 
 /* 手机设备 (480px及以下) */
 @media (max-width: 480px) {
@@ -1563,5 +1910,56 @@ watch(activeTab, (newTab) => {
     width: 90px;
     height: 90px;
   }
+}
+</style>
+<style scoped>
+.page-footer {
+  margin-top: auto;
+}
+.page-footer :deep(.login-footer .footer-txt) {
+  display: none;
+}
+.footer-txt {
+  background: #666666;
+  color: #c1c1c1;
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+.footer-txt-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 14px;
+  text-align: center;
+  position: relative;
+  padding-right: 170px;
+}
+.footer-line {
+  margin: 0;
+}
+.footer-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.footer-right {
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.footer-slh {
+  display: block;
+}
+.footer-slh {
+  width: 120px;
+  height: auto;
 }
 </style>

@@ -85,7 +85,7 @@ class UserValidator:
         if not id_number:
             raise ValidationException("身份证号不能为空")
         
-        if id_type == "身份证":
+        if id_type in ("身份证", "居民身份证"):
             # 18位身份证号验证
             if not re.match(r'^\d{17}[\dXx]$', id_number):
                 raise ValidationException("请输入有效的18位身份证号")

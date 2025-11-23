@@ -37,6 +37,14 @@
         </section>
       </div>
     </div>
+    
+    <div class="footer-txt">
+      <div class="footer-txt-inner">
+        <p class="footer-line">版权所有©2008-2025 中国铁道科学研究院集团有限公司 技术支持：铁旅科技有限公司</p>
+        <p class="footer-line"><img :src="imgGongan" alt="公安备案" class="footer-icon" />京公网安备 11010802038392号  |  京ICP备05020493号-4  |  ICP证：京B2-20202537</p>
+        <div class="footer-right"><img :src="imgFooterSlh" alt="适老化 无障碍服务" class="footer-slh" /></div>
+      </div>
+    </div>
   </footer>
 </template>
 
@@ -49,12 +57,14 @@ const imgWeChat = new URL('../../pics/zgtlwx.png', import.meta.url).href
 const imgWeibo = new URL('../../pics/zgtlwb.png', import.meta.url).href
 const imgPublic = new URL('../../pics/public.png', import.meta.url).href
 const imgDownload = new URL('../../pics/download.png', import.meta.url).href
+const imgGongan = new URL('../../pics/gongan.png', import.meta.url).href
+const imgFooterSlh = new URL('../../pics/footer-slh.jpg', import.meta.url).href
 </script>
 
 <style scoped>
 .login-footer {
   background: #f5f5f5;
-  padding: 30px 0;
+  padding: 30px 0 0;
   border-top: 1px solid #e8e8e8;
 }
 
@@ -143,5 +153,51 @@ const imgDownload = new URL('../../pics/download.png', import.meta.url).href
   padding: 4px;
   margin-top: 8px;
   align-self: center;
+}
+
+/* 底部版权文本 */
+.footer-txt {
+  background: #666666;
+  color: #c1c1c1;
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.footer-txt-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 14px;
+  text-align: center;
+  position: relative;
+  padding-right: 170px;
+}
+
+.footer-line {
+  margin: 0;
+}
+
+.footer-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.footer-right {
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.footer-slh {
+  display: block;
 }
 </style>

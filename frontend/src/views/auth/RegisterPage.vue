@@ -7,6 +7,7 @@
         <div class="register-container">
           <!-- 注册卡片 -->
           <div class="register-card">
+            <div class="breadcrumb">您现在的位置：<router-link to="/">客运首页</router-link> > <router-link to="/register">注册</router-link></div>
             <div class="card-header">
               <h2 class="card-title">账户信息</h2>
             </div>
@@ -20,13 +21,13 @@
                 layout="horizontal"
                 :label-col="{ span: 5 }"
                 :wrapper-col="{ span: 19 }"
-                class="register-form"
+                :class="['register-form', { 'show-errors': showErrors }]"
               >
                 <!-- 用户名 -->
                 <a-form-item name="username" class="form-item">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star"></span>
+                      <span class="required-star">*</span>
                       用户名
                     </span>
                   </template>
@@ -47,7 +48,7 @@
                 <a-form-item name="password" class="form-item">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star"></span>
+                      <span class="required-star">*</span>
                       密码
                     </span>
                   </template>
@@ -59,9 +60,10 @@
                       class="form-input"
                       @input="updatePasswordStrength"
                       @blur="clearFieldError('password')"
+                      :visibilityToggle="false"
                     />
-                    <span v-if="!registerForm.password" class="field-hint password-hint">6-20位，包含字母和数字</span>
-                    <div v-if="registerForm.password" class="password-strength inline">
+                    
+                    <div class="password-strength inline">
                       <div class="strength-bar">
                         <div 
                           class="strength-fill" 
@@ -69,9 +71,6 @@
                           :style="{ width: passwordStrength.width }"
                         ></div>
                       </div>
-                      <span class="strength-text" :class="passwordStrength.level">
-                        {{ passwordStrength.text }}
-                      </span>
                     </div>
                   </div>
                   <div v-if="errors.password" class="error-message">{{ errors.password }}</div>
@@ -81,7 +80,7 @@
                 <a-form-item name="confirmPassword" class="form-item">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star"></span>
+                      <span class="required-star">*</span>
                       再次输入密码
                     </span>
                   </template>
@@ -92,6 +91,7 @@
                       size="middle"
                       class="form-input"
                       @blur="clearFieldError('confirmPassword')"
+                      :visibilityToggle="false"
                     />
                   </div>
                   <div v-if="errors.confirmPassword" class="error-message">{{ errors.confirmPassword }}</div>
@@ -112,9 +112,13 @@
                       class="form-input"
                     >
                       <a-select-option value="身份证">居民身份证</a-select-option>
-                      <a-select-option value="护照">护照</a-select-option>
-                      <a-select-option value="港澳通行证">港澳通行证</a-select-option>
-                      <a-select-option value="台胞证">台胞证</a-select-option>
+                      <a-select-option value="港澳居民居住证">港澳居民居住证</a-select-option>
+                      <a-select-option value="台湾居民居住证">台湾居民居住证</a-select-option>
+                      <a-select-option value="外国人永久居留身份证">外国人永久居留身份证</a-select-option>
+                      <a-select-option value="护照">外国护照</a-select-option>
+                      <a-select-option value="护照">中国护照</a-select-option>
+                      <a-select-option value="港澳通行证">港澳居民来往内地通行证</a-select-option>
+                      <a-select-option value="台胞证">台湾居民来往大陆通行证</a-select-option>
                     </a-select>
                   </div>
                 </a-form-item>
@@ -123,7 +127,7 @@
                 <a-form-item name="realName" class="form-item">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star"></span>
+                      <span class="required-star">*</span>
                       姓名
                     </span>
                   </template>
@@ -144,7 +148,7 @@
                 <a-form-item name="idNumber" class="form-item">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star"></span>
+                      <span class="required-star">*</span>
                       证件号码
                     </span>
                   </template>
@@ -176,6 +180,7 @@
                       class="form-input"
                     >
                       <a-select-option value="成人">成人</a-select-option>
+                      <a-select-option value="儿童">儿童</a-select-option>
                       <a-select-option value="学生">学生</a-select-option>
                       <a-select-option value="残疾军人">残疾军人</a-select-option>
                     </a-select>
@@ -187,7 +192,7 @@
                 <a-form-item name="email" class="form-item">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star"></span>
+                      <span class="required-star">*</span>
                       邮箱
                     </span>
                   </template>
@@ -207,7 +212,7 @@
                 <a-form-item name="phone" class="form-item full-width">
                   <template #label>
                     <span class="required-label">
-                      <span class="required-star"></span>
+                      <span class="required-star">*</span>
                       手机号
                     </span>
                   </template>
@@ -257,6 +262,7 @@
                     size="middle" 
                     block 
                     :loading="loading"
+                    @click="showErrors = true"
                     class="submit-btn"
                   >
                     下一步
@@ -285,6 +291,7 @@ const router = useRouter()
 const userStore = useUserStore()
 const loading = ref(false)
 const formRef = ref()
+const showErrors = ref(false)
 
 // 表单数据
 const registerForm = reactive({
@@ -316,7 +323,7 @@ const errors = reactive({
 // 密码强度计算
 const passwordStrength = computed(() => {
   const password = registerForm.password
-  if (!password) return { level: '', width: '0%', text: '' }
+  if (!password) return { level: 'weak', width: '0%', text: '' }
 
   let score = 0
   let feedback = []
@@ -366,14 +373,14 @@ const passwordStrength = computed(() => {
 // 表单验证规则
 const rules = {
   username: [
-    { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 6, max: 30, message: '用户名长度为6-30位', trigger: 'blur' },
-    { pattern: /^[a-zA-Z0-9_-][a-zA-Z0-9_-]*$/, message: '用户名只能以字母、数字、下划线或横线开头，包含字母、数字、下划线和横线', trigger: 'blur' }
+    { required: true, message: '请输入用户名', trigger: 'submit' },
+    { min: 6, max: 30, message: '用户名长度为6-30位', trigger: 'submit' },
+    { pattern: /^[a-zA-Z0-9_-][a-zA-Z0-9_-]*$/, message: '用户名只能以字母、数字、下划线或横线开头，包含字母、数字、下划线和横线', trigger: 'submit' }
   ],
   password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, max: 20, message: '密码长度为6-20位', trigger: 'blur' },
-    { pattern: /^(?=.*[a-zA-Z])(?=.*\d).+$/, message: '密码必须包含字母和数字', trigger: 'blur' }
+    { required: true, message: '请输入密码', trigger: 'submit' },
+    { min: 6, max: 20, message: '密码长度为6-20位', trigger: 'submit' },
+    { pattern: /^(?=.*[a-zA-Z])(?=.*\d).+$/, message: '密码必须包含字母和数字', trigger: 'submit' }
   ],
   confirmPassword: [
     { required: true, message: '请再次输入密码', trigger: 'blur' },
@@ -384,18 +391,18 @@ const rules = {
         }
         return Promise.resolve()
       },
-      trigger: 'blur'
+      trigger: 'submit'
     }
   ],
   realName: [
-    { required: true, message: '请输入真实姓名', trigger: 'blur' },
+    { required: true, message: '请输入真实姓名', trigger: 'submit' },
     { pattern: /^[\u4e00-\u9fa5·]{2,20}$/, message: '请输入2-20位中文姓名', trigger: 'blur' }
   ],
   idNumber: [
-    { required: true, message: '请输入证件号码', trigger: 'blur' },
+    { required: true, message: '请输入证件号码', trigger: 'submit' },
     {
       validator: (rule, value) => {
-        if (registerForm.idType === '身份证') {
+        if (registerForm.idType === '居民身份证') {
           const idPattern = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
           if (!idPattern.test(value)) {
             return Promise.reject('请输入正确的身份证号码')
@@ -403,15 +410,15 @@ const rules = {
         }
         return Promise.resolve()
       },
-      trigger: 'blur'
+      trigger: 'submit'
     }
   ],
   email: [
-    { required: true, message: '请输入邮箱', trigger: 'blur' },
+    { required: true, message: '请输入邮箱', trigger: 'submit' },
     { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
   ],
   phone: [
-    { required: true, message: '请输入手机号', trigger: 'blur' },
+    { required: true, message: '请输入手机号', trigger: 'submit' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' }
   ],
   agreeTerms: [
@@ -422,7 +429,7 @@ const rules = {
         }
         return Promise.resolve()
       },
-      trigger: 'change'
+      trigger: 'submit'
     }
   ]
 }
@@ -441,6 +448,7 @@ const updatePasswordStrength = () => {
 const handleRegister = async (values) => {
   try {
     loading.value = true
+    showErrors.value = true
     
     // 验证服务条款
     if (!registerForm.agreeTerms) {
@@ -488,7 +496,7 @@ const handleRegister = async (values) => {
   font-size: 12px;
 }
 
-.register-page :deep([class^="ant-"]:not(.anticon)) {
+.register-form :deep([class^="ant-"]:not(.anticon)) {
   font-size: 12px;
   font-family: "Tahoma", "SimSun", "宋体", serif;
 }
@@ -584,10 +592,12 @@ const handleRegister = async (values) => {
 /* 主体区域 */
 .register-main {
   padding: 0;
-  min-height: 100vh;
+  height: auto;
+  min-height: 600px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  background: white;
 }
 
 .main-content {
@@ -617,6 +627,8 @@ const handleRegister = async (values) => {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .card-title {
@@ -633,6 +645,25 @@ const handleRegister = async (values) => {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.breadcrumb {
+  font-size: 12px;
+  color: #666;
+  height: 20px;
+  line-height: 20px;
+  padding: 0 16px;
+  text-align: left;
+}
+
+.breadcrumb a {
+  color: #1890ff;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: #40a9ff;
+  text-decoration: underline;
 }
 
 /* 表单样式 */
@@ -674,11 +705,13 @@ const handleRegister = async (values) => {
   padding-right: 0;
   text-align: right;
   display: flex;
+  justify-content: flex-end;
   font-size: 12px;
   /* margin-left: 50px; */
   align-items: center;
   height: 30px;
   background: transparent;
+  position: static;
 }
 
 .required-label {
@@ -692,8 +725,13 @@ const handleRegister = async (values) => {
 
 .required-star {
   color: #ff4d4f;
-  margin-right: 4px;
+  margin-right: 6px;
   font-size: 14px;
+}
+
+.form-item :deep(.ant-form-item-label .ant-form-item-required)::before {
+  content: none !important;
+  display: none !important;
 }
 
 .form-input {
@@ -755,6 +793,10 @@ const handleRegister = async (values) => {
   align-items: center;
 }
 
+.form-item :deep(.ant-input-password-icon) {
+  display: none;
+}
+
 .form-item :deep(.ant-select-selector) {
   height: 30px;
   padding: 0 8px;
@@ -786,12 +828,12 @@ const handleRegister = async (values) => {
   margin-top: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-  height: 30px;
+  gap: 4px;
+  height: 18px;
 }
 
 .strength-bar {
-  flex: 1;
+  width: 180px;
   height: 2px;
   background: #f0f0f0;
   border-radius: 2px;
@@ -823,8 +865,8 @@ const handleRegister = async (values) => {
 .strength-text {
   font-size: 12px;
   font-weight: 500;
-  min-width: 24px;
-  line-height: 30px;
+  min-width: 28px;
+  line-height: 24px;
 }
 
 .strength-text.weak {
@@ -1105,11 +1147,25 @@ const handleRegister = async (values) => {
 .register-form {
   margin: 0 auto;
 }
-</style>
-
-.form-divider {
-  height: 0;
-  border-top: 1px dashed #d9d9d9;
-  margin: 12px 0;
+/* 标签右侧对齐与错误展示控制 */
+.form-item :deep(.ant-form-item-label > label) {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  padding-right: 0;
 }
+.register-form :deep(.ant-form-item-explain-error) {
+  display: none;
+}
+.register-form.show-errors :deep(.ant-form-item-explain-error) {
+  display: block;
+}
+ .form-divider {
+   height: 0;
+   border-top: 1px dashed #d9d9d9;
+   margin: 12px 0;
+ }
+</style>
 
