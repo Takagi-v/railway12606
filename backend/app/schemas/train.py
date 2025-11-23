@@ -39,6 +39,7 @@ class TrainSearchResponse(BaseModel):
     arrival_station: str
     departure_time: str
     arrival_time: str
+    arrival_day_offset: int
     duration: str
     first_class: SeatAvailability
     second_class: SeatAvailability

@@ -52,6 +52,19 @@ def _seat_availability_by_type(db: Session, train_id: int, travel_date: date) ->
     return counts
 
 
+def _arrival_day_offset(train: Train) -> int:
+    """Estimate how many days after departure the train arrives."""
+    if not train.duration_minutes:
+        return 0
+    base_days = train.duration_minutes // (24 * 60)
+    remainder = train.duration_minutes % (24 * 60)
+    # If arrival clock time is earlier than departure clock time and there is remaining duration,
+    # it means跨天到达
+    if remainder and train.departure_time > train.arrival_time:
+        base_days += 1
+    return base_days
+
+
 @router.get("/search", response_model=Response[List[TrainSearchResponse]])
 async def search_trains(
     departure_city: str = Query(..., description="出发地（城市或车站名/拼音）"),
@@ -160,6 +173,7 @@ async def search_trains(
                 arrival_station=t.arrival_station.station_name,
                 departure_time=t.departure_time.strftime("%H:%M"),
                 arrival_time=t.arrival_time.strftime("%H:%M"),
+                arrival_day_offset=_arrival_day_offset(t),
                 duration=_format_duration(t.duration_minutes),
                 first_class=SeatAvailability(
                     available=avail[SeatType.FIRST_CLASS],
