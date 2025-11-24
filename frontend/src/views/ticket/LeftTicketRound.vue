@@ -79,29 +79,30 @@
               <li>
                 <span class="label">出发日</span>
                 <div class="inp-w" style="z-index: 1200">
-                  <input
-                    autocomplete="off"
-                    type="text"
-                    class="inp_selected"
-                    name="leftTicketDTO.train_date"
-                    id="train_date"
-                    :value="goDateDisplay"
+                  <ADatePicker
+                    v-model:value="goDate"
+                    :disabled-date="disabledGoDate"
+                    :allow-clear="false"
+                    format="YYYY-MM-DD"
+                    value-format="YYYY-MM-DD"
+                    placeholder="选择出发日期"
+                    style="width: 100%"
+                    @change="ensureBackDateValid"
                   />
-                  <span id="date_icon_1" class="i-date"></span>
                 </div>
               </li>
               <li class="">
                 <span class="label">返程日</span>
                 <div class="inp-w" id="back_div" style="z-index: 1100">
-                  <input
-                    autocomplete="off"
-                    type="text"
-                    class="inp_selected"
-                    name="back_train_date"
-                    id="back_train_date"
-                    :value="backDateDisplay"
+                  <ADatePicker
+                    v-model:value="backDate"
+                    :disabled-date="disabledBackDate"
+                    :allow-clear="false"
+                    format="YYYY-MM-DD"
+                    value-format="YYYY-MM-DD"
+                    placeholder="选择返程日期"
+                    style="width: 100%"
                   />
-                  <span id="date_icon_2" class="i-date"></span>
                 </div>
               </li>
             </ul>
@@ -706,11 +707,13 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import dayjs from 'dayjs'
-import { message } from 'ant-design-vue'
+import { message, DatePicker } from 'ant-design-vue'
 import Header12306 from '@/components/Header12306.vue'
 import Footer from '@/components/LoginFooter.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { searchTrains } from '@/api/train'
+
+const ADatePicker = DatePicker
 
 const router = useRouter()
 const route = useRoute()
@@ -741,17 +744,9 @@ const bookTrain = train => {
 
 const from = ref('北京')
 const to = ref('上海')
-const goDate = ref(new Date())
-const backDate = ref(dayjs().add(1, 'day').toDate())
+const goDate = ref(dayjs().format('YYYY-MM-DD'))
+const backDate = ref(dayjs().add(1, 'day').format('YYYY-MM-DD'))
 const weekday = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-const fmt = d => {
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const dd = String(d.getDate()).padStart(2, '0')
-  return `${y}-${m}-${dd} ${weekday[d.getDay()]}`
-}
-const goDateDisplay = computed(() => fmt(goDate.value))
-const backDateDisplay = computed(() => fmt(backDate.value))
 
 const dateTabs = computed(() => {
   const arr = []
@@ -835,7 +830,7 @@ const toggleAllTypes = () => {
   }
 }
 
-const formatDateValue = d => dayjs(d).format('YYYY-MM-DD')
+const formatDateValue = d => (typeof d === 'string' ? d : dayjs(d).format('YYYY-MM-DD'))
 const normalizeTime = value => {
   const hour = value.slice(0, 2)
   if (hour === '24') {
@@ -1005,9 +1000,20 @@ const fetchBackTrains = async () => {
 }
 
 const ensureBackDateValid = () => {
-  if (dayjs(backDate.value).isBefore(dayjs(goDate.value))) {
-    backDate.value = dayjs(goDate.value).add(1, 'day').toDate()
+  // 确保返程日期不早于出发日期，自动调整为出发日期同一天
+  if (dayjs(backDate.value).isBefore(dayjs(goDate.value), 'day')) {
+    backDate.value = goDate.value
   }
+}
+
+// 禁用早于今天的出发日期
+const disabledGoDate = (current) => {
+  return current && current < dayjs().startOf('day')
+}
+
+// 禁用早于出发日期的返程日期
+const disabledBackDate = (current) => {
+  return current && current < dayjs(goDate.value).startOf('day')
 }
 
 const updateActiveDateByGoDate = () => {
@@ -1022,14 +1028,21 @@ const search = async () => {
     message.warning('请输入出发地和目的地')
     return
   }
-  ensureBackDateValid()
+
+  // 校验返程日期不早于出发日期
+  if (dayjs(backDate.value).isBefore(dayjs(goDate.value), 'day')) {
+    message.error('返程日期不能早于出发日期')
+    ensureBackDateValid()
+    return
+  }
+
   await Promise.all([fetchGoTrains(), fetchBackTrains()])
 }
 
 const selectDate = i => {
   activeDate.value = i
   const d = dateTabs.value[i].dateObj
-  goDate.value = new Date(d)
+  goDate.value = dayjs(d).format('YYYY-MM-DD')
   ensureBackDateValid()
   search()
 }
@@ -1071,16 +1084,14 @@ const syncFromRoute = () => {
     changed = true
   }
   if (routeGo && dayjs(routeGo, 'YYYY-MM-DD', true).isValid()) {
-    const parsed = dayjs(routeGo).toDate()
-    if (parsed.toDateString() !== goDate.value.toDateString()) {
-      goDate.value = parsed
+    if (routeGo !== goDate.value) {
+      goDate.value = routeGo
       changed = true
     }
   }
   if (routeBack && dayjs(routeBack, 'YYYY-MM-DD', true).isValid()) {
-    const parsedBack = dayjs(routeBack).toDate()
-    if (parsedBack.toDateString() !== backDate.value.toDateString()) {
-      backDate.value = parsedBack
+    if (routeBack !== backDate.value) {
+      backDate.value = routeBack
       changed = true
     }
   }

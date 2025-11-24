@@ -3,18 +3,24 @@ Passenger Endpoints
 乘客管理相关API
 """
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, status, Path
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
 
-from app.db.session import get_db
-from app.schemas.passenger import PassengerCreate, PassengerUpdate, PassengerResponse
-from app.schemas.common import Response
-from app.models.user import User
-from app.models.passenger import Passenger
+from fastapi import APIRouter, Depends, HTTPException, Path, status
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
+
 from app.api.deps import get_current_user
-from app.core.exceptions import ValidationException, NotFoundException, BusinessException
+from app.core.exceptions import (
+    BusinessException,
+    NotFoundException,
+    ValidationException,
+)
 from app.core.validators import UserValidator
+from app.db.session import get_db
+from app.models.enums import PassengerType
+from app.models.passenger import Passenger
+from app.models.user import User
+from app.schemas.common import Response
+from app.schemas.passenger import PassengerCreate, PassengerResponse, PassengerUpdate
 
 router = APIRouter()
 
@@ -26,16 +32,86 @@ async def get_passengers(
 ):
     """
     获取当前用户的所有乘客
+    默认乘客（用户本人）会排在最前面
     """
     passengers = db.query(Passenger).filter(
         Passenger.user_id == current_user.id
-    ).all()
+    ).order_by(Passenger.is_default.desc(), Passenger.create_time.asc()).all()
     
     return Response(
         code=200,
         message="查询成功",
         data=[PassengerResponse.model_validate(p) for p in passengers]
     )
+
+
+@router.post("/sync-default", response_model=Response[PassengerResponse])
+async def sync_default_passenger(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    同步/创建默认乘客（用户本人）
+    
+    如果默认乘客不存在，则根据用户信息创建；
+    如果存在，则更新信息与用户保持一致
+    """
+    # Check if default passenger already exists
+    default_passenger = db.query(Passenger).filter(
+        Passenger.user_id == current_user.id,
+        Passenger.is_default == True
+    ).first()
+    
+    # Map user_type to passenger_type
+    passenger_type_map = {
+        "成人": PassengerType.ADULT,
+        "学生": PassengerType.STUDENT
+    }
+    passenger_type = passenger_type_map.get(current_user.user_type.value, PassengerType.ADULT)
+    
+    if default_passenger:
+        # Update existing default passenger with current user info
+        default_passenger.name = current_user.real_name
+        default_passenger.id_type = current_user.id_type
+        default_passenger.id_number = current_user.id_number
+        default_passenger.phone = current_user.phone
+        default_passenger.passenger_type = passenger_type
+        default_passenger.verified = True  # User's own info is considered verified
+        
+        db.commit()
+        db.refresh(default_passenger)
+        
+        return Response(
+            code=200,
+            message="默认乘客信息已同步",
+            data=PassengerResponse.model_validate(default_passenger)
+        )
+    else:
+        # Create new default passenger from user info
+        new_default_passenger = Passenger(
+            user_id=current_user.id,
+            name=current_user.real_name,
+            id_type=current_user.id_type,
+            id_number=current_user.id_number,
+            phone=current_user.phone,
+            passenger_type=passenger_type,
+            verified=True,
+            is_default=True
+        )
+        
+        db.add(new_default_passenger)
+        try:
+            db.commit()
+            db.refresh(new_default_passenger)
+        except IntegrityError:
+            db.rollback()
+            raise ValidationException("无法创建默认乘客，可能已存在相同证件号的乘客")
+        
+        return Response(
+            code=201,
+            message="默认乘客已创建",
+            data=PassengerResponse.model_validate(new_default_passenger)
+        )
 
 
 @router.post("", response_model=Response[PassengerResponse], status_code=status.HTTP_201_CREATED)
@@ -142,6 +218,7 @@ async def delete_passenger(
 ):
     """
     删除乘客
+    注意：默认乘客（用户本人）不允许删除
     """
     passenger = db.query(Passenger).filter(
         Passenger.id == passenger_id,
@@ -150,6 +227,10 @@ async def delete_passenger(
     
     if not passenger:
         raise NotFoundException("乘客不存在")
+    
+    # Prevent deletion of default passenger
+    if passenger.is_default:
+        raise BusinessException("默认乘客（用户本人）不允许删除")
     
     # TODO: Check if passenger has uncompleted orders
     # For now, just delete

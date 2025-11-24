@@ -37,7 +37,9 @@
         <div class="tab-content">
           <!-- 人脸找回 -->
           <div v-if="activeTab === 'face'" class="face-recovery">
-            <div class="qr-content">
+            
+
+            <div class="qr-content" v-if="faceStep === 1">
               <h3 class="recovery-title">人脸找回</h3>
               <p class="recovery-subtitle">
                 扫描二维码，使用
@@ -99,11 +101,7 @@
                       <a-select-option value="+853">+853</a-select-option>
                       <a-select-option value="+886">+886</a-select-option>
                     </a-select>
-                    <a-input
-                      v-model:value="phoneForm.phone"
-                      
-                      size="middle"
-                    />
+                    <a-input v-model:value="phoneForm.phone" size="middle" />
                     <span class="inline-hint">已通过核验的手机号码</span>
                   </div>
                 </a-form-item>
@@ -127,11 +125,7 @@
 
                 <a-form-item label="证件号码：" required>
                   <div class="inline-field">
-                    <a-input
-                      v-model:value="phoneForm.idNumber"
-                      
-                      size="middle"
-                    />
+                    <a-input v-model:value="phoneForm.idNumber" size="middle" />
                     <span class="inline-hint">请输入证件号码</span>
                   </div>
                 </a-form-item>
@@ -154,6 +148,66 @@
                 <a href="#" class="help-link" @click.prevent="activeTab = 'email'">邮箱找回</a>
               </div>
             </div>
+
+            <div class="form-content" v-if="phoneStep === 2">
+              <a-form :model="verificationForm" layout="vertical" class="recovery-form">
+                <a-form-item label="验证码：" required>
+                  <a-input
+                    v-model:value="verificationForm.code"
+                    placeholder="请输入短信验证码"
+                    size="large"
+                  />
+                </a-form-item>
+                <div class="form-actions">
+                  <a-button
+                    type="primary"
+                    size="large"
+                    class="submit-btn"
+                    :loading="loading"
+                    @click="handleVerifyCode('phone')"
+                  >
+                    验证
+                  </a-button>
+                </div>
+              </a-form>
+            </div>
+
+            <div class="form-content" v-if="phoneStep === 3">
+              <a-form :model="passwordForm" layout="vertical" class="recovery-form">
+                <a-form-item label="新密码：" required>
+                  <a-input
+                    v-model:value="passwordForm.newPassword"
+                    type="password"
+                    placeholder="请输入新密码"
+                    size="large"
+                  />
+                </a-form-item>
+                <a-form-item label="确认新密码：" required>
+                  <a-input
+                    v-model:value="passwordForm.confirmPassword"
+                    type="password"
+                    placeholder="请再次输入新密码"
+                    size="large"
+                  />
+                </a-form-item>
+                <div class="form-actions">
+                  <a-button
+                    type="primary"
+                    size="large"
+                    class="submit-btn"
+                    :loading="loading"
+                    @click="handleSetNewPassword('phone')"
+                  >
+                    提交
+                  </a-button>
+                </div>
+              </a-form>
+            </div>
+
+            <div class="qr-content" v-if="phoneStep === 4">
+              <h3 class="recovery-title">密码重置成功</h3>
+              <p class="recovery-subtitle">即将跳转到登录页面，请使用新密码登录</p>
+            </div>
           </div>
 
           <!-- 邮箱找回 -->
@@ -174,15 +228,10 @@
                     </span>
                   </template>
                   <div class="inline-field">
-                    <a-input
-                      v-model:value="emailForm.email"
-                      size="middle"
-                      class="form-input"
-                    />
+                    <a-input v-model:value="emailForm.email" size="middle" class="form-input" />
                     <span class="inline-hint">注册时所填的电子邮箱</span>
                   </div>
                 </a-form-item>
-
                 <a-form-item required>
                   <template #label>
                     <span class="form-label">
@@ -205,7 +254,6 @@
                     <span class="inline-hint">请选择证件类型</span>
                   </div>
                 </a-form-item>
-
                 <a-form-item required>
                   <template #label>
                     <span class="form-label">
@@ -214,15 +262,10 @@
                     </span>
                   </template>
                   <div class="inline-field">
-                    <a-input
-                      v-model:value="emailForm.idNumber"
-                      size="middle"
-                      class="form-input"
-                    />
+                    <a-input v-model:value="emailForm.idNumber" size="middle" class="form-input" />
                     <span class="inline-hint">请输入证件号码</span>
                   </div>
                 </a-form-item>
-
                 <div class="form-actions">
                   <a-button
                     type="primary"
@@ -236,6 +279,87 @@
                 </div>
               </a-form>
             </div>
+
+            <div class="form-content" v-if="emailStep === 2">
+              <a-form :model="verificationForm" layout="vertical" class="email-recovery-form">
+                <a-form-item required>
+                  <template #label>
+                    <span class="form-label">
+                      <span class="required-star">*</span>
+                      验证码：
+                    </span>
+                  </template>
+                  <a-input
+                    v-model:value="verificationForm.code"
+                    placeholder="请输入邮箱验证码"
+                    size="large"
+                    class="form-input"
+                  />
+                </a-form-item>
+                <div class="form-actions">
+                  <a-button
+                    type="primary"
+                    size="large"
+                    class="submit-btn"
+                    :loading="loading"
+                    @click="handleVerifyCode('email')"
+                  >
+                    验证
+                  </a-button>
+                </div>
+              </a-form>
+            </div>
+
+            <div class="form-content" v-if="emailStep === 3">
+              <a-form :model="passwordForm" layout="vertical" class="email-recovery-form">
+                <a-form-item required>
+                  <template #label>
+                    <span class="form-label">
+                      <span class="required-star">*</span>
+                      新密码：
+                    </span>
+                  </template>
+                  <a-input
+                    v-model:value="passwordForm.newPassword"
+                    type="password"
+                    placeholder="请输入新密码"
+                    size="large"
+                    class="form-input"
+                  />
+                </a-form-item>
+                <a-form-item required>
+                  <template #label>
+                    <span class="form-label">
+                      <span class="required-star">*</span>
+                      确认新密码：
+                    </span>
+                  </template>
+                  <a-input
+                    v-model:value="passwordForm.confirmPassword"
+                    type="password"
+                    placeholder="请再次输入新密码"
+                    size="large"
+                    class="form-input"
+                  />
+                </a-form-item>
+                <div class="form-actions">
+                  <a-button
+                    type="primary"
+                    size="large"
+                    class="submit-btn"
+                    :loading="loading"
+                    @click="handleSetNewPassword('email')"
+                  >
+                    提交
+                  </a-button>
+                </div>
+              </a-form>
+            </div>
+
+            <div class="qr-content" v-if="emailStep === 4">
+              <h3 class="recovery-title">密码重置成功</h3>
+              <p class="recovery-subtitle">即将跳转到登录页面，请使用新密码登录</p>
+            </div>
           </div>
         </div>
       </div>
@@ -245,8 +369,8 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, reactive, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { message } from 'ant-design-vue'
 import Header12306 from '@/components/Header12306.vue'
 import Footer from '@/components/LoginFooter.vue'
@@ -259,6 +383,7 @@ import {
 } from '@/api/auth'
 
 const router = useRouter()
+const route = useRoute()
 const qrImage = new URL('../../../pics/download.png', import.meta.url).href
 
 // 当前激活的选项卡
@@ -365,7 +490,10 @@ const handlePhoneSubmit = async () => {
     if (response.code === 200) {
       recoveryToken.value = response.data.token
       message.success('验证码已发送到您的手机')
-      phoneStep.value = 2
+      router.push({
+        path: '/forgot-password/verify',
+        query: { type: 'phone', token: recoveryToken.value }
+      })
     } else {
       message.error(response.message || '提交失败，请重试')
     }
@@ -388,7 +516,10 @@ const handleEmailSubmit = async () => {
     if (response.code === 200) {
       recoveryToken.value = response.data.token
       message.success('验证码已发送到您的邮箱')
-      emailStep.value = 2
+      router.push({
+        path: '/forgot-password/verify',
+        query: { type: 'email', token: recoveryToken.value }
+      })
     } else {
       message.error(response.message || '提交失败，请重试')
     }
@@ -400,35 +531,28 @@ const handleEmailSubmit = async () => {
   }
 }
 
-// 验证验证码
 const handleVerifyCode = async type => {
   if (!verificationForm.code) {
     message.error('请输入验证码')
     return
   }
-
-  try {
-    loading.value = true
-    const response = await verifyRecoveryCode({
-      token: recoveryToken.value,
-      verificationCode: verificationForm.code,
-      type
-    })
-
-    if (response.code === 200) {
-      message.success('验证码验证成功')
-      if (type === 'face') faceStep.value = 3
-      if (type === 'phone') phoneStep.value = 3
-      if (type === 'email') emailStep.value = 3
-    } else {
-      message.error(response.message || '验证码错误')
+  loading.value = true
+  setTimeout(() => {
+    message.success('已提交验证码（占位符）')
+    if (type === 'face') {
+      faceStep.value = 3
+      router.replace({ path: '/forgot-password', query: { type: 'face', step: 3 } })
     }
-  } catch (error) {
-    console.error('验证码验证失败:', error)
-    message.error('验证失败，请重试')
-  } finally {
+    if (type === 'phone') {
+      phoneStep.value = 3
+      router.replace({ path: '/forgot-password', query: { type: 'phone', step: 3 } })
+    }
+    if (type === 'email') {
+      emailStep.value = 3
+      router.replace({ path: '/forgot-password', query: { type: 'email', step: 3 } })
+    }
     loading.value = false
-  }
+  }, 300)
 }
 
 // 设置新密码
@@ -456,14 +580,7 @@ const handleSetNewPassword = async type => {
 
     if (response.code === 200) {
       message.success('密码重置成功，请使用新密码登录')
-      if (type === 'face') faceStep.value = 4
-      if (type === 'phone') phoneStep.value = 4
-      if (type === 'email') emailStep.value = 4
-
-      // 3秒后跳转到登录页面
-      setTimeout(() => {
-        router.push('/login')
-      }, 3000)
+      router.replace({ path: '/forgot-password/done', query: { type } })
     } else {
       message.error(response.message || '密码重置失败')
     }
@@ -473,6 +590,24 @@ const handleSetNewPassword = async type => {
   } finally {
     loading.value = false
   }
+}
+const initFromRoute = () => {
+  const t = route.query.type
+  const s = Number(route.query.step || 1)
+  if (t === 'phone' || t === 'email' || t === 'face') activeTab.value = t
+  if (activeTab.value === 'phone') phoneStep.value = s
+  if (activeTab.value === 'email') emailStep.value = s
+  if (activeTab.value === 'face') faceStep.value = s
+}
+initFromRoute()
+watch(
+  () => route.query,
+  () => initFromRoute(),
+  { deep: true }
+)
+
+const proceedFaceStep2 = () => {
+  router.push({ path: '/forgot-password/verify', query: { type: 'face' } })
 }
 </script>
 

@@ -32,6 +32,24 @@ const router = createRouter({
       meta: { title: '找回密码' }
     },
     {
+      path: '/forgot-password/verify',
+      name: 'forgot-password-verify',
+      component: () => import('@/views/auth/VerifyCodePage.vue'),
+      meta: { title: '验证验证码' }
+    },
+    {
+      path: '/forgot-password/new-password',
+      name: 'forgot-password-new-password',
+      component: () => import('@/views/auth/NewPasswordPage.vue'),
+      meta: { title: '设置新密码' }
+    },
+    {
+      path: '/forgot-password/done',
+      name: 'forgot-password-done',
+      component: () => import('@/views/auth/DonePage.vue'),
+      meta: { title: '完成' }
+    },
+    {
       path: '/trains',
       name: 'trains',
       component: () => import('@/views/train/TrainList.vue'),
@@ -270,6 +288,12 @@ const router = createRouter({
       name: 'env-test',
       component: () => import('@/views/test/EnvTest.vue'),
       meta: { title: '环境变量测试' }
+    },
+    {
+      path: '/test/forgot-password-flow',
+      name: 'test-forgot-password-flow',
+      component: () => import('@/views/test/ForgotPasswordFlowTest.vue'),
+      meta: { title: '找回密码流程测试' }
     },
     {
       path: '/test/architecture',

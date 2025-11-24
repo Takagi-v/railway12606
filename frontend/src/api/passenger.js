@@ -15,6 +15,16 @@ export const getPassengers = () => {
 }
 
 /**
+ * 同步/创建默认乘客（用户本人）
+ */
+export const syncDefaultPassenger = () => {
+  return request({
+    url: '/passengers/sync-default',
+    method: 'post'
+  })
+}
+
+/**
  * 添加乘客
  */
 export const createPassenger = data => {
