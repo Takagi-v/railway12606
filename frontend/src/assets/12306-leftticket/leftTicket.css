@@ -1,0 +1,372 @@
+@import url('https://kyfw.12306.cn/otn/resources/merged/common_css.css');
+@import url('https://kyfw.12306.cn/otn/resources/merged/queryLeftTicket_css.css');
+@import url('https://kyfw.12306.cn/otn/resources/merged/queryLeftTicket_end_css.css');
+@import url('@/assets/12306-icons/fonts/iconfont.css');
+
+/* ==========================================================================
+   Reset & Base
+   ========================================================================== */
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+    font-size: 12px;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.clearfix {
+    display: block;
+}
+
+/* ==========================================================================
+   Layout Wrapper
+   ========================================================================== */
+.leftticket-page .wrapper {
+    width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* ==========================================================================
+   Search Box (Top)
+   ========================================================================== */
+.leftticket-page .sear-box.quick-sear-box.sear-box-lg {
+    width: 1198px;
+    height: 72px;
+    padding: 11px 10px;
+    border: 1px solid #298cce;
+    background: #eef1f8;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+
+
+/* --- Header (Date Tabs) --- */
+.leftticket-page .sear-sel-hd {
+    height: 32px;
+    background-color: #eef1f8;
+    border-bottom: 1px solid #298cce;
+}
+
+.leftticket-page .sear-sel-hd ul {
+    width: 100%;
+    height: 32px;
+}
+
+
+
+.leftticket-page .sear-sel-hd li:nth-child(15) {
+    width: 76px;
+    /* Adjust to fill remaining space exactly (1198 - 14*79 = 92, minus borders) */
+    border-right: none;
+}
+
+.leftticket-page .sear-sel-hd li.sel {
+    background: #fff;
+    border-bottom: 1px solid #fff;
+    font-weight: 700;
+    color: #000;
+    height: 32px;
+    line-height: 32px;
+    margin-bottom: -1px;
+}
+
+.leftticket-page .sear-sel-hd li a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+}
+
+/* --- Body (Filters) --- */
+.leftticket-page .sear-sel-bd {
+    padding: 5px px 5px;
+    position: relative;
+}
+
+/* Sections (Train Type, Seat Type, etc.) */
+.leftticket-page .sear-sel-bd .section {
+    float: left;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    line-height: 20px;
+}
+
+.leftticket-page .sear-sel-bd .section-hd {
+    float: left;
+    color: #333;
+    font-weight: bold;
+    text-align: right;
+    width: 65px;
+}
+
+.leftticket-page .sear-sel-bd .section-bd {
+    float: left;
+}
+
+.leftticket-page .sear-sel-bd .section-bd li {
+    float: left;
+}
+
+.leftticket-page .sear-sel-bd .section-bd li label {
+    cursor: pointer;
+    vertical-align: middle;
+    margin-left: 3px;
+}
+
+/* Inputs & Checkboxes */
+.leftticket-page .check {
+    vertical-align: middle;
+    margin: -2px 0 0 0;
+}
+
+.leftticket-page .inp-small {
+    width: 50px;
+    height: 18px;
+    line-height: 18px;
+    border: 1px solid #999;
+    padding: 0 2px;
+}
+
+/* Buttons */
+.leftticket-page .btn-all {
+    color: #0077ff;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-right: 10px;
+}
+
+/* Show More Toggle */
+.leftticket-page .quick-gif {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 50px;
+    height: 20px;
+    z-index: 20;
+}
+
+.leftticket-page .quick-gif a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    line-height: 20px;
+    text-align: center;
+    color: #fff;
+    padding-right: 15px;
+    position: relative;
+}
+
+.leftticket-page .quick-gif .up::after {
+    content: "";
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    margin-top: -2px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid #fff;
+}
+
+.leftticket-page .quick-gif .down::after {
+    content: "";
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    margin-top: -2px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #fff;
+}
+
+/* ==========================================================================
+   Ticket List Table (t-list) - COMPLETE REWRITE
+   ========================================================================== */
+.t-list {
+    border: 1px solid #298cce;
+    margin-top: 10px;
+    width: 1198px;
+    /* 1200px total width including border */
+    background: #fff;
+}
+
+.t-list table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+/* 覆盖返程日期及站点输入框尺寸 */
+
+
+.leftticket-page .inp_selected,
+.leftticket-page .inp-w .inp-txt {
+  width: 120px;
+  height: 25px;
+  line-height: 24px;
+  box-sizing: border-box;
+}
+
+.t-list th {
+    background: url('/assets/12306/images/line_tlisth.png') no-repeat right center, linear-gradient(to bottom, #4b94d6, #298cce);
+    height: 52px;
+    border-bottom: 1px solid #b0cccc;
+    font-size: 12px;
+    color: #fff;
+    font-weight: normal;
+    padding: 0;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.t-list td {
+    height: 50px;
+    border-right: 1px solid #b0cccc;
+    border-bottom: 1px solid #b0cccc;
+    text-align: center;
+    font-size: 12px;
+    color: #333;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.t-list .bgc {
+    background: #f8f8f8;
+}
+
+/* --- Column Widths (16 Columns) --- */
+/* Total width: 1198px (inside border) */
+/* 140 + 220 + 130 + 90 + (11 * 42) + 156 = 1198 */
+
+.t-list th:nth-child(1),
+.t-list td:nth-child(1) {
+    width: 90px;
+}
+
+/* 车次 */
+.t-list th:nth-child(2),
+.t-list td:nth-child(2) {
+    width: 100px;
+}
+
+/* 出发站/到达站 */
+.t-list th:nth-child(3),
+.t-list td:nth-child(3) {
+    width: 82px;
+}
+
+/* 出发时间/到达时间 */
+.t-list th:nth-child(4),
+.t-list td:nth-child(4) {
+    width: 82px;
+}
+
+/* 历时 */
+
+/* Seat Types (Cols 5-15) */
+.t-list th:nth-child(5),
+.t-list td:nth-child(5),
+.t-list th:nth-child(6),
+.t-list td:nth-child(6),
+.t-list th:nth-child(7),
+.t-list td:nth-child(7),
+.t-list th:nth-child(8),
+.t-list td:nth-child(8),
+.t-list th:nth-child(9),
+.t-list td:nth-child(9),
+.t-list th:nth-child(10),
+.t-list td:nth-child(10),
+.t-list th:nth-child(11),
+.t-list td:nth-child(11),
+.t-list th:nth-child(12),
+.t-list td:nth-child(12),
+.t-list th:nth-child(13),
+.t-list td:nth-child(13),
+.t-list th:nth-child(14),
+.t-list td:nth-child(14),
+.t-list th:nth-child(15),
+.t-list td:nth-child(15) {
+    width: 66px;
+}
+
+/* Remarks/Button (Col 16) */
+.t-list th:last-child,
+.t-list td:last-child {
+    width: 118px !important;
+    /* 1198 - (90+100+82+82 + 11*66) = 118 */
+    border-right: none;
+}
+
+/* --- Content Styling --- */
+.train .number {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: underline;
+}
+
+.cdz_name strong,
+.cds_name strong {
+    display: block;
+    line-height: 20px;
+}
+
+.start-s,
+.start-t {
+    color: #333;
+}
+
+.end-s,
+.color999 {
+    color: #999;
+}
+
+.ls_name strong {
+    display: block;
+    font-weight: bold;
+}
+
+/* Book Button */
+.btn72 {
+    display: inline-block;
+    width: 72px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    color: #fff;
+    background: #0077ff;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.btn72:hover {
+    background: #0066cc;
+}
+
+/* Utilities */
+.hide {
+    display: none !important;
+}
+
+.mr17 {
+    margin-right: 17px;
+}
+
+.mr5 {
+    margin-right: 5px;
+}
+
+.pt2 {
+    padding-top: 2px;
+}

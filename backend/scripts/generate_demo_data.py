@@ -19,10 +19,17 @@ Options:
 from __future__ import annotations
 
 import argparse
+import sys
+from pathlib import Path
 from datetime import date, datetime, timedelta, time
 from typing import List, Tuple
 
 from sqlalchemy.orm import Session
+
+# Ensure `backend` directory is on sys.path no matter where the script is launched.
+BACKEND_DIR = Path(__file__).resolve().parents[1]
+if str(BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(BACKEND_DIR))
 
 from app.db.session import SessionLocal
 from app.models.station import Station
@@ -166,6 +173,8 @@ def main():
         sh_hq = ensure_station(db, "上海虹桥", "上海", "shanghaihongqiao", "shhq")
         nj_nan = ensure_station(db, "南京南", "南京", "nanjingnan", "njn")
         hz_dong = ensure_station(db, "杭州东", "杭州", "hangzhoudong", "hzd")
+        gz_nan = ensure_station(db, "广州南", "广州", "guangzhounan", "gzn")
+        sz_bei = ensure_station(db, "深圳北", "深圳", "shenzhenbei", "szb")
 
         # === 车次 ===
         g1234 = ensure_train(
@@ -225,8 +234,28 @@ def main():
             hard_price=200.0,
         )
 
+        # 实验车次（广州南-深圳北）
+        x9012 = ensure_train(
+            db,
+            train_number="X9012",
+            train_type=TrainType.BULLET,
+            depart_station=gz_nan,
+            arrive_station=sz_bei,
+            depart_time=time(7, 45),
+            arrive_time=time(9, 10),
+            duration_minutes=85,
+            first_count=50,
+            second_count=220,
+            soft_count=30,
+            hard_count=50,
+            first_price=320.0,
+            second_price=180.0,
+            soft_price=380.0,
+            hard_price=260.0,
+        )
+
         # === 日历座位 ===
-        trains: List[Train] = [g1234, d5678, g2345]
+        trains: List[Train] = [g1234, d5678, g2345, x9012]
         for i in range(days):
             d = start_date + timedelta(days=i)
             for tr in trains:

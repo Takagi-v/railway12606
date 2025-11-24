@@ -377,8 +377,11 @@ const goHome = () => {
   router.push({ path: '/' })
 }
 const openTicket = type => {
-  const q = type === 'dc' ? { type: 'single' } : { type: 'round' }
-  router.push({ path: '/trains', query: q })
+  if (type === 'dc') {
+    router.push({ path: '/leftTicket/single' })
+  } else {
+    router.push({ path: '/leftTicket/round' })
+  }
 }
 const openTransfer = () => {
   router.push({ path: '/trains', query: { transfer: 'true' } })

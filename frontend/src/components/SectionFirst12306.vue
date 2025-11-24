@@ -1006,7 +1006,7 @@ const submitSingle = () => {
   const route = `${single.value.fromStation}-${single.value.toStation}`
   if (!history.value.includes(route)) history.value.unshift(route)
   router.push({
-    name: 'trains',
+    name: 'leftTicket-single',
     query: {
       departure_city: single.value.fromStation,
       arrival_city: single.value.toStation,
@@ -1018,7 +1018,7 @@ const submitSingle = () => {
 
 const submitRound = () => {
   router.push({
-    name: 'trains',
+    name: 'leftTicket-round',
     query: {
       departure_city: round.value.fromStation,
       arrival_city: round.value.toStation,

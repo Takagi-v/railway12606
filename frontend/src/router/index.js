@@ -38,9 +38,21 @@ const router = createRouter({
       meta: { title: '车次列表' }
     },
     {
+      path: '/leftTicket/single',
+      name: 'leftTicket-single',
+      component: () => import('@/views/ticket/LeftTicketSingle.vue'),
+      meta: { title: '单程查询' }
+    },
+    {
+      path: '/leftTicket/round',
+      name: 'leftTicket-round',
+      component: () => import('@/views/ticket/LeftTicketRound.vue'),
+      meta: { title: '往返查询' }
+    },
+    {
       path: '/permission-test',
       name: 'permission-test',
-      component: () => import('@/views/PermissionTest.vue'),
+      component: () => import('@/views/test/PermissionTest.vue'),
       meta: { title: '权限测试', requiresAuth: true }
     },
     {
