@@ -18,7 +18,7 @@
     "axios": "^1.6.5",
     "dayjs": "^1.11.10",
     "js-cookie": "^3.0.5",
-    "pinia": "^2.1.7",
+    "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"

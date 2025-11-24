@@ -1099,6 +1099,11 @@ onMounted(() => {
 
 <style>
 @import url('@/assets/12306-leftticket/leftTicket.css');
+.leftticket-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 .btn72 {
   display: inline-block;
   height: 30px;
@@ -1116,6 +1121,7 @@ onMounted(() => {
 .leftticket-page .wrapper {
   width: 1200px;
   margin: 0 auto;
+  flex: 1;
 }
 .quick-s-inner {
   display: flex;

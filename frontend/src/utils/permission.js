@@ -364,5 +364,71 @@ export default {
   permissionUtils,
   permissionChecker,
   permissionGuard,
-  permissionDirective
+  permissionDirective,
+};
+
+export const USER_TYPES = {
+  GUEST: 'guest',
+  ADULT: 'adult',
+  STUDENT: 'student',
 }
+
+export const USER_ROLES = ROLES
+
+export const hasPermission = (permissionCode, user) => {
+  const checker = new PermissionChecker()
+  return checker.hasPermission(permissionCode)
+}
+
+export const hasRole = (roleName, user) => {
+  const checker = new PermissionChecker()
+  return checker.hasRole(roleName)
+}
+
+export const canAccessRoute = (route, user) => {
+  const checker = new PermissionChecker()
+  if (route?.meta?.requiresAuth) {
+    const userStore = useUserStore()
+    if (!userStore.isAuthenticated) return false
+  }
+  if (route?.meta?.permissions) {
+    const codes = Array.isArray(route.meta.permissions)
+      ? route.meta.permissions
+      : [route.meta.permissions]
+    const mode = route.meta.permissionMode || 'any'
+    const pass = mode === 'all'
+      ? codes.every(code => checker.hasPermission(code))
+      : codes.some(code => checker.hasPermission(code))
+    if (!pass) return false
+  }
+  if (route?.meta?.roles) {
+    const roles = Array.isArray(route.meta.roles) ? route.meta.roles : [route.meta.roles]
+    const mode = route.meta.roleMode || 'any'
+    const pass = mode === 'all'
+      ? roles.every(r => checker.hasRole(r))
+      : roles.some(r => checker.hasRole(r))
+    if (!pass) return false
+  }
+  return true
+}
+
+export const getUserPermissions = (user) => {
+  const permissionStore = usePermissionStore()
+  return permissionStore.getPermissionCodes?.value || []
+}
+
+export const hasUserType = (type, user) => {
+  const u = user || useUserStore().user
+  const t = (u && (u.user_type || u.userType)) || USER_TYPES.ADULT
+  return t === type
+}
+
+export const isAuthenticated = () => {
+  const userStore = useUserStore()
+  return userStore.isAuthenticated
+}
+
+export const isStudent = (user) => hasUserType(USER_TYPES.STUDENT, user)
+export const isAdult = (user) => hasUserType(USER_TYPES.ADULT, user)
+
+export { PERMISSIONS }

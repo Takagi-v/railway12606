@@ -218,7 +218,7 @@ const statusClass = s => {
 }
 
 const goLeftTicket = () => {
-  router.push('/trains')
+  router.push('/leftTicket/single')
 }
 
 const onPay = async id => {
