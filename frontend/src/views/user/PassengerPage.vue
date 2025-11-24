@@ -47,14 +47,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(p, idx) in filteredPassengers" :key="p.id">
+          <tr v-for="(p, idx) in filteredPassengers" :key="p.id" :class="{ 'default-row': p.isDefault }">
             <td class="col-select">
-              <input type="checkbox" :value="p.id" v-model="selectedIds" />
+              <input 
+                type="checkbox" 
+                :value="p.id" 
+                v-model="selectedIds" 
+                :disabled="p.isDefault"
+              />
             </td>
             <td class="col-index">{{ idx + 1 }}</td>
             <td class="col-name">
               <i class="icon icon-person"></i>
               <span class="text">{{ p.name }}</span>
+              <span v-if="p.isDefault" class="badge badge-default">本人</span>
             </td>
             <td class="col-type">{{ p.type }}</td>
             <td class="col-idtype">{{ p.idTypeLabel }}</td>
@@ -66,18 +72,36 @@
             </td>
             <td class="col-status">{{ p.status }}</td>
             <td class="col-actions">
-              <a href="javascript:;" class="action" @click="openEdit(p)">
+              <a 
+                v-if="!p.isDefault" 
+                href="javascript:;" 
+                class="action" 
+                @click="openEdit(p)"
+              >
                 <i class="icon icon-edit"></i>
                 编辑
               </a>
-              <a href="javascript:;" class="action" @click="handleDelete(p)">
+              <span v-else class="action disabled">
+                <i class="icon icon-edit"></i>
+                编辑
+              </span>
+              <a 
+                v-if="!p.isDefault" 
+                href="javascript:;" 
+                class="action" 
+                @click="handleDelete(p)"
+              >
                 <i class="icon icon-del"></i>
                 删除
               </a>
+              <span v-else class="action disabled" title="默认乘客不可删除">
+                <i class="icon icon-del"></i>
+                删除
+              </span>
             </td>
           </tr>
           <tr v-if="filteredPassengers.length === 0">
-            <td colspan="8" class="empty">暂无乘车人</td>
+            <td colspan="9" class="empty">暂无乘车人</td>
           </tr>
         </tbody>
       </table>
@@ -144,7 +168,7 @@
 <script setup>
 import { computed, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
-import { getPassengers, createPassenger, updatePassenger, deletePassenger } from '@/api/passenger'
+import { getPassengers, createPassenger, updatePassenger, deletePassenger, syncDefaultPassenger } from '@/api/passenger'
 
 const query = ref({ name: '' })
 const loading = ref(false)
@@ -199,7 +223,8 @@ const mapPassenger = p => ({
   idNo: p.id_number,
   phone: p.phone,
   phoneVerified: p.verified ? 'Y' : 'N',
-  status: p.verified ? '正常' : '待核验'
+  status: p.verified ? '正常' : '待核验',
+  isDefault: p.is_default || false
 })
 
 const loadPassengers = async () => {
@@ -213,6 +238,15 @@ const loadPassengers = async () => {
     message.error('查询失败')
   } finally {
     loading.value = false
+  }
+}
+
+const syncDefault = async () => {
+  try {
+    await syncDefaultPassenger()
+  } catch (e) {
+    console.warn('同步默认乘客失败:', e)
+    // Don't show error to user, just log it
   }
 }
 
@@ -289,14 +323,18 @@ const batchDelete = async () => {
 
 const toggleAll = () => {
   if (allChecked.value) {
-    selectedIds.value = filteredPassengers.value.map(p => p.id)
+    // Only select non-default passengers
+    selectedIds.value = filteredPassengers.value
+      .filter(p => !p.isDefault)
+      .map(p => p.id)
   } else {
     selectedIds.value = []
   }
 }
 
-onMounted(() => {
-  loadPassengers()
+onMounted(async () => {
+  await syncDefault() // Sync default passenger first
+  await loadPassengers()
 })
 </script>
 
@@ -469,6 +507,17 @@ onMounted(() => {
   font-size: 16px;
   color: var(--primary-color);
 }
+.col-name .badge-default {
+  margin-left: 8px;
+  background: var(--primary-color);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+.default-row {
+  background-color: #f0f7ff;
+}
 .badge {
   display: inline-block;
   padding: 2px 6px;
@@ -493,6 +542,11 @@ onMounted(() => {
 }
 .action .icon {
   font-size: 14px;
+}
+.action.disabled {
+  color: #bbb;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 .empty {
   text-align: center;

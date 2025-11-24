@@ -2,8 +2,19 @@
 Passenger Model
 乘客表模型
 """
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, func, UniqueConstraint, Enum as SAEnum
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    UniqueConstraint,
+    func,
+)
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import relationship
+
 from app.db.base_class import Base
 from app.models.enums import IdType, PassengerType
 
@@ -38,6 +49,7 @@ class Passenger(Base):
         comment="旅客类型（成人/学生/儿童）"
     )
     verified = Column(Boolean, default=False, comment="是否已验证")
+    is_default = Column(Boolean, default=False, comment="是否为用户本人的默认乘车人")
     create_time = Column(DateTime(timezone=True), server_default=func.now(), comment="创建时间")
     
     # Relationships

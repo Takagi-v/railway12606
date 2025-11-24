@@ -2,10 +2,10 @@
  * Axios Request Configuration
  * HTTP请求封装
  */
-import axios from 'axios'
-import { message } from 'ant-design-vue'
-import { useUserStore } from '@/stores/user'
 import router from '@/router'
+import { useUserStore } from '@/stores/user'
+import { message } from 'ant-design-vue'
+import axios from 'axios'
 
 // 创建axios实例
 const request = axios.create({
@@ -55,7 +55,7 @@ request.interceptors.response.use(
 
     // 统一处理响应格式
     if (data.code !== undefined) {
-      if (data.code === 200 || data.code === 0) {
+      if (data.code === 200 || data.code === 201 || data.code === 0) {
         return data // 返回完整的响应对象，包括code、message和data
       } else {
         message.error(data.message || '请求失败')
