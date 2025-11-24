@@ -988,9 +988,7 @@ const fetchBackTrains = async () => {
 }
 
 const ensureBackDateValid = () => {
-  if (dayjs(backDate.value).isBefore(dayjs(goDate.value))) {
-    backDate.value = dayjs(goDate.value).add(1, 'day').toDate()
-  }
+  // 用户要求保留此bug：返程日不随出发日改变
 }
 
 const updateActiveDateByGoDate = () => {
