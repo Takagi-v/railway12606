@@ -6,9 +6,17 @@ from enum import Enum
 
 class IdType(Enum):
     ID_CARD = "身份证"
+    RESIDENT_ID_CARD = "居民身份证"
     PASSPORT = "护照"
+    CN_PASSPORT = "中国护照"
+    FOREIGN_PASSPORT = "外国护照"
     HK_MO = "港澳通行证"
+    HKMO_TRAVEL_PERMIT = "港澳居民来往内地通行证"
     TAIWAN = "台胞证"
+    TAIWAN_TRAVEL_PERMIT = "台湾居民来往大陆通行证"
+    HKMO_RESIDENT_PERMIT = "港澳居民居住证"
+    TAIWAN_RESIDENT_PERMIT = "台湾居民居住证"
+    FOREVER_RESIDENT_ID = "外国人永久居留身份证"
 
 
 class UserType(Enum):

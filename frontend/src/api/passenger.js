@@ -2,7 +2,7 @@
  * Passenger API
  * 乘客管理API
  */
-import request from './request'
+import request from '@/utils/request'
 
 /**
  * 获取乘客列表
@@ -17,7 +17,7 @@ export const getPassengers = () => {
 /**
  * 添加乘客
  */
-export const createPassenger = (data) => {
+export const createPassenger = data => {
   return request({
     url: '/passengers',
     method: 'post',
@@ -39,10 +39,9 @@ export const updatePassenger = (id, data) => {
 /**
  * 删除乘客
  */
-export const deletePassenger = (id) => {
+export const deletePassenger = id => {
   return request({
     url: `/passengers/${id}`,
     method: 'delete'
   })
 }
-

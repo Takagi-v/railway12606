@@ -17,19 +17,21 @@
 
 ```
 frontend/
-├── public/                 # 静态资源
+├── .eslintrc.cjs          # ESLint 配置文件
+├── .gitignore             # Git 忽略文件
+├── .prettierrc            # Prettier 配置文件
 ├── src/
 │   ├── api/               # API 接口封装
-│   │   ├── request.js     # Axios 配置
 │   │   ├── auth.js        # 认证接口
+│   │   ├── order.js       # 订单接口
 │   │   ├── passenger.js   # 乘客接口
-│   │   ├── train.js       # 车次接口
-│   │   └── order.js       # 订单接口
+│   │   ├── request.js     # Axios 配置
+│   │   └── train.js       # 车次接口
 │   ├── assets/            # 资源文件
 │   │   └── main.css       # 全局样式
 │   ├── components/        # 公共组件
-│   │   ├── AppHeader.vue  # 顶部导航
-│   │   └── AppFooter.vue  # 底部信息
+│   │   ├── AppFooter.vue  # 底部信息
+│   │   └── AppHeader.vue  # 顶部导航
 │   ├── router/            # 路由配置
 │   │   └── index.js
 │   ├── stores/            # 状态管理
@@ -40,22 +42,23 @@ frontend/
 │   │   ├── auth/              # 认证相关
 │   │   │   ├── LoginPage.vue
 │   │   │   └── RegisterPage.vue
-│   │   ├── train/             # 车次相关
-│   │   │   └── TrainList.vue
 │   │   ├── order/             # 订单相关
 │   │   │   ├── OrderCreate.vue
 │   │   │   └── OrderDetail.vue
+│   │   ├── train/             # 车次相关
+│   │   │   └── TrainList.vue
 │   │   └── user/              # 用户中心
-│   │       ├── UserLayout.vue
-│   │       ├── ProfilePage.vue
+│   │       ├── OrderPage.vue
 │   │       ├── PassengerPage.vue
-│   │       └── OrderPage.vue
+│   │       ├── ProfilePage.vue
+│   │       └── UserLayout.vue
 │   ├── App.vue            # 根组件
 │   └── main.js            # 入口文件
-├── index.html
-├── vite.config.js         # Vite 配置
-├── package.json
-└── README.md
+├── index.html             # HTML 模板
+├── package-lock.json      # 依赖锁定文件
+├── package.json           # 项目配置和依赖
+├── README.md              # 项目说明文档
+└── vite.config.js         # Vite 配置
 ```
 
 ## 快速开始
@@ -168,8 +171,10 @@ VITE_APP_TITLE=中国铁路12306                 # 应用标题
 
 ## 常用命令
 
+### 基础命令
+
 ```bash
-# 安装依赖
+# 安装依赖（包含开发依赖）
 npm install
 
 # 启动开发服务器
@@ -180,10 +185,84 @@ npm run build
 
 # 预览生产构建
 npm run preview
-
-# 代码格式化（需要配置）
-npm run lint
 ```
+
+### 代码质量和格式化
+
+项目已配置 ESLint 和 Prettier 来确保代码质量和统一的代码风格：
+
+```bash
+# 检查并自动修复代码问题（推荐）
+npm run lint
+
+# 仅检查代码问题，不自动修复
+npm run lint:check
+
+# 格式化所有代码文件
+npm run format
+
+# 检查代码格式是否符合规范
+npm run format:check
+```
+
+#### 使用场合
+
+- **开发时**：保存文件时 IDE 会自动运行 Prettier 格式化
+- **提交前**：运行 `npm run lint` 确保代码质量
+- **团队协作**：统一的代码风格，减少合并冲突
+- **CI/CD**：可在构建流程中运行 `npm run lint:check` 和 `npm run format:check`
+
+#### 配置文件
+
+- `.eslintrc.cjs` - ESLint 规则配置
+- `.prettierrc` - Prettier 格式化配置
+
+#### 代码规范
+
+- 使用单引号
+- 无分号结尾
+- 2 空格缩进
+- 行宽限制 100 字符
+- 禁止使用 `var`，推荐使用 `const`
+- 开发环境允许 `console`，生产环境警告
+
+## 环境变量配置
+
+项目使用环境变量来管理不同环境下的配置，支持开发、生产等多种环境。
+
+### 环境文件
+
+- `.env.development` - 开发环境配置
+- `.env.production` - 生产环境配置
+
+### 主要环境变量
+
+| 变量名 | 说明 | 开发环境默认值 | 生产环境默认值 |
+|--------|------|----------------|----------------|
+| `VITE_API_BASE_URL` | API基础地址 | `http://localhost:8000/api` | `https://api.railway12306.com/api` |
+| `VITE_REQUEST_TIMEOUT` | 请求超时时间(ms) | `30000` | `15000` |
+| `VITE_APP_TITLE` | 应用标题 | `中国铁路12306 - 开发环境` | `中国铁路12306` |
+| `VITE_DEBUG` | 调试模式 | `true` | `false` |
+| `VITE_PAGE_SIZE` | 分页大小 | `20` | `20` |
+| `VITE_UPLOAD_SIZE_LIMIT` | 上传文件大小限制(MB) | `10` | `5` |
+| `VITE_TOKEN_EXPIRE_HOURS` | Token过期时间(小时) | `24` | `12` |
+
+### 使用方式
+
+```javascript
+// 直接使用
+const apiUrl = import.meta.env.VITE_API_BASE_URL
+
+// 使用工具函数（推荐）
+import { ENV_CONFIG, isDebug, isDev } from '@/utils/env'
+
+const apiUrl = ENV_CONFIG.API_BASE_URL
+const isDebugMode = isDebug()
+```
+
+### 测试环境变量
+
+访问 `/env-test` 页面可以查看当前环境变量配置和测试功能。
 
 ## 注意事项
 

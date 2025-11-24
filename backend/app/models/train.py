@@ -15,7 +15,12 @@ class Train(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     train_number = Column(String(10), unique=True, nullable=False, index=True, comment="车次号（如G1234）")
     train_type = Column(
-        SAEnum(TrainType, values_callable=lambda x: [e.value for e in x], name="train_type_enum"),
+        SAEnum(
+            TrainType,
+            values_callable=lambda x: [e.value for e in x],
+            name="train_type_enum",
+            validate_strings=True
+        ),
         nullable=False,
         comment="车次类型（高铁/动车/直达）"
     )

@@ -206,3 +206,28 @@ alembic upgrade head
 
 祝开发顺利！🚀
 
+## 📦 生成演示数据（站点/车次/余票）
+
+为了快速联调车次查询与余票接口，可以使用内置脚本生成演示数据：
+
+```bash
+cd backend
+source .venv/bin/activate
+python scripts/generate_demo_data.py --days 14
+```
+
+- `--days` 指定从今天起生成多少天的座位数据（默认 7）
+- 脚本会幂等地创建下面实体：
+  - 站点：北京南、上海虹桥、南京南、杭州东
+  - 车次：G1234（京-沪）、D5678（京-宁）、G2345（沪-杭）
+  - 每日座位：按席别（一等/二等/软卧/硬卧）生成当日所有可售座位
+
+生成后可通过以下接口进行验证：
+
+- `GET /api/v1/trains/search?departure_city=北京&arrival_city=上海&travel_date=2025-11-15`
+  - 支持筛选与排序：`train_type`、`min_departure_time`、`max_departure_time`、`min_duration_minutes`、`max_duration_minutes`、`max_price`、`sort_by`（departure_time/duration/price）、`sort_order`（asc/desc）
+- `GET /api/v1/trains/{train_number}` 车次详情
+- `GET /api/v1/trains/{train_number}/availability?date=YYYY-MM-DD` 某日各席别余票与价格
+
+如果你使用 Postman，已在集合中新增 `Trains / Availability` 请求，并在本地环境变量加入上述筛选参数，可直接发起请求测试。
+

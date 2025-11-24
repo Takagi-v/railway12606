@@ -39,6 +39,7 @@ class TrainSearchResponse(BaseModel):
     arrival_station: str
     departure_time: str
     arrival_time: str
+    arrival_day_offset: int
     duration: str
     first_class: SeatAvailability
     second_class: SeatAvailability
@@ -67,4 +68,12 @@ class TrainDetailResponse(BaseModel):
     
     class Config:
         from_attributes = True
+
+
+class TrainAvailabilityResponse(BaseModel):
+    """Train availability response for a given date"""
+    first_class: SeatAvailability
+    second_class: SeatAvailability
+    soft_sleeper: SeatAvailability
+    hard_sleeper: SeatAvailability
 

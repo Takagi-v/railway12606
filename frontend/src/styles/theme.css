@@ -1,0 +1,313 @@
+/* 12306风格主题变量 */
+:root {
+  /* 主色调 - 12306蓝色系 */
+  --primary-color: #4a90e2;
+  --primary-color-hover: #357abd;
+  --primary-color-active: #2e6ba8;
+  --primary-gradient: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+
+  /* 辅助色 - 12306橙色系 */
+  --accent-color: #ff6600;
+  --accent-color-hover: #e55a00;
+  --accent-color-active: #cc5000;
+
+  /* 成功色 */
+  --success-color: #52c41a;
+  --success-color-hover: #73d13d;
+  --success-color-active: #389e0d;
+
+  /* 警告色 */
+  --warning-color: #faad14;
+  --warning-color-hover: #ffc53d;
+  --warning-color-active: #d48806;
+
+  /* 错误色 */
+  --error-color: #ff4d4f;
+  --error-color-hover: #ff7875;
+  --error-color-active: #d9363e;
+
+  /* 文字颜色 */
+  --text-color: #333333;
+  --text-color-secondary: #666666;
+  --text-color-disabled: #999999;
+  --text-color-inverse: #ffffff;
+
+  /* 背景色 */
+  --background-color: #f5f7fa;
+  --background-color-light: #ffffff;
+  --background-color-dark: #e8f4fd;
+
+  /* 边框色 */
+  --border-color: #d9d9d9;
+  --border-color-light: #e8e8e8;
+  --border-color-dark: #bfbfbf;
+
+  /* 阴影 */
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+  /* 圆角 */
+  --border-radius-small: 4px;
+  --border-radius-medium: 6px;
+  --border-radius-large: 8px;
+
+  /* 间距 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+
+  /* 字体大小 */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-xxl: 24px;
+
+  /* 行高 */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-loose: 1.8;
+
+  /* 动画时长 */
+  --transition-fast: 0.15s;
+  --transition-normal: 0.3s;
+  --transition-slow: 0.5s;
+}
+
+/* 12306特色渐变背景 */
+.railway-gradient {
+  background: var(--primary-gradient);
+}
+
+/* 12306风格按钮 */
+.btn-railway-primary {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--text-color-inverse);
+  border-radius: var(--border-radius-medium);
+  transition: all var(--transition-normal);
+}
+
+.btn-railway-primary:hover {
+  background: var(--accent-color-hover);
+  border-color: var(--accent-color-hover);
+}
+
+.btn-railway-primary:active {
+  background: var(--accent-color-active);
+  border-color: var(--accent-color-active);
+}
+
+/* 12306风格卡片 */
+.card-railway {
+  background: var(--background-color-light);
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--border-color-light);
+}
+
+/* 12306风格输入框 */
+.input-railway {
+  border-radius: var(--border-radius-small);
+  border-color: var(--border-color);
+}
+
+.input-railway:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+/* 12306风格表单样式 */
+.form-railway {
+  --form-item-margin-bottom: 24px;
+}
+
+.form-railway .ant-form-item-label > label {
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+}
+
+.form-railway
+  .ant-form-item-label
+  > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  color: var(--error-color);
+}
+
+.form-railway .ant-form-item-explain-error {
+  color: var(--error-color);
+  font-size: var(--font-size-xs);
+}
+
+/* 12306风格选择器 */
+.select-railway .ant-select-selector {
+  border-radius: var(--border-radius-small);
+  border-color: var(--border-color);
+  transition: all var(--transition-normal);
+}
+
+.select-railway:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: var(--primary-color);
+}
+
+.select-railway.ant-select-focused .ant-select-selector {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2) !important;
+}
+
+.select-railway .ant-select-selection-item {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--text-color-inverse);
+  border-radius: var(--border-radius-small);
+}
+
+/* 12306风格日期选择器 */
+.picker-railway {
+  border-radius: var(--border-radius-small);
+  border-color: var(--border-color);
+  transition: all var(--transition-normal);
+}
+
+.picker-railway:hover {
+  border-color: var(--primary-color);
+}
+
+.picker-railway.ant-picker-focused {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+/* 12306风格复选框和单选框 */
+.checkbox-railway .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.radio-railway .ant-radio-checked .ant-radio-inner {
+  border-color: var(--primary-color);
+}
+
+.radio-railway .ant-radio-checked .ant-radio-inner::after {
+  background-color: var(--primary-color);
+}
+
+/* 12306风格开关 */
+.switch-railway.ant-switch-checked {
+  background-color: var(--primary-color);
+}
+
+/* 12306风格滑块 */
+.slider-railway .ant-slider-track {
+  background-color: var(--primary-color);
+}
+
+.slider-railway .ant-slider-handle {
+  border-color: var(--primary-color);
+}
+
+.slider-railway .ant-slider-handle:focus {
+  box-shadow: 0 0 0 5px rgba(74, 144, 226, 0.2);
+}
+
+/* 12306风格上传组件 */
+.upload-railway .ant-upload {
+  border-color: var(--border-color);
+  border-radius: var(--border-radius-small);
+}
+
+.upload-railway .ant-upload:hover {
+  border-color: var(--primary-color);
+}
+
+/* 12306风格评分组件 */
+.rate-railway .ant-rate-star-focused,
+.rate-railway .ant-rate-star:hover,
+.rate-railway .ant-rate-star-full {
+  color: var(--accent-color);
+}
+
+/* 表单验证状态样式 */
+.form-railway .ant-form-item-has-success .ant-input,
+.form-railway .ant-form-item-has-success .ant-select .ant-select-selector,
+.form-railway .ant-form-item-has-success .ant-picker {
+  border-color: var(--success-color);
+}
+
+.form-railway .ant-form-item-has-warning .ant-input,
+.form-railway .ant-form-item-has-warning .ant-select .ant-select-selector,
+.form-railway .ant-form-item-has-warning .ant-picker {
+  border-color: var(--warning-color);
+}
+
+.form-railway .ant-form-item-has-error .ant-input,
+.form-railway .ant-form-item-has-error .ant-select .ant-select-selector,
+.form-railway .ant-form-item-has-error .ant-picker {
+  border-color: var(--error-color);
+}
+
+.form-railway .ant-form-item-has-error .ant-input:focus,
+.form-railway .ant-form-item-has-error .ant-select-focused .ant-select-selector,
+.form-railway .ant-form-item-has-error .ant-picker-focused {
+  border-color: var(--error-color);
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+}
+
+/* 表单布局样式 */
+.form-railway--horizontal .ant-form-item-label {
+  text-align: right;
+  padding-right: var(--spacing-md);
+}
+
+.form-railway--vertical .ant-form-item-label {
+  padding-bottom: var(--spacing-xs);
+}
+
+.form-railway--inline .ant-form-item {
+  margin-right: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* 表单操作按钮区域 */
+.form-railway__actions {
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-color-light);
+  text-align: center;
+}
+
+.form-railway__actions .ant-btn + .ant-btn {
+  margin-left: var(--spacing-md);
+}
+
+/* 响应式表单样式 */
+@media (max-width: 768px) {
+  .form-railway--horizontal .ant-form-item-label {
+    text-align: left;
+    padding-right: 0;
+    padding-bottom: var(--spacing-xs);
+  }
+
+  .form-railway--horizontal .ant-col-6 {
+    width: 100%;
+  }
+
+  .form-railway--horizontal .ant-col-18 {
+    width: 100%;
+  }
+
+  .form-railway__actions {
+    text-align: center;
+  }
+
+  .form-railway__actions .ant-btn {
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: var(--spacing-sm);
+  }
+}

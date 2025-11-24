@@ -2,15 +2,9 @@
   <a-layout class="not-found-layout">
     <app-header />
     <a-layout-content class="not-found-content">
-      <a-result
-        status="404"
-        title="404"
-        sub-title="抱歉，您访问的页面不存在"
-      >
+      <a-result status="404" title="404" sub-title="抱歉，您访问的页面不存在">
         <template #extra>
-          <a-button type="primary" @click="router.push('/')">
-            返回首页
-          </a-button>
+          <a-button type="primary" @click="router.push('/')">返回首页</a-button>
         </template>
       </a-result>
     </a-layout-content>
@@ -39,4 +33,3 @@ const router = useRouter()
   background: #f0f2f5;
 }
 </style>
-
