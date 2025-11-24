@@ -3,7 +3,7 @@ API v1 Router
 集中管理所有API路由
 """
 from fastapi import APIRouter
-from app.api.v1.endpoints import auth, users, passengers, trains, orders, admin, permissions, roles, user_roles
+from app.api.v1.endpoints import auth, users, passengers, trains, orders, admin, permissions, roles, user_roles, password_recovery
 
 api_router = APIRouter()
 
@@ -11,6 +11,12 @@ api_router = APIRouter()
 api_router.include_router(
     auth.router,
     prefix="/auth",
+    tags=["认证"]
+)
+
+# 找回密码路由
+api_router.include_router(
+    password_recovery.router,
     tags=["认证"]
 )
 
