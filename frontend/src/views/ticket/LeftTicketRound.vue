@@ -46,6 +46,7 @@
                     v-model="from"
                     name="leftTicketDTO.from_station_name"
                     placeholder="简拼/全拼/汉字"
+                    @click="showCitySelector('from', $event)"
                   />
                 </div>
               </li>
@@ -73,6 +74,7 @@
                     v-model="to"
                     name="leftTicketDTO.to_station_name"
                     placeholder="简拼/全拼/汉字"
+                    @click="showCitySelector('to', $event)"
                   />
                 </div>
               </li>
@@ -700,15 +702,25 @@
       </div>
     </div>
     <Footer />
+    <Teleport to="body">
+      <CitySelector
+        :visible="citySelectorVisible"
+        :top="citySelectorTop"
+        :left="citySelectorLeft"
+        @select="handleCitySelect"
+        @close="closeCitySelector"
+      />
+    </Teleport>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import dayjs from 'dayjs'
 import { message } from 'ant-design-vue'
 import Header12306 from '@/components/Header12306.vue'
 import Footer from '@/components/LoginFooter.vue'
+import CitySelector from '@/components/CitySelector.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { searchTrains } from '@/api/train'
 
@@ -721,6 +733,78 @@ const showTicketPrice = train => {
 const showStopStation = train => {
   console.log('Show stops for', train.station_train_code)
 }
+
+const citySelectorVisible = ref(false)
+const citySelectorTop = ref(0)
+const citySelectorLeft = ref(0)
+const currentSelectingInput = ref('')
+
+const showCitySelector = (type, event) => {
+  currentSelectingInput.value = type
+  const rect = event.target.getBoundingClientRect()
+  // Calculate position relative to the viewport or a common ancestor if needed
+  // Here we assume absolute positioning relative to the page (or fixed)
+  // But the component uses absolute, so we might need offsetParent.
+  // Let's try using pageX/pageY or rect with scroll.
+  // Actually, the user example had hardcoded top/left.
+  // We should position it below the input.
+  // Since the component is in the flow, we might need to adjust.
+  // Let's try to position it relative to the input wrapper.
+  
+  // Better approach: Use the input element's position.
+  const inputEl = document.getElementById(type === 'from' ? 'fromStationText' : 'toStationText')
+  if (inputEl) {
+    const inputRect = inputEl.getBoundingClientRect()
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
+    
+    citySelectorTop.value = inputRect.bottom + scrollTop
+    citySelectorLeft.value = inputRect.left + scrollLeft
+    citySelectorVisible.value = true
+  }
+}
+
+const handleCitySelect = city => {
+  if (currentSelectingInput.value === 'from') {
+    from.value = city
+  } else {
+    to.value = city
+  }
+  citySelectorVisible.value = false
+}
+
+const closeCitySelector = () => {
+  citySelectorVisible.value = false
+}
+
+const handleGlobalClick = (e) => {
+  if (citySelectorVisible.value) {
+    const selector = document.querySelector('.city-selector')
+    const fromInput = document.getElementById('fromStationText')
+    const toInput = document.getElementById('toStationText')
+    const fromIcon = document.querySelector('.icon-place[data-type="from"]')
+    const toIcon = document.querySelector('.icon-place[data-type="to"]')
+    
+    if (selector && !selector.contains(e.target) && 
+        e.target !== fromInput && 
+        e.target !== toInput &&
+        e.target !== fromIcon &&
+        e.target !== toIcon) {
+      closeCitySelector()
+    }
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleGlobalClick)
+  syncFromRoute()
+  updateActiveDateByGoDate()
+  search()
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleGlobalClick)
+})
 
 const from = ref('北京')
 const to = ref('上海')
@@ -1088,11 +1172,7 @@ watch(
   }
 )
 
-onMounted(() => {
-  syncFromRoute()
-  updateActiveDateByGoDate()
-  search()
-})
+
 </script>
 
 <style>

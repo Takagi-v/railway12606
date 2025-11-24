@@ -46,6 +46,7 @@
                     v-model="from"
                     name="leftTicketDTO.from_station_name"
                     placeholder="简拼/全拼/汉字"
+                    @click="showCitySelector('from', $event)"
                   />
                 </div>
               </li>
@@ -73,6 +74,7 @@
                     v-model="to"
                     name="leftTicketDTO.to_station_name"
                     placeholder="简拼/全拼/汉字"
+                    @click="showCitySelector('to', $event)"
                   />
                 </div>
               </li>
@@ -702,15 +704,25 @@
       </div>
     </div>
     <Footer />
+    <Teleport to="body">
+      <CitySelector
+        :visible="citySelectorVisible"
+        :top="citySelectorTop"
+        :left="citySelectorLeft"
+        @select="handleCitySelect"
+        @close="closeCitySelector"
+      />
+    </Teleport>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import dayjs from 'dayjs'
 import { message } from 'ant-design-vue'
 import Header12306 from '@/components/Header12306.vue'
 import Footer from '@/components/LoginFooter.vue'
+import CitySelector from '@/components/CitySelector.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { searchTrains } from '@/api/train'
 
@@ -723,6 +735,63 @@ const showTicketPrice = train => {
 const showStopStation = train => {
   console.log('Show stops for', train.station_train_code)
 }
+
+const citySelectorVisible = ref(false)
+const citySelectorTop = ref(0)
+const citySelectorLeft = ref(0)
+const currentSelectingInput = ref('')
+
+const showCitySelector = (type, event) => {
+  currentSelectingInput.value = type
+  const inputEl = document.getElementById(type === 'from' ? 'fromStationText' : 'toStationText')
+  if (inputEl) {
+    const inputRect = inputEl.getBoundingClientRect()
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
+    
+    citySelectorTop.value = inputRect.bottom + scrollTop
+    citySelectorLeft.value = inputRect.left + scrollLeft
+    citySelectorVisible.value = true
+  }
+}
+
+const handleCitySelect = city => {
+  if (currentSelectingInput.value === 'from') {
+    from.value = city
+  } else {
+    to.value = city
+  }
+  citySelectorVisible.value = false
+}
+
+const closeCitySelector = () => {
+  citySelectorVisible.value = false
+}
+
+const handleGlobalClick = (e) => {
+  if (citySelectorVisible.value) {
+    const selector = document.querySelector('.city-selector')
+    const fromInput = document.getElementById('fromStationText')
+    const toInput = document.getElementById('toStationText')
+    
+    if (selector && !selector.contains(e.target) && 
+        e.target !== fromInput && 
+        e.target !== toInput) {
+      closeCitySelector()
+    }
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleGlobalClick)
+  syncFromRoute()
+  updateActiveDateByGoDate()
+  search()
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleGlobalClick)
+})
 
 const from = ref('北京')
 const to = ref('上海')
@@ -1047,11 +1116,7 @@ watch(
   }
 )
 
-onMounted(() => {
-  syncFromRoute()
-  updateActiveDateByGoDate()
-  search()
-})
+
 </script>
 
 <style>

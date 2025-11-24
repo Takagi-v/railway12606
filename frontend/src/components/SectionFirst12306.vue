@@ -118,8 +118,9 @@
                             id="fromStationText"
                             autocomplete="off"
                             aria-label="请输入或选择出发地，按键盘上下键进行选择，按回车键选中"
+                            @click="showCitySelector('single.from', $event)"
                           />
-                          <i class="icon icon-place" data-click="fromStationText"></i>
+                          <i class="icon icon-place" data-click="fromStationText" @click.stop="showCitySelector('single.from', $event)"></i>
                         </div>
                       </div>
                     </div>
@@ -135,8 +136,9 @@
                             id="toStationText"
                             autocomplete="off"
                             aria-label="请输入或选择到达地，按键盘上下键进行选择，按回车键选中"
+                            @click="showCitySelector('single.to', $event)"
                           />
-                          <i class="icon icon-place" data-click="toStationText"></i>
+                          <i class="icon icon-place" data-click="toStationText" @click.stop="showCitySelector('single.to', $event)"></i>
                         </div>
                       </div>
                     </div>
@@ -236,8 +238,9 @@
                             id="fromStationFanText"
                             autocomplete="off"
                             aria-label="请输入或选择出发地，按键盘上下键进行选择，按回车键选中"
+                            @click="showCitySelector('round.from', $event)"
                           />
-                          <i class="icon icon-place" data-click="fromStationFanText"></i>
+                          <i class="icon icon-place" data-click="fromStationFanText" @click.stop="showCitySelector('round.from', $event)"></i>
                         </div>
                       </div>
                     </div>
@@ -253,8 +256,9 @@
                             id="toStationFanText"
                             autocomplete="off"
                             aria-label="请输入或选择到达地，按键盘上下键进行选择，按回车键选中"
+                            @click="showCitySelector('round.to', $event)"
                           />
-                          <i class="icon icon-place" data-click="toStationFanText"></i>
+                          <i class="icon icon-place" data-click="toStationFanText" @click.stop="showCitySelector('round.to', $event)"></i>
                         </div>
                       </div>
                     </div>
@@ -343,8 +347,9 @@
                             id="fromStationSerialText"
                             v-model="transfer.fromStation"
                             autocomplete="off"
+                            @click="showCitySelector('transfer.from', $event)"
                           />
-                          <i class="icon icon-place" data-click="fromStationSerialText"></i>
+                          <i class="icon icon-place" data-click="fromStationSerialText" @click.stop="showCitySelector('transfer.from', $event)"></i>
                         </div>
                       </div>
                     </div>
@@ -362,8 +367,9 @@
                             id="toStationSerialText"
                             v-model="transfer.toStation"
                             autocomplete="off"
+                            @click="showCitySelector('transfer.to', $event)"
                           />
-                          <i class="icon icon-place" data-click="toStationSerialText"></i>
+                          <i class="icon icon-place" data-click="toStationSerialText" @click.stop="showCitySelector('transfer.to', $event)"></i>
                         </div>
                       </div>
                     </div>
@@ -815,12 +821,22 @@
         </div>
       </div>
     </div>
+    <Teleport to="body">
+      <CitySelector
+        :visible="citySelectorVisible"
+        :top="citySelectorTop"
+        :left="citySelectorLeft"
+        @select="handleCitySelect"
+        @close="closeCitySelector"
+      />
+    </Teleport>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import CitySelector from '@/components/CitySelector.vue'
 
 const router = useRouter()
 
@@ -1045,6 +1061,80 @@ const submitChange = () => {
   // 跳转至订单查询页，退改签相关功能在此处理
   router.push({ name: 'order-inquiry' })
 }
+
+// 城市选择器逻辑
+const citySelectorVisible = ref(false)
+const citySelectorTop = ref(0)
+const citySelectorLeft = ref(0)
+const currentSelectingInput = ref('') // 'single.from', 'single.to', 'round.from', etc.
+
+const showCitySelector = (type, event) => {
+  currentSelectingInput.value = type
+  
+  // Find the target element to position against
+  // We can use the event target or find the specific input element
+  let targetEl = event.target
+  
+  // If clicked on icon, we might want to position relative to the input box wrapper
+  if (targetEl.tagName === 'I') {
+    targetEl = targetEl.previousElementSibling
+  }
+  
+  // Or better, find the input-box wrapper
+  const inputBox = targetEl.closest('.input-box')
+  
+  if (inputBox) {
+    const rect = inputBox.getBoundingClientRect()
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
+    
+    citySelectorTop.value = rect.bottom + scrollTop
+    citySelectorLeft.value = rect.left + scrollLeft
+    citySelectorVisible.value = true
+  }
+}
+
+const handleCitySelect = city => {
+  const [mode, field] = currentSelectingInput.value.split('.')
+  
+  if (mode === 'single') {
+    if (field === 'from') single.value.fromStation = city
+    else if (field === 'to') single.value.toStation = city
+  } else if (mode === 'round') {
+    if (field === 'from') round.value.fromStation = city
+    else if (field === 'to') round.value.toStation = city
+  } else if (mode === 'transfer') {
+    if (field === 'from') transfer.value.fromStation = city
+    else if (field === 'to') transfer.value.toStation = city
+  }
+  
+  citySelectorVisible.value = false
+}
+
+const closeCitySelector = () => {
+  citySelectorVisible.value = false
+}
+
+const handleGlobalClick = (e) => {
+  if (citySelectorVisible.value) {
+    const selector = document.querySelector('.city-selector')
+    // Check if click is inside selector or on any of the triggers
+    // This is a bit complex with multiple triggers, so we rely on stopPropagation on triggers
+    // or check if target is inside .input-city
+    
+    if (selector && !selector.contains(e.target) && !e.target.closest('.input-city')) {
+      closeCitySelector()
+    }
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleGlobalClick)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleGlobalClick)
+})
 </script>
 
 <!-- 引入原站样式与图标字体，确保外观一致性 -->
