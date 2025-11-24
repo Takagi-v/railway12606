@@ -704,13 +704,15 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import dayjs from 'dayjs'
-import { message } from 'ant-design-vue'
+import { message, DatePicker } from 'ant-design-vue'
 import Header12306 from '@/components/Header12306.vue'
 import Footer from '@/components/LoginFooter.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { searchTrains } from '@/api/train'
+
+const ADatePicker = DatePicker
 
 const router = useRouter()
 const route = useRoute()
@@ -988,7 +990,20 @@ const fetchBackTrains = async () => {
 }
 
 const ensureBackDateValid = () => {
-  // 用户要求保留此bug：返程日不随出发日改变
+  // 确保返程日期不早于出发日期
+  if (dayjs(backDate.value).isBefore(dayjs(goDate.value), 'day')) {
+    backDate.value = dayjs(goDate.value).add(1, 'day').toDate()
+  }
+}
+
+// 禁用早于今天的出发日期
+const disabledGoDate = (current) => {
+  return current && current < dayjs().startOf('day')
+}
+
+// 禁用早于出发日期的返程日期
+const disabledBackDate = (current) => {
+  return current && current < dayjs(goDate.value).startOf('day')
 }
 
 const updateActiveDateByGoDate = () => {
@@ -1003,7 +1018,14 @@ const search = async () => {
     message.warning('请输入出发地和目的地')
     return
   }
-  ensureBackDateValid()
+
+  // 校验返程日期不早于出发日期
+  if (dayjs(backDate.value).isBefore(dayjs(goDate.value), 'day')) {
+    message.error('返程日期不能早于出发日期')
+    ensureBackDateValid()
+    return
+  }
+
   await Promise.all([fetchGoTrains(), fetchBackTrains()])
 }
 
