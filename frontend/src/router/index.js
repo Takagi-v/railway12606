@@ -62,6 +62,12 @@ const router = createRouter({
       meta: { title: '订单填写', requiresAuth: true }
     },
     {
+      path: '/order/confirm',
+      name: 'order-confirm',
+      component: () => import('@/views/order/OrderConfirm.vue'),
+      meta: { title: '确认订单', requiresAuth: true }
+    },
+    {
       path: '/order/:orderId',
       name: 'order-detail',
       component: () => import('@/views/order/OrderDetail.vue'),

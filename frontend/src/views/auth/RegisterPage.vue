@@ -7,7 +7,12 @@
         <div class="register-container">
           <!-- 注册卡片 -->
           <div class="register-card">
-            <div class="breadcrumb">您现在的位置：<router-link to="/">客运首页</router-link> > <router-link to="/register">注册</router-link></div>
+            <div class="breadcrumb">
+              您现在的位置：
+              <router-link to="/">客运首页</router-link>
+              >
+              <router-link to="/register">注册</router-link>
+            </div>
             <div class="card-header">
               <h2 class="card-title">账户信息</h2>
             </div>
@@ -62,7 +67,7 @@
                       @blur="clearFieldError('password')"
                       :visibilityToggle="false"
                     />
-                    
+
                     <div class="password-strength inline">
                       <div class="strength-bar">
                         <div
@@ -112,7 +117,9 @@
                       <a-select-option value="身份证">居民身份证</a-select-option>
                       <a-select-option value="港澳居民居住证">港澳居民居住证</a-select-option>
                       <a-select-option value="台湾居民居住证">台湾居民居住证</a-select-option>
-                      <a-select-option value="外国人永久居留身份证">外国人永久居留身份证</a-select-option>
+                      <a-select-option value="外国人永久居留身份证">
+                        外国人永久居留身份证
+                      </a-select-option>
                       <a-select-option value="护照">外国护照</a-select-option>
                       <a-select-option value="护照">中国护照</a-select-option>
                       <a-select-option value="港澳通行证">港澳居民来往内地通行证</a-select-option>
@@ -372,7 +379,11 @@ const rules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'submit' },
     { min: 6, max: 30, message: '用户名长度为6-30位', trigger: 'submit' },
-    { pattern: /^[a-zA-Z0-9_-][a-zA-Z0-9_-]*$/, message: '用户名只能以字母、数字、下划线或横线开头，包含字母、数字、下划线和横线', trigger: 'submit' }
+    {
+      pattern: /^[a-zA-Z0-9_-][a-zA-Z0-9_-]*$/,
+      message: '用户名只能以字母、数字、下划线或横线开头，包含字母、数字、下划线和横线',
+      trigger: 'submit'
+    }
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'submit' },
@@ -400,7 +411,8 @@ const rules = {
     {
       validator: (rule, value) => {
         if (registerForm.idType === '居民身份证') {
-          const idPattern = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+          const idPattern =
+            /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
           if (!idPattern.test(value)) {
             return Promise.reject('请输入正确的身份证号码')
           }
@@ -446,7 +458,7 @@ const handleRegister = async values => {
   try {
     loading.value = true
     showErrors.value = true
-    
+
     // 验证服务条款
     if (!registerForm.agreeTerms) {
       errors.agreeTerms = '请阅读并同意服务条款'
@@ -493,7 +505,7 @@ const handleRegister = async values => {
   font-size: 12px;
 }
 
-.register-form :deep([class^="ant-"]:not(.anticon)) {
+.register-form :deep([class^='ant-']:not(.anticon)) {
   font-size: 12px;
   font-family: 'Tahoma', 'SimSun', '宋体', serif;
 }
@@ -1151,14 +1163,9 @@ const handleRegister = async values => {
 .register-form.show-errors :deep(.ant-form-item-explain-error) {
   display: block;
 }
- .form-divider {
-   height: 0;
-   border-top: 1px dashed #d9d9d9;
-   margin: 12px 0;
- }
+.form-divider {
+  height: 0;
+  border-top: 1px dashed #d9d9d9;
+  margin: 12px 0;
+}
 </style>
-
-<<<<<<< HEAD
-.form-divider { height: 0; border-top: 1px dashed #d9d9d9; margin: 12px 0; }
-=======
->>>>>>> origin/feature/user-authentication

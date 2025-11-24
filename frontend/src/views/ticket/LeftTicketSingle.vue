@@ -688,7 +688,7 @@
                       href="javascript:"
                       class="btn72"
                       style="cursor: pointer"
-                      @click="showTicketPrice(train)"
+                      @click.prevent="bookTrain(train)"
                     >
                       预订
                       <i class="ico-dh"></i>
@@ -722,6 +722,20 @@ const showTicketPrice = train => {
 }
 const showStopStation = train => {
   console.log('Show stops for', train.station_train_code)
+}
+
+const bookTrain = train => {
+  const q = {
+    date: formatDateValue(goDate.value),
+    trainNo: train.station_train_code,
+    trainId: String(train.train_no || ''),
+    fromStation: train.from_station_name,
+    toStation: train.to_station_name,
+    departTime: train.start_time,
+    arriveTime: train.arrive_time,
+    seatType: '二等座'
+  }
+  router.push({ path: '/order/confirm', query: q })
 }
 
 const from = ref('北京')

@@ -364,13 +364,13 @@ export default {
   permissionUtils,
   permissionChecker,
   permissionGuard,
-  permissionDirective,
-};
+  permissionDirective
+}
 
 export const USER_TYPES = {
   GUEST: 'guest',
   ADULT: 'adult',
-  STUDENT: 'student',
+  STUDENT: 'student'
 }
 
 export const USER_ROLES = ROLES
@@ -396,23 +396,23 @@ export const canAccessRoute = (route, user) => {
       ? route.meta.permissions
       : [route.meta.permissions]
     const mode = route.meta.permissionMode || 'any'
-    const pass = mode === 'all'
-      ? codes.every(code => checker.hasPermission(code))
-      : codes.some(code => checker.hasPermission(code))
+    const pass =
+      mode === 'all'
+        ? codes.every(code => checker.hasPermission(code))
+        : codes.some(code => checker.hasPermission(code))
     if (!pass) return false
   }
   if (route?.meta?.roles) {
     const roles = Array.isArray(route.meta.roles) ? route.meta.roles : [route.meta.roles]
     const mode = route.meta.roleMode || 'any'
-    const pass = mode === 'all'
-      ? roles.every(r => checker.hasRole(r))
-      : roles.some(r => checker.hasRole(r))
+    const pass =
+      mode === 'all' ? roles.every(r => checker.hasRole(r)) : roles.some(r => checker.hasRole(r))
     if (!pass) return false
   }
   return true
 }
 
-export const getUserPermissions = (user) => {
+export const getUserPermissions = user => {
   const permissionStore = usePermissionStore()
   return permissionStore.getPermissionCodes?.value || []
 }
@@ -428,7 +428,7 @@ export const isAuthenticated = () => {
   return userStore.isAuthenticated
 }
 
-export const isStudent = (user) => hasUserType(USER_TYPES.STUDENT, user)
-export const isAdult = (user) => hasUserType(USER_TYPES.ADULT, user)
+export const isStudent = user => hasUserType(USER_TYPES.STUDENT, user)
+export const isAdult = user => hasUserType(USER_TYPES.ADULT, user)
 
 export { PERMISSIONS }
