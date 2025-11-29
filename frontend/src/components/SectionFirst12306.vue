@@ -119,6 +119,7 @@
                             autocomplete="off"
                             aria-label="请输入或选择出发地，按键盘上下键进行选择，按回车键选中"
                             @click="showCitySelector('single.from', $event)"
+                            @input="handleInput('single.from', $event)"
                           />
                           <i class="icon icon-place" data-click="fromStationText" @click.stop="showCitySelector('single.from', $event)"></i>
                         </div>
@@ -137,6 +138,7 @@
                             autocomplete="off"
                             aria-label="请输入或选择到达地，按键盘上下键进行选择，按回车键选中"
                             @click="showCitySelector('single.to', $event)"
+                            @input="handleInput('single.to', $event)"
                           />
                           <i class="icon icon-place" data-click="toStationText" @click.stop="showCitySelector('single.to', $event)"></i>
                         </div>
@@ -163,6 +165,9 @@
                           id="train_date"
                           autocomplete="off"
                           aria-label="请输入日期，例如2021杠01杠01"
+                          @click="showDateSelector('train_date', 'single.date', $event)"
+                          readonly
+                          style="cursor: pointer;"
                         />
                         <i class="icon icon-date" data-click="train_date"></i>
                       </div>
@@ -239,6 +244,7 @@
                             autocomplete="off"
                             aria-label="请输入或选择出发地，按键盘上下键进行选择，按回车键选中"
                             @click="showCitySelector('round.from', $event)"
+                            @input="handleInput('round.from', $event)"
                           />
                           <i class="icon icon-place" data-click="fromStationFanText" @click.stop="showCitySelector('round.from', $event)"></i>
                         </div>
@@ -257,6 +263,7 @@
                             autocomplete="off"
                             aria-label="请输入或选择到达地，按键盘上下键进行选择，按回车键选中"
                             @click="showCitySelector('round.to', $event)"
+                            @input="handleInput('round.to', $event)"
                           />
                           <i class="icon icon-place" data-click="toStationFanText" @click.stop="showCitySelector('round.to', $event)"></i>
                         </div>
@@ -282,6 +289,9 @@
                           v-model="round.goDate"
                           id="go_date"
                           aria-label="请输入日期，例如2021杠01杠01"
+                          @click="showDateSelector('go_date', 'round.goDate', $event)"
+                          readonly
+                          style="cursor: pointer;"
                         />
                         <i class="icon icon-date" data-click="go_date"></i>
                       </div>
@@ -297,6 +307,9 @@
                           v-model="round.backDate"
                           id="from_date"
                           aria-label="请输入日期，例如2021杠01杠01"
+                          @click="showDateSelector('from_date', 'round.backDate', $event)"
+                          readonly
+                          style="cursor: pointer;"
                         />
                         <i class="icon icon-date" data-click="from_date"></i>
                       </div>
@@ -348,6 +361,7 @@
                             v-model="transfer.fromStation"
                             autocomplete="off"
                             @click="showCitySelector('transfer.from', $event)"
+                            @input="handleInput('transfer.from', $event)"
                           />
                           <i class="icon icon-place" data-click="fromStationSerialText" @click.stop="showCitySelector('transfer.from', $event)"></i>
                         </div>
@@ -368,6 +382,7 @@
                             v-model="transfer.toStation"
                             autocomplete="off"
                             @click="showCitySelector('transfer.to', $event)"
+                            @input="handleInput('transfer.to', $event)"
                           />
                           <i class="icon icon-place" data-click="toStationSerialText" @click.stop="showCitySelector('transfer.to', $event)"></i>
                         </div>
@@ -829,6 +844,23 @@
         @select="handleCitySelect"
         @close="closeCitySelector"
       />
+      <CitySearch
+        :visible="citySearchVisible"
+        :top="citySelectorTop"
+        :left="citySelectorLeft"
+        :search-query="searchQuery"
+        @select="handleCitySelect"
+        @close="closeCitySelector"
+      />
+
+      <DateSelector
+        :visible="dateSelectorVisible"
+        :top="dateSelectorTop"
+        :left="dateSelectorLeft"
+        :selected-date="getSelectedDate()"
+        @select="handleDateSelectorSelect"
+        @close="closeDateSelector"
+      />
     </Teleport>
   </div>
 </template>
@@ -837,6 +869,10 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import CitySelector from '@/components/CitySelector.vue'
+
+import CitySearch from '@/components/CitySearch.vue'
+import DateSelector from '@/components/DateSelector.vue'
+import dayjs from 'dayjs'
 
 const router = useRouter()
 
@@ -1068,21 +1104,16 @@ const citySelectorTop = ref(0)
 const citySelectorLeft = ref(0)
 const currentSelectingInput = ref('') // 'single.from', 'single.to', 'round.from', etc.
 
-const showCitySelector = (type, event) => {
-  currentSelectingInput.value = type
-  
-  // Find the target element to position against
-  // We can use the event target or find the specific input element
+// 城市搜索逻辑
+const citySearchVisible = ref(false)
+const searchQuery = ref('')
+
+const updatePosition = (event) => {
   let targetEl = event.target
-  
-  // If clicked on icon, we might want to position relative to the input box wrapper
   if (targetEl.tagName === 'I') {
     targetEl = targetEl.previousElementSibling
   }
-  
-  // Or better, find the input-box wrapper
   const inputBox = targetEl.closest('.input-box')
-  
   if (inputBox) {
     const rect = inputBox.getBoundingClientRect()
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop
@@ -1090,6 +1121,27 @@ const showCitySelector = (type, event) => {
     
     citySelectorTop.value = rect.bottom + scrollTop
     citySelectorLeft.value = rect.left + scrollLeft
+  }
+}
+
+const showCitySelector = (type, event) => {
+  currentSelectingInput.value = type
+  searchQuery.value = ''
+  citySearchVisible.value = false
+  updatePosition(event)
+  citySelectorVisible.value = true
+}
+
+const handleInput = (type, event) => {
+  currentSelectingInput.value = type
+  searchQuery.value = event.target.value
+  
+  if (searchQuery.value) {
+    citySelectorVisible.value = false
+    updatePosition(event)
+    citySearchVisible.value = true
+  } else {
+    citySearchVisible.value = false
     citySelectorVisible.value = true
   }
 }
@@ -1109,23 +1161,93 @@ const handleCitySelect = city => {
   }
   
   citySelectorVisible.value = false
+  citySearchVisible.value = false
 }
 
 const closeCitySelector = () => {
   citySelectorVisible.value = false
+  citySearchVisible.value = false
 }
 
 const handleGlobalClick = (e) => {
-  if (citySelectorVisible.value) {
+  if (citySelectorVisible.value || citySearchVisible.value) {
     const selector = document.querySelector('.city-selector')
-    // Check if click is inside selector or on any of the triggers
-    // This is a bit complex with multiple triggers, so we rely on stopPropagation on triggers
-    // or check if target is inside .input-city
+    const search = document.querySelector('.city-search')
+    const clickedInsideSelector = selector && selector.contains(e.target)
+    const clickedInsideSearch = search && search.contains(e.target)
     
-    if (selector && !selector.contains(e.target) && !e.target.closest('.input-city')) {
+    // Check if clicked on any input that triggers city selector
+    const isInput = e.target.id && (
+      e.target.id === 'fromStationText' || 
+      e.target.id === 'toStationText' ||
+      e.target.id === 'fromStationFanText' ||
+      e.target.id === 'toStationFanText' ||
+      e.target.id === 'fromStationSerialText' ||
+      e.target.id === 'toStationSerialText'
+    )
+    
+    if (!clickedInsideSelector && !clickedInsideSearch && !isInput) {
       closeCitySelector()
     }
   }
+  
+  if (dateSelectorVisible.value) {
+    const dateSelector = document.querySelector('.cal-wrap')
+    const clickedInsideDateSelector = dateSelector && dateSelector.contains(e.target)
+    const isInput = e.target.id && (
+      e.target.id === 'train_date' ||
+      e.target.id === 'go_date' ||
+      e.target.id === 'from_date'
+    )
+    
+    if (!clickedInsideDateSelector && !isInput) {
+      closeDateSelector()
+    }
+  }
+}
+
+const dateSelectorVisible = ref(false)
+const dateSelectorTop = ref(0)
+const dateSelectorLeft = ref(0)
+const currentSelectingDateInput = ref('')
+
+const showDateSelector = (inputId, modelKey, event) => {
+  currentSelectingDateInput.value = modelKey
+  const inputEl = document.getElementById(inputId)
+  if (inputEl) {
+    const rect = inputEl.getBoundingClientRect()
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
+    
+    dateSelectorTop.value = rect.bottom + scrollTop
+    dateSelectorLeft.value = rect.left + scrollLeft
+    dateSelectorVisible.value = true
+  }
+}
+
+const getSelectedDate = () => {
+  if (currentSelectingDateInput.value === 'single.date') return single.value.date
+  if (currentSelectingDateInput.value === 'round.goDate') return round.value.goDate
+  if (currentSelectingDateInput.value === 'round.backDate') return round.value.backDate
+  return ''
+}
+
+const handleDateSelectorSelect = (dateStr) => {
+  if (currentSelectingDateInput.value === 'single.date') {
+    single.value.date = dateStr
+  } else if (currentSelectingDateInput.value === 'round.goDate') {
+    round.value.goDate = dateStr
+    if (dayjs(round.value.backDate).isBefore(dayjs(dateStr))) {
+      round.value.backDate = dateStr
+    }
+  } else if (currentSelectingDateInput.value === 'round.backDate') {
+    round.value.backDate = dateStr
+  }
+  closeDateSelector()
+}
+
+const closeDateSelector = () => {
+  dateSelectorVisible.value = false
 }
 
 onMounted(() => {
