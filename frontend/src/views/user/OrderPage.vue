@@ -97,7 +97,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { message } from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
 import { getOrders, payOrder, cancelOrder, refundOrder } from '@/api/order'
 import { useRouter } from 'vue-router'
 
@@ -223,32 +223,60 @@ const goLeftTicket = () => {
 
 const onPay = async id => {
   try {
-    await payOrder(id)
-    message.success('支付请求已发起')
-    fetchOrders()
+    const res = await payOrder(id)
+    if (res.code === 200) {
+      message.success('支付成功，订单已移至"未出行订单"')
+      fetchOrders()
+    } else {
+      message.error(res.message || '支付失败')
+    }
   } catch (e) {
     message.error('支付失败或功能未开通')
   }
 }
 
-const onCancel = async id => {
-  try {
-    await cancelOrder(id)
-    message.success('取消请求已发起')
-    fetchOrders()
-  } catch (e) {
-    message.error('取消失败或功能未开通')
-  }
+const onCancel = id => {
+  Modal.confirm({
+    title: '确认取消订单',
+    content: '取消后订单信息将被删除，是否确认？',
+    okText: '确认取消',
+    cancelText: '暂不取消',
+    onOk: async () => {
+      try {
+        const res = await cancelOrder(id)
+        if (res.code === 200) {
+          message.success('订单已取消')
+          fetchOrders()
+        } else {
+          message.error(res.message || '取消失败')
+        }
+      } catch (e) {
+        message.error('取消失败或功能未开通')
+      }
+    }
+  })
 }
 
-const onRefund = async id => {
-  try {
-    await refundOrder(id, { passenger_ids: [] })
-    message.success('退票请求已发起')
-    fetchOrders()
-  } catch (e) {
-    message.error('退票失败或功能未开通')
-  }
+const onRefund = id => {
+  Modal.confirm({
+    title: '确认退票',
+    content: '退票将收取5%手续费，确认要退票吗？（将退还所有乘客）',
+    okText: '确认退票',
+    cancelText: '取消',
+    onOk: async () => {
+      try {
+        const res = await refundOrder(id, { passenger_ids: [] })
+        if (res.code === 200) {
+          message.success(res.message || '退票成功')
+          fetchOrders()
+        } else {
+          message.error(res.message || '退票失败')
+        }
+      } catch (e) {
+        message.error('退票失败或功能未开通')
+      }
+    }
+  })
 }
 </script>
 

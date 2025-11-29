@@ -5,7 +5,7 @@ Order Schemas
 from datetime import datetime, date
 from typing import List, Optional
 from decimal import Decimal
-from pydantic import BaseModel, field_validator, Field, validator
+from pydantic import BaseModel, field_validator, Field, model_validator
 from app.models.enums import PassengerType, SeatType, OrderStatus, RefundStatus
 from app.core.exceptions import ValidationException
 
@@ -67,6 +67,22 @@ class OrderPassengerResponse(BaseModel):
             raise ValueError('票价必须为非负数')
         return v
     
+    @model_validator(mode='before')
+    @classmethod
+    def flatten_passenger(cls, v):
+        # Handle ORM object
+        if hasattr(v, 'passenger') and hasattr(v, 'seat'):
+            return {
+                "name": v.passenger.name,
+                "id_number": v.passenger.id_number,
+                "seat_type": v.seat_type,
+                "seat_number": v.seat.seat_number,
+                "ticket_type": v.ticket_type,
+                "price": v.price,
+                "refund_status": v.refund_status
+            }
+        return v
+    
     class Config:
         from_attributes = True
 
@@ -85,6 +101,26 @@ class OrderResponse(BaseModel):
     passenger_count: int
     create_time: datetime
     
+    @model_validator(mode='before')
+    @classmethod
+    def flatten_order(cls, v):
+        # Handle ORM object
+        if hasattr(v, 'train'):
+            return {
+                "id": v.id,
+                "order_number": v.order_number,
+                "train_number": v.train.train_number,
+                "departure_station": v.train.departure_station.station_name,
+                "arrival_station": v.train.arrival_station.station_name,
+                "travel_date": v.travel_date,
+                "departure_time": str(v.train.departure_time),
+                "total_price": v.total_price,
+                "status": v.status,
+                "passenger_count": len(v.order_passengers),
+                "create_time": v.create_time
+            }
+        return v
+
     class Config:
         from_attributes = True
 
@@ -106,6 +142,29 @@ class OrderDetailResponse(BaseModel):
     pay_time: Optional[datetime]
     cancel_time: Optional[datetime]
     
+    @model_validator(mode='before')
+    @classmethod
+    def flatten_order_detail(cls, v):
+        # Handle ORM object
+        if hasattr(v, 'train'):
+            return {
+                "id": v.id,
+                "order_number": v.order_number,
+                "train_number": v.train.train_number,
+                "departure_station": v.train.departure_station.station_name,
+                "arrival_station": v.train.arrival_station.station_name,
+                "departure_time": str(v.train.departure_time),
+                "arrival_time": str(v.train.arrival_time),
+                "travel_date": v.travel_date,
+                "passengers": v.order_passengers, # List of OrderPassenger objects, will be handled by OrderPassengerResponse validator
+                "total_price": v.total_price,
+                "status": v.status,
+                "create_time": v.create_time,
+                "pay_time": v.pay_time,
+                "cancel_time": v.cancel_time
+            }
+        return v
+
     class Config:
         from_attributes = True
 
