@@ -50,7 +50,29 @@
         <div class="tab-content">
           <!-- 人脸找回 -->
           <div v-if="activeTab === 'face'" class="face-recovery">
-            <div class="qr-content">
+            <div class="step-indicator">
+              <div class="step" :class="{ active: faceStep >= 1, completed: faceStep > 1 }">
+                <div class="step-number">1</div>
+                <div class="step-text">提交身份信息</div>
+              </div>
+              <div class="step-line"></div>
+              <div class="step" :class="{ active: faceStep >= 2, completed: faceStep > 2 }">
+                <div class="step-number">2</div>
+                <div class="step-text">验证验证码</div>
+              </div>
+              <div class="step-line"></div>
+              <div class="step" :class="{ active: faceStep >= 3, completed: faceStep > 3 }">
+                <div class="step-number">3</div>
+                <div class="step-text">设置新密码</div>
+              </div>
+              <div class="step-line"></div>
+              <div class="step" :class="{ active: faceStep >= 4 }">
+                <div class="step-number">4</div>
+                <div class="step-text">完成</div>
+              </div>
+            </div>
+
+            <div class="qr-content" v-if="faceStep === 1">
               <h3 class="recovery-title">人脸找回</h3>
               <p class="recovery-subtitle">
                 扫描二维码，使用
@@ -60,74 +82,41 @@
 
               <div class="qr-code-container">
                 <div class="qr-code">
-                  <!-- 二维码SVG -->
                   <svg
                     width="160"
                     height="160"
                     viewBox="0 0 200 200"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <!-- 外框 -->
-                    <rect
-                      x="10"
-                      y="10"
-                      width="180"
-                      height="180"
-                      fill="white"
-                      stroke="#000"
-                      stroke-width="2"
-                    />
-
-                    <!-- 左上角定位点 -->
+                    <rect x="10" y="10" width="180" height="180" fill="white" stroke="#000" stroke-width="2" />
                     <rect x="20" y="20" width="50" height="50" fill="black" />
                     <rect x="30" y="30" width="30" height="30" fill="white" />
                     <rect x="40" y="40" width="10" height="10" fill="black" />
-
-                    <!-- 右上角定位点 -->
                     <rect x="130" y="20" width="50" height="50" fill="black" />
                     <rect x="140" y="30" width="30" height="30" fill="white" />
                     <rect x="150" y="40" width="10" height="10" fill="black" />
-
-                    <!-- 左下角定位点 -->
                     <rect x="20" y="130" width="50" height="50" fill="black" />
                     <rect x="30" y="140" width="30" height="30" fill="white" />
                     <rect x="40" y="150" width="10" height="10" fill="black" />
-
-                    <!-- 中心logo区域 -->
                     <circle cx="100" cy="100" r="15" fill="#e60012" />
-                    <text
-                      x="100"
-                      y="105"
-                      text-anchor="middle"
-                      fill="white"
-                      font-size="12"
-                      font-weight="bold"
-                    >
-                      🚄
-                    </text>
-
-                    <!-- 模拟二维码数据点 -->
+                    <text x="100" y="105" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🚄</text>
                     <rect x="80" y="20" width="5" height="5" fill="black" />
                     <rect x="90" y="20" width="5" height="5" fill="black" />
                     <rect x="100" y="20" width="5" height="5" fill="black" />
                     <rect x="110" y="20" width="5" height="5" fill="black" />
-
                     <rect x="20" y="80" width="5" height="5" fill="black" />
                     <rect x="30" y="80" width="5" height="5" fill="black" />
                     <rect x="40" y="80" width="5" height="5" fill="black" />
                     <rect x="50" y="80" width="5" height="5" fill="black" />
-
                     <rect x="80" y="80" width="5" height="5" fill="black" />
                     <rect x="120" y="80" width="5" height="5" fill="black" />
                     <rect x="130" y="80" width="5" height="5" fill="black" />
                     <rect x="140" y="80" width="5" height="5" fill="black" />
-
                     <rect x="80" y="120" width="5" height="5" fill="black" />
                     <rect x="90" y="120" width="5" height="5" fill="black" />
                     <rect x="100" y="120" width="5" height="5" fill="black" />
                     <rect x="110" y="120" width="5" height="5" fill="black" />
                     <rect x="120" y="120" width="5" height="5" fill="black" />
-
                     <rect x="80" y="160" width="5" height="5" fill="black" />
                     <rect x="90" y="160" width="5" height="5" fill="black" />
                     <rect x="100" y="160" width="5" height="5" fill="black" />
@@ -138,14 +127,11 @@
                     <rect x="150" y="160" width="5" height="5" fill="black" />
                     <rect x="160" y="160" width="5" height="5" fill="black" />
                     <rect x="170" y="160" width="5" height="5" fill="black" />
-
-                    <!-- 更多数据点 -->
                     <rect x="25" y="95" width="5" height="5" fill="black" />
                     <rect x="35" y="95" width="5" height="5" fill="black" />
                     <rect x="45" y="95" width="5" height="5" fill="black" />
                     <rect x="55" y="95" width="5" height="5" fill="black" />
                     <rect x="65" y="95" width="5" height="5" fill="black" />
-
                     <rect x="135" y="95" width="5" height="5" fill="black" />
                     <rect x="145" y="95" width="5" height="5" fill="black" />
                     <rect x="155" y="95" width="5" height="5" fill="black" />
@@ -154,11 +140,43 @@
                   </svg>
                 </div>
               </div>
-
               <div class="qr-instructions">
                 <p class="instruction-text">请使用中国铁路12306手机客户端扫描上方二维码</p>
                 <p class="instruction-note">扫码后按照APP提示完成身份验证即可找回密码</p>
               </div>
+              <div class="form-actions">
+                <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="proceedFaceStep2">已扫码，继续</a-button>
+              </div>
+            </div>
+
+            <div class="form-content" v-if="faceStep === 2">
+              <a-form :model="verificationForm" layout="vertical" class="recovery-form">
+                <a-form-item label="验证码：" required>
+                  <a-input v-model:value="verificationForm.code" placeholder="请输入收到的验证码" size="large" />
+                </a-form-item>
+                <div class="form-actions">
+                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleVerifyCode('face')">验证</a-button>
+                </div>
+              </a-form>
+            </div>
+
+            <div class="form-content" v-if="faceStep === 3">
+              <a-form :model="passwordForm" layout="vertical" class="recovery-form">
+                <a-form-item label="新密码：" required>
+                  <a-input v-model:value="passwordForm.newPassword" type="password" placeholder="请输入新密码" size="large" />
+                </a-form-item>
+                <a-form-item label="确认新密码：" required>
+                  <a-input v-model:value="passwordForm.confirmPassword" type="password" placeholder="请再次输入新密码" size="large" />
+                </a-form-item>
+                <div class="form-actions">
+                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleSetNewPassword('face')">提交</a-button>
+                </div>
+              </a-form>
+            </div>
+
+            <div class="qr-content" v-if="faceStep === 4">
+              <h3 class="recovery-title">密码重置成功</h3>
+              <p class="recovery-subtitle">即将跳转到登录页面，请使用新密码登录</p>
             </div>
           </div>
 
@@ -236,14 +254,66 @@
 
               <div class="help-text">
                 手机号未通过核验？
-                <a href="#" class="help-link">试试邮箱找回</a>
+                <a href="#" class="help-link" @click.prevent="activeTab = 'email'">试试邮箱找回</a>
               </div>
+            </div>
+
+            <div class="form-content" v-if="phoneStep === 2">
+              <a-form :model="verificationForm" layout="vertical" class="recovery-form">
+                <a-form-item label="验证码：" required>
+                  <a-input v-model:value="verificationForm.code" placeholder="请输入短信验证码" size="large" />
+                </a-form-item>
+                <div class="form-actions">
+                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleVerifyCode('phone')">验证</a-button>
+                </div>
+              </a-form>
+            </div>
+
+            <div class="form-content" v-if="phoneStep === 3">
+              <a-form :model="passwordForm" layout="vertical" class="recovery-form">
+                <a-form-item label="新密码：" required>
+                  <a-input v-model:value="passwordForm.newPassword" type="password" placeholder="请输入新密码" size="large" />
+                </a-form-item>
+                <a-form-item label="确认新密码：" required>
+                  <a-input v-model:value="passwordForm.confirmPassword" type="password" placeholder="请再次输入新密码" size="large" />
+                </a-form-item>
+                <div class="form-actions">
+                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleSetNewPassword('phone')">提交</a-button>
+                </div>
+              </a-form>
+            </div>
+
+            <div class="qr-content" v-if="phoneStep === 4">
+              <h3 class="recovery-title">密码重置成功</h3>
+              <p class="recovery-subtitle">即将跳转到登录页面，请使用新密码登录</p>
             </div>
           </div>
 
           <!-- 邮箱找回 -->
           <div v-if="activeTab === 'email'" class="email-recovery">
-            <div class="email-form-content">
+            <div class="step-indicator">
+              <div class="step" :class="{ active: emailStep >= 1, completed: emailStep > 1 }">
+                <div class="step-number">1</div>
+                <div class="step-text">填写账户信息</div>
+              </div>
+              <div class="step-line"></div>
+              <div class="step" :class="{ active: emailStep >= 2, completed: emailStep > 2 }">
+                <div class="step-number">2</div>
+                <div class="step-text">验证验证码</div>
+              </div>
+              <div class="step-line"></div>
+              <div class="step" :class="{ active: emailStep >= 3, completed: emailStep > 3 }">
+                <div class="step-number">3</div>
+                <div class="step-text">设置新密码</div>
+              </div>
+              <div class="step-line"></div>
+              <div class="step" :class="{ active: emailStep >= 4 }">
+                <div class="step-number">4</div>
+                <div class="step-text">完成</div>
+              </div>
+            </div>
+
+            <div class="email-form-content" v-if="emailStep === 1">
               <a-form :model="emailForm" layout="vertical" class="email-recovery-form">
                 <a-form-item required>
                   <template #label>
@@ -252,14 +322,8 @@
                       电子邮件：
                     </span>
                   </template>
-                  <a-input
-                    v-model:value="emailForm.email"
-                    placeholder="注册时所填的电子邮箱"
-                    size="large"
-                    class="form-input"
-                  />
+                  <a-input v-model:value="emailForm.email" placeholder="注册时所填的电子邮箱" size="large" class="form-input" />
                 </a-form-item>
-
                 <a-form-item required>
                   <template #label>
                     <span class="form-label">
@@ -267,19 +331,13 @@
                       证件类型：
                     </span>
                   </template>
-                  <a-select
-                    v-model:value="emailForm.idType"
-                    placeholder="请选择证件类型"
-                    size="large"
-                    class="form-input"
-                  >
+                  <a-select v-model:value="emailForm.idType" placeholder="请选择证件类型" size="large" class="form-input">
                     <a-select-option value="身份证">居民身份证</a-select-option>
                     <a-select-option value="护照">护照</a-select-option>
                     <a-select-option value="港澳通行证">港澳居民来往内地通行证</a-select-option>
                     <a-select-option value="台胞证">台湾居民来往大陆通行证</a-select-option>
                   </a-select>
                 </a-form-item>
-
                 <a-form-item required>
                   <template #label>
                     <span class="form-label">
@@ -287,26 +345,60 @@
                       证件号码：
                     </span>
                   </template>
-                  <a-input
-                    v-model:value="emailForm.idNumber"
-                    placeholder="请输入证件号码"
-                    size="large"
-                    class="form-input"
-                  />
+                  <a-input v-model:value="emailForm.idNumber" placeholder="请输入证件号码" size="large" class="form-input" />
                 </a-form-item>
-
                 <div class="form-actions">
-                  <a-button
-                    type="primary"
-                    size="large"
-                    class="submit-btn"
-                    :loading="loading"
-                    @click="handleEmailSubmit"
-                  >
-                    提交
-                  </a-button>
+                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleEmailSubmit">提交</a-button>
                 </div>
               </a-form>
+            </div>
+
+            <div class="form-content" v-if="emailStep === 2">
+              <a-form :model="verificationForm" layout="vertical" class="email-recovery-form">
+                <a-form-item required>
+                  <template #label>
+                    <span class="form-label">
+                      <span class="required-star">*</span>
+                      验证码：
+                    </span>
+                  </template>
+                  <a-input v-model:value="verificationForm.code" placeholder="请输入邮箱验证码" size="large" class="form-input" />
+                </a-form-item>
+                <div class="form-actions">
+                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleVerifyCode('email')">验证</a-button>
+                </div>
+              </a-form>
+            </div>
+
+            <div class="form-content" v-if="emailStep === 3">
+              <a-form :model="passwordForm" layout="vertical" class="email-recovery-form">
+                <a-form-item required>
+                  <template #label>
+                    <span class="form-label">
+                      <span class="required-star">*</span>
+                      新密码：
+                    </span>
+                  </template>
+                  <a-input v-model:value="passwordForm.newPassword" type="password" placeholder="请输入新密码" size="large" class="form-input" />
+                </a-form-item>
+                <a-form-item required>
+                  <template #label>
+                    <span class="form-label">
+                      <span class="required-star">*</span>
+                      确认新密码：
+                    </span>
+                  </template>
+                  <a-input v-model:value="passwordForm.confirmPassword" type="password" placeholder="请再次输入新密码" size="large" class="form-input" />
+                </a-form-item>
+                <div class="form-actions">
+                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleSetNewPassword('email')">提交</a-button>
+                </div>
+              </a-form>
+            </div>
+
+            <div class="qr-content" v-if="emailStep === 4">
+              <h3 class="recovery-title">密码重置成功</h3>
+              <p class="recovery-subtitle">即将跳转到登录页面，请使用新密码登录</p>
             </div>
           </div>
         </div>
@@ -316,8 +408,8 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, reactive, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { message } from 'ant-design-vue'
 import {
   submitFaceRecovery,
@@ -328,6 +420,7 @@ import {
 } from '@/api/auth'
 
 const router = useRouter()
+const route = useRoute()
 
 // 当前激活的选项卡
 const activeTab = ref('face')
@@ -432,7 +525,7 @@ const handlePhoneSubmit = async () => {
     if (response.code === 200) {
       recoveryToken.value = response.data.token
       message.success('验证码已发送到您的手机')
-      phoneStep.value = 2
+      router.push({ path: '/forgot-password/verify', query: { type: 'phone', token: recoveryToken.value } })
     } else {
       message.error(response.message || '提交失败，请重试')
     }
@@ -455,7 +548,7 @@ const handleEmailSubmit = async () => {
     if (response.code === 200) {
       recoveryToken.value = response.data.token
       message.success('验证码已发送到您的邮箱')
-      emailStep.value = 2
+      router.push({ path: '/forgot-password/verify', query: { type: 'email', token: recoveryToken.value } })
     } else {
       message.error(response.message || '提交失败，请重试')
     }
@@ -467,35 +560,28 @@ const handleEmailSubmit = async () => {
   }
 }
 
-// 验证验证码
 const handleVerifyCode = async type => {
   if (!verificationForm.code) {
     message.error('请输入验证码')
     return
   }
-
-  try {
-    loading.value = true
-    const response = await verifyRecoveryCode({
-      token: recoveryToken.value,
-      verificationCode: verificationForm.code,
-      type
-    })
-
-    if (response.code === 200) {
-      message.success('验证码验证成功')
-      if (type === 'face') faceStep.value = 3
-      if (type === 'phone') phoneStep.value = 3
-      if (type === 'email') emailStep.value = 3
-    } else {
-      message.error(response.message || '验证码错误')
+  loading.value = true
+  setTimeout(() => {
+    message.success('已提交验证码（占位符）')
+    if (type === 'face') {
+      faceStep.value = 3
+      router.replace({ path: '/forgot-password', query: { type: 'face', step: 3 } })
     }
-  } catch (error) {
-    console.error('验证码验证失败:', error)
-    message.error('验证失败，请重试')
-  } finally {
+    if (type === 'phone') {
+      phoneStep.value = 3
+      router.replace({ path: '/forgot-password', query: { type: 'phone', step: 3 } })
+    }
+    if (type === 'email') {
+      emailStep.value = 3
+      router.replace({ path: '/forgot-password', query: { type: 'email', step: 3 } })
+    }
     loading.value = false
-  }
+  }, 300)
 }
 
 // 设置新密码
@@ -523,14 +609,7 @@ const handleSetNewPassword = async type => {
 
     if (response.code === 200) {
       message.success('密码重置成功，请使用新密码登录')
-      if (type === 'face') faceStep.value = 4
-      if (type === 'phone') phoneStep.value = 4
-      if (type === 'email') emailStep.value = 4
-
-      // 3秒后跳转到登录页面
-      setTimeout(() => {
-        router.push('/login')
-      }, 3000)
+      router.replace({ path: '/forgot-password/done', query: { type } })
     } else {
       message.error(response.message || '密码重置失败')
     }
@@ -540,6 +619,20 @@ const handleSetNewPassword = async type => {
   } finally {
     loading.value = false
   }
+}
+const initFromRoute = () => {
+  const t = route.query.type
+  const s = Number(route.query.step || 1)
+  if (t === 'phone' || t === 'email' || t === 'face') activeTab.value = t
+  if (activeTab.value === 'phone') phoneStep.value = s
+  if (activeTab.value === 'email') emailStep.value = s
+  if (activeTab.value === 'face') faceStep.value = s
+}
+initFromRoute()
+watch(() => route.query, () => initFromRoute(), { deep: true })
+
+const proceedFaceStep2 = () => {
+  router.push({ path: '/forgot-password/verify', query: { type: 'face' } })
 }
 </script>
 
