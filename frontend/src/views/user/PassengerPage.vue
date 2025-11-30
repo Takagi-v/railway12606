@@ -275,6 +275,37 @@ const closeForm = () => {
 }
 
 const submitForm = async () => {
+  const v = form.value
+  const phoneOk = /^\d{11}$/.test(String(v.phone || ''))
+  const nameOk = String(v.name || '').trim().length >= 2
+  const idTypeOk = !!v.id_type
+  const idNoOk = String(v.id_number || '').trim().length > 0
+  const pTypeOk = !!v.passenger_type
+  if (!nameOk) {
+    message.error('请填写有效的姓名')
+    return
+  }
+  if (!idTypeOk) {
+    message.error('请选择证件类型')
+    return
+  }
+  if (!idNoOk) {
+    message.error('请填写证件号码')
+    return
+  }
+  if (!phoneOk) {
+    message.error('请填写11位手机号')
+    return
+  }
+  if (!pTypeOk) {
+    message.error('请选择旅客类型')
+    return
+  }
+  const dup = passengers.value.some(p => String(p.idNo) === String(v.id_number) && String(p.idTypeLabel) === String(v.id_type))
+  if (dup) {
+    message.error('该证件号的乘车人已存在')
+    return
+  }
   try {
     if (formMode.value === 'create') {
       const res = await createPassenger(form.value)

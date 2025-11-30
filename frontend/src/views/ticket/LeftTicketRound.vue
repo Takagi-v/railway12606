@@ -708,6 +708,10 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import dayjs from 'dayjs'
 import { message, DatePicker } from 'ant-design-vue'
+
+// 单独引入 leftTicket 样式，避免污染全局
+import '@/assets/12306-leftticket/leftTicket.css'
+
 import Header12306 from '@/components/Header12306.vue'
 import Footer from '@/components/LoginFooter.vue'
 import { useRouter, useRoute } from 'vue-router'

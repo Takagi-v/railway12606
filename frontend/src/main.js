@@ -12,7 +12,11 @@ import router from './router'
 import './assets/main.css'
 import './styles/theme.css'
 import './assets/design-system.css'
-import './assets/12306-leftticket/leftTicket.css'
+// [WARNING] 禁止在此处引入 12306 相关的全局 CSS (如 leftTicket.css, index_y_v50003.css)
+// 这些样式文件包含大量通用类名，会污染整个应用的样式。
+// 请务必在具体组件中使用 <style scoped> @import ... </style> 进行引入。
+// 详情请参考：frontend/CSS_BEST_PRACTICES.md
+// import './assets/12306-leftticket/leftTicket.css'
 import antdTheme from './config/theme.js'
 
 // 权限相关
