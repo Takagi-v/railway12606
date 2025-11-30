@@ -1,0 +1,2601 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>中国铁路12306网站</title>
+  <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon" />
+  <link href="../fonts/iconfont.css" rel="stylesheet" />
+  <!-- <link href="../css/global.css" rel="stylesheet" />
+  <link href="../css/public.css" rel="stylesheet" />
+  <link href="../css/center.css" rel="stylesheet" /> 
+  <link rel="stylesheet" href="../css/pagination.css" /> -->
+  <!-- 日历控件 -->
+  <!-- <link href="../css/common/calendarNew.css" rel="stylesheet" /> -->
+  <link rel="stylesheet" href="../css/ticket_index_v70004.css" />
+</head>
+<style>
+  .panel-tab .tab-item {
+    min-width: 988px;
+  }
+
+  .label-primary {
+    display: inline-block;
+    border: 1px solid #ffb5b5;
+    height: 18px;
+    line-height: 16px;
+    padding: 0 5px;
+    background: #fff;
+    color: #ff4646;
+    font-size: 12px;
+    font-style: normal;
+    vertical-align: middle;
+  }
+
+  .order-cancel-tips .order-cancel-count {
+    padding: 10px 0px;
+    margin: 10px 0;
+    line-height: 24px;
+    color: #666;
+    border-top: 1px dashed #dedede;
+    border-bottom: 1px dashed #dedede;
+  }
+
+  .order-cancel-tips .order-cancel-count li {
+    padding-left: 30px;
+  }
+
+  .order-cancel-tips .order-cancel-count li:first-child {
+    border-bottom: 1px dashed #dedede;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    margin-bottom: 10px;
+  }
+</style>
+
+<body>
+  <!-- 头部 -->
+  <!-- 公用-头部 start -->
+<div class="header" role="banner">
+  <div class="wrapper">
+    <!-- 头部内容 -->
+    <div class="header-con">
+      <h1 class="logo">
+        <a
+          name="g_href"
+          data-type="1"
+          data-href="index.html"
+          data-redirect="Y"
+          href="javascript:;"
+          >中国铁路12306</a
+        >
+      </h1>
+      <div class="header-right">
+        <!-- 搜索条 -->
+        <div class="header-search" style="width: 380px">
+          <div class="search-bd" style="width: 350px">
+            <input type="password" value="" style="display: none" />
+            <input
+              type="text"
+              class="search-input"
+              id="search-input"
+              aria-label="搜索车票、餐饮、常旅客、相关规章"
+              value=""
+              placeholder="搜索车票/餐饮/常旅客/相关规章"
+              auto-complete="new-password"
+              aria-haspopup="true"
+            />
+            <!-- 搜索提示 -->
+            <div class="search-down">
+              <a href="javascript:;" class="close">关闭</a>
+              <ul
+                class="search-down-list"
+                role="listbox"
+                aria-expanded="true"
+              ></ul>
+            </div>
+            <!-- 搜索历史 -->
+            <div class="search-history">
+              <a href="javascript:;" class="history-clear">清除</a>
+              <h3 class="search-history-tit">搜索历史</h3>
+              <ul
+                class="search-history-list"
+                role="listbox"
+                aria-expanded="true"
+              ></ul>
+            </div>
+          </div>
+          <a class="search-btn" href="javascript:;" aria-label="点击搜索，搜索结果页面可能超出无障碍服务范围">
+            <i class="icon icon-search"></i>
+          </a>
+        </div>
+        <!-- 右侧菜单 -->
+        <ul class="header-menu" id="topMenu">
+          <li class="menu-item">
+            <a id="toolbarSwitch" href="javascript:;" class="menu-nav-hd">无障碍</a>
+          </li>
+          <li class="menu-item menu-line">|</li>
+          <li class="menu-item">
+            <a id="caringEdition" href="javascript:;" class="menu-nav-hd">敬老版</a>
+          </li>
+          <li class="menu-item menu-line">|</li>
+          <li class="menu-item menu-nav" role="menuitem">
+            <a
+              href="https://www.12306.cn/en/index.html"
+              class="menu-nav-hd item"
+              title="English"
+              aria-controls="megamenu-1"
+              aria-expanded="false"
+              aria-haspopup="true"
+              >English
+              <i class="caret"></i>
+            </a>
+            <ul
+              class="menu-nav-bd"
+              style="width: 90px"
+              id="megamenu-1"
+              role="menu"
+              aria-hidden="true"
+            >
+              <li>
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="index.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  title="简体中文"
+                  >简体中文</a
+                >
+              </li>
+              <li>
+                <a href="https://www.12306.cn/en/index.html" title="English"
+                  >English</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li class="menu-item menu-line">|</li>
+          <li class="menu-item menu-nav" role="menuitem">
+            <a
+              name="g_href"
+              data-type="2"
+              data-href="view/index.html"
+              data-redirect="Y"
+              href="javascript:;"
+              class="menu-nav-hd item"
+              aria-controls="megamenu-2"
+              aria-expanded="false"
+              aria-haspopup="true"
+              >我的12306
+              <i class="caret"></i>
+            </a>
+            <ul class="menu-nav-bd">
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/train_order.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >火车票订单</a
+                >
+              </li>
+              <!-- <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/prefilled_order_center.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >预填单</a
+                >
+              </li> -->
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/lineUp_order.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >候补订单</a
+                >
+              </li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/commutation_order.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >计次•定期票订单</a
+                >
+              </li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/commutation_ticket_order.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >约号订单</a
+                >
+              </li>
+              <!-- <li>
+                <a
+                  name="g_href"
+                  data-type="8"
+                  data-href="view/inter_center.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >国际列车订单</a
+                >
+              </li> -->
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/snow_order.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >雪具快运订单</a
+                >
+              </li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/invoice_index.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >电子发票</a
+                >
+              </li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/personal_travel.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >本人车票</a
+                >
+              </li>
+              <li class="nav-line"></li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="10"
+                  data-href="queryMyOrder.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >我的餐饮•特产</a
+                >
+              </li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/my_insurance.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >我的保险</a
+                >
+              </li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="3"
+                  data-href="welcome.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >我的会员</a
+                >
+              </li>
+              <li class="nav-line"></li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/information.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >查看个人信息</a
+                >
+              </li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/userSecurity.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >账户安全</a
+                >
+              </li>
+              <li class="nav-line"></li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/passengers.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >乘车人</a
+                >
+              </li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/address_init.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >地址管理</a
+                >
+              </li>
+              <li class="nav-line"></li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/icentre_serviceQuery.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >温馨服务查询</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li class="menu-item menu-line">|</li>
+          <li id="J-header-login" class="menu-item menu-login" role="menuitem">
+            <a
+              name="g_href"
+              data-type="2"
+              data-href="resources/login.html"
+              data-redirect="Y"
+              href="javascript:;"
+              >登录</a
+            ><a
+              name="g_href"
+              data-type="2"
+              data-href="regist/init"
+              data-redirect="Y"
+              href="javascript:;"
+              class="ml"
+              >注册</a
+            >
+          </li>
+          <li
+            id="J-header-logout"
+            style="display: none"
+            class="menu-item menu-nav menu-login"
+            role="menuitem"
+          >
+            您好，
+            <a
+              login-type="personal"
+              name="g_href"
+              data-type="2"
+              data-href="view/index.html"
+              data-redirect="Y"
+              href="javascript:;"
+              class="txt-primary menu-nav-my-hd"
+              style="display: inline-block;vertical-align:top;overflow:hidden;white-space:nowrap;max-width: 72px;"
+            ></a
+            >&nbsp;|&nbsp;<a class="logout" href="javascript:;">退出</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- 导航 -->
+  <div class="nav-box" role="navigation">
+    <ul class="nav" id="wbomeal" role="menubar">
+      <li id="J-index" class="nav-item nav-item-w1">
+        <a
+          name="g_href"
+          data-type="1"
+          data-href="index.html"
+          data-redirect="Y"
+          href="javascript:;"
+          class="nav-hd"
+          >首页</a
+        >
+      </li>
+      <li id="J-chepiao" class="nav-item nav-item-w1">
+        <a
+          href="javascript:void(0)"
+          class="nav-hd item"
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-controls="megamenu-3"
+          >车票
+          <i class="icon icon-down"></i>
+        </a>
+        <div class="nav-bd" id="megamenu-3">
+          <div class="nav-bd-item nav-col2">
+            <h3 class="nav-tit">购买</h3>
+            <ul class="nav-con" role="menu" aria-hidden="true">
+              <li class="nav_dan" role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="leftTicket/init?linktypeid=dc"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >单程</a
+                >
+              </li>
+              <li class="nav_wang" role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="leftTicket/init?linktypeid=wf"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >往返</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="lcQuery/init"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >中转换乘</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/commutation_index.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >计次•定期票</a
+                >
+              </li>
+              <!-- <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/prefilled_home.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >购票预填</a
+                >
+              </li> -->
+              <!-- <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="8"
+                  data-href="view/inter_query_ticket.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >国际列车购票</a
+                >
+              </li> -->
+            </ul>
+          </div>
+          <div class="nav-bd-item nav-col2">
+            <h3 class="nav-tit">变更</h3>
+            <ul class="nav-con" role="menu" aria-hidden="true">
+              <li class="nav_ref" role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/train_order.html?type=2&typefilt=4"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >退票</a
+                >
+              </li>
+              <li class="nav_res" role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/train_order.html?type=2&typefilt=2"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >改签</a
+                >
+              </li>
+              <li class="nav_chg" role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/train_order.html?type=2&typefilt=3"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >变更到站</a
+                >
+              </li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="nav-bd-item nav-col2">
+            <h3 class="nav-tit border-none">更多</h3>
+            <ul class="nav-con" role="menu" aria-hidden="true">
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/ticket/zt_card.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >中铁银通卡</a
+                >
+              </li>
+              <!-- <li class="border-none" role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/ticket/through_train.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >广九直通车</a
+                >
+              </li> -->
+              <!-- <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/ticket/railway.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >市郊快速铁路</a
+                >
+              </li> -->
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/ticket/international_train.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >国际列车</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <li id="J-tuangoufuwu" class="nav-item" role="menuitem">
+        <a
+          href="javascript:void(0) "
+          class="nav-hd item"
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-controls="megamenu-4"
+          >团购服务
+          <i class="icon icon-down"></i>
+        </a>
+        <div class="nav-bd" id="megamenu-4">
+          <div class="nav-bd-item nav-col6">
+            <ul class="nav-con" role="menu" aria-hidden="true">
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/group/group_management.html?type=1"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >务工人员</a
+                >
+              </li>
+
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/group/group_management.html?type=2"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >学生团体</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <li id="J-huiyuanfuwu" class="nav-item" role="menuitem">
+        <a
+          href="javascript:void(0) "
+          class="nav-hd item"
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-controls="megamenu-5"
+          >会员服务
+          <i class="icon icon-down"></i>
+        </a>
+        <div class="nav-bd" id="megamenu-5">
+          <div class="nav-bd-item nav-col6">
+            <ul class="nav-con" role="menu" aria-hidden="true">
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="3"
+                  data-href="index.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >会员管理</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="3"
+                  data-href="index.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >积分账户</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="3"
+                  data-href="index.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >积分兑换</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="3"
+                  data-href="index.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >会员专享</a
+                >
+              </li>
+              <li class="border-none" role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="3"
+                  data-href="welcome.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >会员中心</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <li id="J-zhanchefuwu" class="nav-item" role="menuitem">
+        <a
+          href="javascript:void(0) "
+          class="nav-hd item"
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-controls="megamenu-6"
+          >站车服务
+          <i class="icon icon-down"></i>
+        </a>
+        <div class="nav-bd" id="megamenu-6">
+          <div class="nav-bd-item nav-col4" role="menu" aria-hidden="true">
+            <ul class="nav-con">
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/icentre_qxyyInfo.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >重点旅客预约</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/station/hand.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >便民托运</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/station/shared_Car.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >约车服务</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="4"
+                  data-href="czyd_2143/"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >车站引导</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/icentre_lostInfo.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >遗失物品查找</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/station/train_intro.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >动车组介绍</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="4"
+                  data-href="zcfc_2548/"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >站车风采</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- <div class="nav-bd-item ">
+              <ul class="nav-con ">
+                  <li>
+                      <a name="g_href" data-type="4" data-href="czyd_2143/" data-redirect="Y" href="javascript:;">车站引导</a>
+                  </li>
+                  <li>
+                      <a name="g_href" data-type="4" data-href="zcfc_2548/" data-redirect="Y" href="javascript:;">站车风采</a>
+                  </li>
+              </ul>
+          </div> -->
+        </div>
+      </li>
+      <li id="J-shanlvfuwu" class="nav-item" role="menuitem">
+        <a
+          href="javascript:void(0) "
+          class="nav-hd item"
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-controls="megamenu-7"
+          >商旅服务
+          <i class="icon icon-down"></i>
+        </a>
+        <div class="nav-bd" id="megamenu-7">
+          <div class="nav-bd-item nav-col6">
+            <ul class="nav-con" role="menu" aria-hidden="true">
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="10"
+                  data-href="index.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >餐饮•特产</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/my_insurance.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >保险</a
+                >
+              </li>
+              <li class="border-none" role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/snow_checkedBaggage.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >雪具快运</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <li id="J-chuxingzhinan" class="nav-item" role="menuitem">
+        <a
+          href="javascript:void(0) "
+          class="nav-hd item"
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-controls="megamenu-8"
+          >出行指南
+          <i class="icon icon-down"></i>
+        </a>
+        <div class="nav-bd" id="megamenu-8">
+          <div class="nav-bd-item nav-col2">
+            <h3 class="nav-tit">常见问题</h3>
+            <ul class="nav-con" role="menu" aria-hidden="true">
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="gonggao/ticketType.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >车票</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="gonggao/ticketWindow.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >购票</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="gonggao/windowEndorse.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >改签</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="gonggao/windowRefund.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >退票</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="gonggao/help.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  class="txt-lighter"
+                  >更多>></a
+                >
+              </li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="nav-bd-item nav-col2">
+            <h3 class="nav-tit">旅客须知</h3>
+            <ul class="nav-con" role="menu" aria-hidden="true">
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="gonggao/usersNeedToKnow.html?linktypeid=txt"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >铁路电子客票</a
+                >
+              </li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="gonggao/saleTicketMeans.html?linktypeid=means5"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >身份核验</a
+                >
+              </li>
+              <li>
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="gonggao/help.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  class="txt-lighter"
+                  >更多>></a
+                >
+              </li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="nav-bd-item nav-col2">
+            <h3 class="nav-tit border-none">相关章程</h3>
+            <ul class="nav-con" role="menu" aria-hidden="true">
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="gonggao/saleTicketMeans.html?linktypeid=means2"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >铁路旅客运输规程</a
+                >
+              </li>
+              <li class="border-none" role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="gonggao/saleTicketMeans.html?linktypeid=means7"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >广深港高速铁路跨境旅客运输组织规则</a
+                >
+              </li>
+              <li
+                style="text-overflow: ellipsis; white-space: nowrap"
+                role="menuitemradio"
+              >
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="gonggao/saleTicketMeans.html?linktypeid=means6"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >铁路旅客禁止、限制携带和托运物品目录</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="gonggao/help.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  class="txt-lighter"
+                  >更多>></a
+                >
+              </li>
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <li id="J-xinxichaxun" class="nav-item last" role="menuitem">
+        <a
+          href="javascript:void(0) "
+          class="nav-hd item"
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-controls="megamenu-9"
+          >信息查询
+          <i class="icon icon-down"></i>
+        </a>
+        <div class="nav-bd" id="megamenu-9">
+          <div class="nav-bd-item nav-col5">
+            <h3 class="nav-tit border-none">常用查询</h3>
+            <ul class="nav-con" role="menu" aria-hidden="true">
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="zwdch/init"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >正晚点</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="queryTrainInfo/init"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >时刻表</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="view/queryPublicIndex.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >公布票价</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/infos/ticket_check.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >检票口</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/infos/sale_time.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >起售时间</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-href="https://12306.weather.com.cn/pc.html"
+                  data-redirect="N"
+                  data-target="_blank"
+                  href="javascript:;"
+                  >天气</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/infos/jiaotong.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >交通查询</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="2"
+                  data-href="queryAgencySellTicket/init"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >代售点</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/infos/service_number.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >客服电话</a
+                >
+              </li>
+              <li role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="1"
+                  data-href="view/infos/train-query-status.html"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >列车状态</a
+                >
+              </li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="nav-bd-item">
+            <ul class="nav-con nav-con-pt" role="menu" aria-hidden="true">
+              <li class="border-none" role="menuitemradio">
+                <a id="gLink" href="javascript:void(0)">最新发布</a>
+              </li>
+              <li class="border-none" role="menuitemradio">
+                <a
+                  name="g_href"
+                  data-type="6"
+                  data-href="queryDishonest/init"
+                  data-redirect="Y"
+                  href="javascript:;"
+                  >信用信息</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<!-- 公用-头部 end -->
+
+
+  <!-- 主体内容 -->
+  <div class="wrapper content">
+    <!-- 面包屑 -->
+    <div class="breadcrumb">
+      当前位置：<a href="./index.html">个人中心</a><span class="sep">></span><span class="active">火车票订单</span>
+    </div>
+    <!-- 个人中心 -->
+    <div class="center-box">
+      <!-- 个人中心左侧 -->
+      <!-- 个人中心左侧菜单 -->
+<ul class="center-menu" role="menubar">
+  <li class="menu-item" id="gerenzhongxin" role="menuitem">
+    <h2 class="menu-tit">
+      <a href="./index.html">个人中心</a>
+    </h2>
+  </li>
+  <li class="menu-item" role="menuitem">
+    <h2 class="menu-tit">订单中心<i class="icon icon-switch"></i></h2>
+    <ul class="menu-sub" role="menubar">
+      <li id="chepiaodingdan" role="menuitem">
+        <a href="./train_order.html">火车票订单</a>
+      </li>
+      <!-- <li id="yuyuepiaodingdan" role="menuitem">
+        <a href="./prefilled_order_center.html">预填单</a>
+      </li> -->
+      <li id="houbudingdan" role="menuitem">
+        <a href="./lineUp_order.html">候补订单</a>
+      </li>
+      <li id="chanpindingdan" title="计次•定期票订单" role="menuitem">
+        <a href="./commutation_order.html">计次•定期票订单</a>
+      </li>
+      <li id="yuehaodingdan" role="menuitem">
+        <a href="./commutation_ticket_order.html">约号订单</a>
+      </li>
+      <!-- <li id="internationOrder" role="menuitem">
+        <a
+          name="g_href"
+          data-type="8"
+          data-href="view/inter_center.html"
+          data-redirect="Y"
+          href="javascript:;"
+          >国际列车订单</a
+        >
+      </li> -->
+      <li id="xuejudingdan" role="menuitem">
+        <a href="./snow_order.html">雪具快运订单</a>
+      </li>
+      <li role="menuitem">
+        <a
+          name="g_href"
+          data-type="10"
+          data-href="queryMyOrder.html"
+          data-redirect="Y"
+          href="javascript:;"
+          >餐饮•特产</a
+        >
+      </li>
+      <li id="baoxiandingdan" role="menuitem">
+        <a href="./my_insurance.html">保险订单</a>
+      </li>
+      <li id="invoiceMeau" role="menuitem">
+        <a href="./invoice_index.html">电子发票</a>
+      </li>
+    </ul>
+  </li>
+  <li id="gerenxingcheng" class="menu-item" role="menuitem">
+    <h2 class="menu-tit"><a href="./personal_travel.html">本人车票</a></h2>
+  </li>
+  <li class="menu-item" role="menuitem">
+    <h2 class="menu-tit">
+      <a
+        name="g_href"
+        data-type="3"
+        data-href="welcome.html"
+        data-redirect="Y"
+        href="javascript:;"
+        >会员中心</a
+      >
+    </h2>
+  </li>
+  <li class="menu-item" role="menuitem">
+    <h2 class="menu-tit">个人信息<i class="icon icon-switch"></i></h2>
+    <ul class="menu-sub" role="menubar">
+      <li id="gerenxinxi" role="menuitem">
+        <a href="./information.html">查看个人信息</a>
+      </li>
+      <li id="zhanghaoanquan" role="menuitem">
+        <a href="./userSecurity.html">账号安全</a>
+      </li>
+      <li id="shoujiheyan" role="menuitem">
+        <a href="./userSecurity_bindTel.html">手机核验</a>
+      </li>
+      <!-- <li id="reserveMobile" role="menuitem">
+        <a href="./reserveMobilePhone.html">联系方式预留</a>
+      </li> -->
+      <li id="zhanghaozhuxiao" role="menuitem">
+        <a href="./accountCancellation.html">账号注销</a>
+      </li>
+    </ul>
+  </li>
+  <li class="menu-item" role="menuitem">
+    <h2 class="menu-tit">常用信息管理<i class="icon icon-switch"></i></h2>
+    <ul class="menu-sub" role="menubar">
+      <li id="cylianxiren" role="menuitem">
+        <a href="./passengers.html">乘车人</a>
+      </li>
+      <li id="chepiaokuaidi" role="menuitem">
+        <a href="./address_init.html">地址管理</a>
+      </li>
+    </ul>
+  </li>
+  <li class="menu-item" role="menuitem">
+    <h2 class="menu-tit">温馨服务<i class="icon icon-switch"></i></h2>
+    <ul class="menu-sub" role="menubar">
+      <li id="lvkeyuyue" role="menuitem">
+        <a href="./icentre_qxyyInfo.html">重点旅客预约</a>
+      </li>
+      <li id="yishiwupin" role="menuitem">
+        <a href="./icentre_lostInfo.html">遗失物品查找</a>
+      </li>
+      <!-- <li id="yiqingshensu" role="menuitem">
+        <a href="./icentre_epidemic.html">限制购票求助</a>
+      </li> -->
+      <li id="J-icentre_serviceQuery" role="menuitem">
+        <a href="./icentre_serviceQuery.html">服务查询</a>
+      </li>
+    </ul>
+  </li>
+  <li class="menu-item" role="menuitem">
+    <h2 class="menu-tit">投诉和建议<i class="icon icon-switch"></i></h2>
+    <ul class="menu-sub" role="menubar">
+      <li id="J-advice_complaintInfo" role="menuitem">
+        <a href="./advice_complaintInfo.html">投诉</a>
+      </li>
+      <li id="J-advice_adviceInfo" role="menuitem">
+        <a href="./advice_adviceInfo.html">建议</a>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+      <!-- 个人中心右侧 -->
+      <div class="center-main">
+        <!-- 待付款 、 未完成 、 历史订单-->
+        <div class="subway-order">
+          <div class="panel-tab">
+            <div class="tab-hd">
+              <ul class="tab-hd-list" id="order_tab">
+                <li class="active">
+                  <a href="javascript:;">未完成订单 </a>
+                </li>
+                <li data-type="0">
+                  <a href="javascript:;">未出行订单 </a>
+                </li>
+                <li data-type="1"><a href="javascript:;">历史订单</a></li>
+              </ul>
+            </div>
+            <div class="tab-bd">
+              <!-- 待付款订单 -->
+              <div class="tab-item" style="display: block">
+                <!-- 订单排队中 -->
+                <div class="order-queue" id="paiduizhong" style="display: none">
+                  <div class="queue-state">
+                    <img src="../images/center/queue.gif" class="queue-ico" alt="" />
+                    <div class="queue-info">
+                      <h2>车票购买排队中…</h2>
+                      <p>请稍等，正在为您占座</p>
+                    </div>
+                  </div>
+                  <div class="queue-right">
+                    <div class="queue-time" id="time_5_30" style="display: none">
+                      预计时间：<span class="txt-num" id="line_minute"></span>分<span class="txt-num"
+                        id="line_second"></span>秒
+                    </div>
+                    <div class="queue-time" id="more_30" style="display: none">
+                      预计时间：超过<span class="txt-num" id="line_minute">30</span>分钟，请耐心等待
+                    </div>
+                    <div class="queue-time" id="low_5" style="display: none">
+                      <span class="txt-num" id="line_minute">正在处理，请耐心等待</span>
+                    </div>
+                    <a href="javascript:void(0)" class="btn" id="cencle_paidui_btn">取消排队</a>
+                  </div>
+                </div>
+                <!-- 订单排队中-排队失败 -->
+                <div class="order-queue" id="paiduierror" style="display: none">
+                  <div class="queue-state">
+                    <i class="icon icon-plaint queue-ico queue-error"></i>
+                    <div class="queue-info">
+                      <h2>排队失败</h2>
+                    </div>
+                  </div>
+                  <div class="queue-right">
+                    <a href="javascript:void(0)" class="btn btn-primary" id="chongxinpay">重新购票</a>
+                    <a class="btn" id="jvbao_btn" href="#" style="display: none">举报</a>
+                  </div>
+                </div>
+                <div id="chupiao_error" style="display: none">
+                  <!-- 出票失败 -->
+                  <div class="panel-error">
+                    <div class="error-pic"></div>
+                    <div class="error-con">
+                      <div class="error-tit">哎呀，出票失败了！</div>
+                      <div class="error-txt" id="chupiao-error-text"></div>
+                    </div>
+                  </div>
+                  <!-- 车次信息 -->
+                  <div class="ticket-error-box">
+                    <div>车次信息</div>
+                    <div>
+                      <span class="txt-blg" id="err_date_start"></span>
+                      <span class="txt-blg" id="err_checi"></span>
+                      <span id="err_t_type">车次</span>
+                      <span class="txt-blg" id="err_from_s"></span>站
+                      <span class="txt-blg" id="err_date_go"></span>
+                      -
+                      <span class="txt-blg" id="err_to_s"></span>站
+                    </div>
+                    <div class="btn-center mt">
+                      <a href="javascript:void(0)" class="btn btn-primary" id="err_chongxinpay">重新购票</a>
+                      <a class="btn" id="err_jvbao_btn" href="#" style="display: none">举报</a>
+                    </div>
+                  </div>
+                </div>
+                <!-- 待付款订单列表 -->
+                <div class="order-panel order-panel-unpaid">
+                  <!-- 订单-订单列表头部 -->
+
+                  <table class="order-panel-head title-text">
+                    <colgroup>
+                      <col class="col-train" />
+                      <col class="col-passenger" />
+                      <col class="col-seat" />
+                      <col class="col-price" />
+                      <col class="col-state" />
+                      <col />
+                    </colgroup>
+
+                    <tr>
+                      <th>车次信息</th>
+                      <th style="width: 200px">旅客信息</th>
+                      <th>席位信息</th>
+                      <th>票价</th>
+                      <th>车票状态</th>
+                      <!-- <th>总金额</th> -->
+                    </tr>
+                  </table>
+                  <div>
+                    <div class="order-item" id="not_complete"></div>
+                    <div class="tips-box mt-lg shao-tips" style="display: none">
+                      <h4 class="tips-tit">温馨提示</h4>
+                      <p>1.席位已锁定，请在指定时间内完成网上支付。</p>
+                      <p>2.逾期未支付，系统将取消本次交易。</p>
+                      <p>
+                        3.在完成支付或取消本订单之前，您将无法购买其他车票。
+                      </p>
+                      <p>
+                        4.未尽事宜详见《国铁集团铁路旅客运输规程》《广深港高速铁路跨境旅客运输组织规则》《中老铁路跨境旅客联运组织规则》等有关规定和车站公告。
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 未出行订单 -->
+              <div class="tab-item" style="display: none">
+                <!-- 未出行订单列表 -->
+                <div class="order-panel order-panel-history">
+                  <!-- 订单-搜索表单 -->
+                  <div class="search-form-mini">
+                    <div class="form-item">
+                      <div class="sel w160">
+                        <div class="sel-hd">
+                          <div class="sel-inner" id="chuxunType">
+                            按订票日期查询
+                          </div>
+                          <i class="icon icon-caret-down"></i>
+                        </div>
+                        <div class="sel-bd select-old">
+                          <ul class="sel-list" id="wcx_seach_type">
+                            <li id="ifSelected" class="selected ifSelected">
+                              按订票日期查询
+                            </li>
+                            <li>按乘车日期查询</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-item">
+                      <div class="input-box input-data w160">
+                        <input type="text" id="noTripFromDate" class="input" value="" aria-label="请输入日期，例如2021杠01杠01"
+                          autocomplete="off" />
+                        <i class="icon icon-date" data-click="noTripFromDate"></i>
+                      </div>
+                      <span class="txt-lighter"> - </span>
+                      <div class="input-box input-data w160">
+                        <input type="text" id="noTripToDate" class="input" value="" aria-label="请输入日期，例如2021杠01杠01"
+                          autocomplete="off" />
+                        <i class="icon icon-date" data-click="noTripToDate"></i>
+                      </div>
+                    </div>
+                    <div class="form-item">
+                      <div class="input-box input-data w160">
+                        <input type="text" class="input" id="noTripName" placeholder="订单号/车次/姓名" autocomplete="off" />
+                        <i class="icon icon-clear"></i>
+                      </div>
+                    </div>
+                    <div class="form-item">
+                      <a href="javascript:;" class="btn w100" id="searchNoTrip">查询</a>
+                    </div>
+                  </div>
+                  <!-- <div
+                      style="
+                        border: 1px solid #ffddba;
+                        background: #fffbf8;
+                        padding: 10px 20px;
+                        text-align: left;
+                        color: #ff8000;
+                      "
+                    >
+                      <div>
+                        出行旅客较多，请您务必预留足够的安检、候车检票时间，尽量提前到站，以免耽误您的行程。
+                      </div>
+                    </div> -->
+                  <!-- <div class="order-filter" style="margin-top: 20px">
+                    <a href="javascript:;" class="active">全部</a>
+                    <a href="javascript:;">可改签</a>
+                    <a href="javascript:;">可变更到站</a>
+                    <a href="javascript:;">可退票</a>
+                  </div> -->
+                  <!-- 订单-订单列表头部 -->
+                  <table class="order-panel-head title-text">
+                    <colgroup>
+                      <col class="col-train" />
+                      <col class="col-passenger" />
+                      <col class="col-seat" />
+                      <col class="col-price" />
+                      <col class="col-state" />
+                      <col />
+                    </colgroup>
+                    <tr>
+                      <th>车次信息</th>
+                      <th style="width: 200px">旅客信息</th>
+                      <th>席位信息</th>
+                      <th>票价</th>
+                      <th>车票状态</th>
+                      <!-- <th>总金额</th> -->
+                    </tr>
+                  </table>
+                  <div id="not_travel"></div>
+                  <div id="J-Trip" class="pagination mt-lg"></div>
+
+                  <div class="tips-box mt-lg duo-tips" style="display: none">
+                    <h4 class="tips-tit">温馨提示</h4>
+                    <p>1.订单信息保存期限为30日。</p>
+                    <p>
+                      2.在12306.cn网站改签和退票，改签应不晚于票面日期当日24:00，变更到站不晚于开车前48小时，退票应不晚于开车前。
+                    </p>
+                    <p>3.在本网站办理退票，只能逐次单张办理。</p>
+                    <p>
+                      4.
+                      车票改签、变更到站均只能办理一次。已经改签或变更到站的车票不再办理改签；对已改签车票、团体票暂不提供“变更到站”服务。
+                    </p>
+                    <p>
+                      5.退票、改签、变更到站后，如有应退票款，按购票时所使用的在线支付工具相关规定，将在规定时间内退还至原在线支付工具账户，请及时查询。如有疑问，请致电12306人工客服查询。
+                    </p>
+                    <!-- <p>6.如需取消或查看车票快递状态，请点击“快递详情”。</p> -->
+                    <p>
+                      7.投保、退保或查看电子保单状态，请点击“我的保险”或“购/赠/退保险”。
+                    </p>
+                    <p>
+                      8.“除有效期有其他规定的车票外，车票当日当次有效。旅客自行中途上车、下车的，未乘区间的票款不予退还。”
+                    </p>
+                    <p>
+                      9.如因运力原因或其他不可控因素导致列车调度调整时，当前车型可能会发生变动。
+                    </p>
+                    <p>
+                      10.未尽事宜详见《国铁集团铁路旅客运输规程》《广深港高速铁路跨境旅客运输组织规则》《中老铁路跨境旅客联运组织规则》等有关规定和车站公告。
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- 历史订单 -->
+              <div class="tab-item" style="display: none">
+                <!-- 历史订单列表 -->
+                <div class="order-panel order-panel-history">
+                  <!-- 订单-搜索表单 -->
+                  <div class="search-form-mini">
+                    <div class="form-item">
+                      <div class="sel-inner">乘车日期</div>
+                    </div>
+                    <div class="form-item">
+                      <div class="input-box input-data w160">
+                        <input type="text" id="historyFromDate" class="input" value="" aria-label="请输入日期，例如2021杠01杠01"
+                          autocomplete="off" />
+                        <i class="icon icon-date" data-click="historyFromDate"></i>
+                      </div>
+                      <span class="txt-lighter"> - </span>
+                      <div class="input-box input-data w160">
+                        <input type="text" id="historyToDate" class="input" value="" aria-label="请输入日期，例如2021杠01杠01"
+                          autocomplete="off" />
+                        <i class="icon icon-date" data-click="historyToDate"></i>
+                      </div>
+                    </div>
+                    <div class="form-item">
+                      <div class="input-box input-data w160">
+                        <input type="text" class="input" placeholder="订单号/车次/姓名" id="historyName" autocomplete="off" />
+                        <i class="icon icon-clear"></i>
+                      </div>
+                    </div>
+                    <div class="form-item">
+                      <a href="javascript:;" class="btn w100" id="searchHistory">查询</a>
+                    </div>
+                  </div>
+                  <!-- 订单-订单列表头部 -->
+                  <table class="order-panel-head title-text">
+                    <colgroup>
+                      <col class="col-train" />
+                      <col class="col-passenger" />
+                      <col class="col-seat" />
+                      <col class="col-price" />
+                      <col class="col-state" />
+                      <col />
+                    </colgroup>
+                    <tr>
+                      <th>车次信息</th>
+                      <th style="width: 200px">旅客信息</th>
+                      <th>席位信息</th>
+                      <th>票价</th>
+                      <th>车票状态</th>
+                      <!-- <th>总金额</th> -->
+                    </tr>
+                  </table>
+                  <div id="history_travel"></div>
+                  <div id="J-History" class="pagination mt-lg"></div>
+
+                  <div class="tips-box mt-lg duo-tips" style="display: none">
+                    <h4 class="tips-tit">温馨提示</h4>
+                    <p>1.订单信息在本网站保存期限为30日。</p>
+                    <p>
+                      2.在12306.cn网站改签和退票，改签应不晚于票面日期当日24:00，变更到站不晚于开车前48小时，退票应不晚于开车前。
+                    </p>
+                    <p>3.在本网站办理退票，只能逐次单张办理。</p>
+                    <p>
+                      4.
+                      车票改签、变更到站均只能办理一次。已经改签或变更到站的车票不再办理改签；对已改签车票、团体票暂不提供“变更到站”服务。
+                    </p>
+                    <p>
+                      5.退票、改签、变更到站后，如有应退票款，按购票时所使用的在线支付工具相关规定，将在规定时间内退还至原在线支付工具账户，请及时查询。如有疑问，请致电12306人工客服查询。
+                    </p>
+                    <!-- <p>6.如需取消或查看车票快递状态，请点击“快递详情”。</p> -->
+                    <p>
+                      7.投保、退保或查看电子保单状态，请点击“我的保险”或“购/赠/退保险”。
+                    </p>
+                    <p>
+                      8.“除有效期有其他规定的车票外，车票当日当次有效。旅客自行中途上车、下车的，未乘区间的票款不予退还。”
+                    </p>
+                    <p>
+                      9.如因运力原因或其他不可控因素导致列车调度调整时，当前车型可能会发生变动。
+                    </p>
+                    <p>
+                      10.未尽事宜详见《国铁集团铁路旅客运输规程》《广深港高速铁路跨境旅客运输组织规则》《中老铁路跨境旅客联运组织规则》等有关规定和车站公告。
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 暂无数据 -->
+          <div class="panel-tab" id="noDataDom" style="display: none">
+            <div class="tab-bd">
+              <!-- 历史订单 -->
+              <div class="tab-item" style="display: block">
+                <!-- 历史订单列表 -->
+                <div class="order-panel order-panel-history">
+                  <!-- 订单-订单列表头部 -->
+                  <table class="order-panel-head title-text">
+                    <colgroup>
+                      <col class="col-train" />
+                      <col class="col-passenger" />
+                      <col class="col-seat" />
+                      <col class="col-price" />
+                      <col class="col-state" />
+                      <col />
+                    </colgroup>
+                    <tr>
+                      <th>车次信息3</th>
+                      <th style="width: 200px">旅客信息</th>
+                      <th>席位信息</th>
+                      <th>票价</th>
+                      <th>车票状态</th>
+                      <!-- <th>总金额</th> -->
+                    </tr>
+                  </table>
+                  <div class="order-empty">
+                    <div class="empty-pic">
+                      <img src="../images/center/empty.png" alt="" />
+                    </div>
+                    <div class="empty-txt">
+                      <p>您没有对应的订单内容哦～</p>
+                      <p>
+                        您可以通过<a href="https://kyfw.12306.cn/otn/leftTicket/init"
+                          class="txt-primary underline">车票预订</a>功能，来制定出行计划。
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部 -->
+  <!-- 公用-底部 start -->
+<div class="footer" role="contentinfo">
+  <div class="footer-con wrapper">
+    <div class="foot-links" style="margin-right: 20px">
+      <h2 class="foot-con-tit">友情链接</h2>
+      <ul class="foot-links-list" role="menubar">
+        <li role="menuitem">
+          <a
+            name="g_href"
+            data-href="http://www.china-railway.com.cn/"
+            data-redirect="N"
+            href="javascript:;"
+            data-target="_blank"
+            title="中国国家铁路集团有限公司"
+          >
+            <img src="../images/link05.png" alt="中国国家铁路集团有限公司" />
+          </a>
+        </li>
+        <li role="menuitem">
+          <a
+            name="g_href"
+            data-href="http://www.china-ric.com/"
+            data-redirect="N"
+            href="javascript:;"
+            data-target="_blank"
+            title="中国铁路财产保险自保有限公司"
+          >
+            <img
+              src="../images/link02.png"
+              alt="中国铁路财产保险自保有限公司"
+            />
+          </a>
+        </li>
+        <li role="menuitem">
+          <a
+            name="g_href"
+            title="中国铁路95306网"
+            data-href="http://www.95306.cn/"
+            data-redirect="N"
+            href="javascript:;"
+            data-target="_blank"
+          >
+            <img src="../images/link03.png" alt="中国铁路95306网" />
+          </a>
+        </li>
+        <li role="menuitem">
+          <a
+            name="g_href"
+            title="中铁快运股份有限公司"
+            data-href="http://www.95572.com/"
+            data-redirect="N"
+            href="javascript:;"
+            data-target="_blank"
+          >
+            <img src="../images/link04.png" alt="中铁快运股份有限公司" />
+          </a>
+        </li>
+      </ul>
+    </div>
+    <ul class="foot-code">
+      <li style="width: 140px">
+        <h2 class="foot-con-tit">中国铁路官方微信</h2>
+        <div class="code-pic">
+          <img src="../images/zgtlwb.png" alt="中国铁路官方微信" />
+        </div>
+      </li>
+      <li style="width: 140px">
+        <h2 class="foot-con-tit">中国铁路官方微博</h2>
+        <div class="code-pic">
+          <img src="../images/zgtlwx.png" alt="中国铁路官方微博" />
+        </div>
+      </li>
+      <li style="width: 110px">
+        <h2 class="foot-con-tit">12306 公众号</h2>
+        <div class="code-pic">
+          <img src="../images/public.png" alt="12306 公众号" />
+        </div>
+      </li>
+      <li style="width: 110px">
+        <h2 class="foot-con-tit">铁路12306</h2>
+        <div class="code-pic">
+          <img src="../images/download.png" alt="铁路12306" />
+          <div class="code-tips">
+            官方APP下载，目前铁路未授权其他网站或APP开展类似服务内容，敬请广大用户注意。
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="footer-txt" style="position: relative;">
+    <p>
+      <span class="mr">版权所有©2008-2025</span>
+      <span class="mr">中国铁道科学研究院集团有限公司</span>
+      <span>技术支持：铁旅科技有限公司</span>
+    </p>
+    <p>
+      <span class="mr">
+        <img src="../images/gongan.png" alt="公安" style="width:13px">
+        <a target="blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802038392" style="color:#c1c1c1">京公网安备 11010802038392号</a>
+      </span>
+      <span class="mr">|</span>
+      <span class="mr">京ICP备05020493号-4</span>
+      <span class="mr">|</span>
+      <span>ICP证：京B2-20202537</span>
+    </p>
+    <div style="position: absolute;top: 17px;left: 50%;margin-left: 465px;">
+      <img src="../images/footer-slh.jpg" style="display: block;width: 130px;height: 46px;" alt="适老化无障碍服务">
+    </div>
+  </div>
+</div>
+<!-- 公用-底部 end -->
+<!-- <script type="text/javascript" src="http://extened.8686c.com/otnyt/resources/route/extened.8686c.com/route.js"></script> -->
+<script type="text/javascript" src="https://kyfw.12306.cn/otn/resources/route/kyfw.12306.cn/route.js"></script>
+
+
+  <!-- 返回顶部 -->
+  <div class="gototop js-top">
+    <a href="javascript:;" class="js-gotop" title="返回顶部"><i class="icon icon-gotop"></i></a>
+  </div>
+
+  <!-- 遮罩层 -->
+  <!-- loading -->
+<div class="mask" style="display: none">
+  <img
+    style="
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      width: 60px;
+    "
+    src="../images/loading.gif"
+    alt="loading"
+  />
+</div>
+
+
+  <!-- <script id="temp1" type="text/template">
+  <ul>
+<%for(var i = 0; i< list.length; i++) {%>
+
+  <%if(i == 0) {%>
+    <li class="active"><%=i%></li>
+    <%} else {%>
+      <li><%=i%></li>
+      <%}%>
+  <%}%>
+</ul>
+</script> -->
+  <script id="no_data_temp" type="text/template">
+      <div class="order-empty">
+      		<div class="empty-pic"><img src="../images/center/empty.png" alt=""></div>
+      			<div class="empty-txt">
+      				<p>您没有<%=data.text%>哦～</p>
+      				<p>您可以通过<a href="<%=data.url+'/leftTicket/init'%>" class="txt-primary underline">车票预订</a>功能，来制定出行计划。</p>
+      		</div>
+      </div>
+    </script>
+
+  <!-- 未出行模板 -->
+  <script id="not_tral_temp" type="text/template">
+      <%for(var i = 0; i< OrderDTODataList.length; i++) {%>
+      <div class="order-item">
+         <div class="order-item-hd">
+           <i class="icon icon-fold"></i>
+           <div class="order-hd-info"><span class="txt-light">订票日期：</span><span class="dingqiaoDate" data-date="<%=OrderDTODataList[i].order_date%>"><%=OrderDTODataList[i].order_date.substr(0,10)%></span></div>
+        <div class="order-hd-info"><span class="txt-light">订单号：</span><%=OrderDTODataList[i].sequence_no%></div>
+        <%if(OrderDTODataList[i].tickets[0].feature_label.slice(61,62) == "A" || OrderDTODataList[i].tickets[0].feature_label.slice(61,62) == "B"){%>
+          <div class="order-hd-info"><span class="label-primary">预填购票订单</span></div>
+        <%}else{%>
+          <%if(OrderDTODataList[i].tickets[0].alternate_flag == "H"){%>
+            <div class="order-hd-info"><span class="label-primary">候补兑现订单</span></div>
+          <%}%>
+        <%}%>
+        <%if(OrderDTODataList[i].tickets[0].feature_label.length>50&&(OrderDTODataList[i].tickets[0].feature_label.slice(50,51)==1||OrderDTODataList[i].tickets[0].feature_label.slice(50,51)==2)){%>
+          <div class="order-hd-info"><span style="padding-right:5px;"><i class="icon icon-plaint-fill txt-primary" style="margin-right:5px;"></i>出发时间和到达时间为车站所在时区时间！</span></div>
+        <%}%>
+        <div style="float:right;color:#999;font-size:12px;"><span>车票当日当次有效</span></div>
+      </div>
+         <div class="order-item-bd">
+           <table class="order-item-table" id='<%="query_order_form_"+OrderDTODataList[i].sequence_no%>'>
+             <colgroup>
+               <col class="col-train">
+               <col class="col-passenger">
+               <col class="col-seat">
+               <col class="col-price">
+               <col class="col-state">
+               <col>
+            </colgroup>
+          <%for(var j = 0; j< OrderDTODataList[i].newTimeCodearr.length; j++) {%>
+            <%var getWeek = ''%>
+            <%var initDate = ''%>
+            <%var weekArr = new Array("星期日","星期一","星期二","星期三","星期四","星期五","星期六")%>
+            <%if(OrderDTODataList[i].start_train_date_page&&OrderDTODataList[i].start_train_date_page!=''){%>
+              <%initDate = new Date(OrderDTODataList[i].start_train_date_page)%>
+              <%getWeek = weekArr[initDate.getDay()]%>
+            <%}%>
+            <%var dayNightTime = OrderDTODataList[i].newTimeCodearr[j].split(' ')[1]%>
+            <%var dayNightStr = dayNightTime.split(':')[0]%>
+            <!-- <%var departTime1 = OrderDTODataList[i].start_time_page?OrderDTODataList[i].start_time_page.split(':'):''%> -->
+            <%var departTime1 = dayNightTime?dayNightTime.split(':'):''%>
+            <%var toStationName = OrderDTODataList[i].to_station_name_page?OrderDTODataList[i].to_station_name_page:''%>
+            <%var dayMinTime = 03%>
+            <%var station = "'北京站','北京南站','北京北站','北京西站','北京朝阳站','清河站','大兴机场站','北京大兴站','北京丰台站'"%>
+            <%var endDate = new Date('2023-03-15 00:00')%>
+
+            <%for(var b = 0; b < toStationName.length; b++){%>
+              <%if(station.indexOf(toStationName[b]) != '-1' && initDate <= endDate){%>
+            <tr>
+              <td colspan="6" style="border-top:  1px solid #ffddba;border-bottom:  1px solid #ffddba;background: #fffbf8; padding: 10px 20px;text-align: left;">
+                <div style="color:#FF8000">您选择的车次进站上车所需时间较长，请您务必预留足够的安检、候车、检票时间，尽量提前到站，以免耽误您的行程。</div>
+              </td>
+            </tr>
+            <%}%>
+            <%}%>
+            <%if(dayNightStr < dayMinTime){%>
+              <tr>
+                <td colspan="6" style="border-top:  1px solid #ffddba;border-bottom:  1px solid #ffddba;background: #fffbf8; padding: 10px 20px;text-align: left;">
+                  <div>本次列车开车时间为<%=OrderDTODataList[i].start_train_date_page.slice(0,4)%>年<%=OrderDTODataList[i].start_train_date_page.slice(5,7)%>月 <span style="color:#FF8000"><%=OrderDTODataList[i].start_train_date_page.slice(8,10)%>日<%=departTime1[0]%>时<%=departTime1[1]%>分</span>，请您注意开车时间。</div>
+                </td>
+              </tr>
+            <%}%>
+
+            <%var oneNewTimeObjArr = OrderDTODataList[i].newTimeObj[OrderDTODataList[i].newTimeCodearr[j]] %>
+            <%var oneNewTimeObj = []%>
+            <%var oneNewTimeObjChildren = []%>
+            <%for( var m = 0 ; m< oneNewTimeObjArr.length;m++ ) {%>
+              <%if(oneNewTimeObjArr[m].feature_label){%>
+                <%if(!(oneNewTimeObjArr[m].feature_label.length>48&&
+                (oneNewTimeObjArr[m].feature_label.slice(48,49)=='M'||oneNewTimeObjArr[m].feature_label.slice(48,49)=='Z'))){%>
+                  <%oneNewTimeObj.push(oneNewTimeObjArr[m])%>
+                <%}else{%>
+                  <%oneNewTimeObjChildren.push(oneNewTimeObjArr[m])%>
+                <%}%>
+              <%}%>
+            <%}%>
+            <%for( var q = 0 ; q< oneNewTimeObj.length;q++ ) {%>
+             <tr class="is-has-tag has-order-num <%=(oneNewTimeObj[q].ticket_status_code=='c'||oneNewTimeObj[q].ticket_status_code=='d'||oneNewTimeObj[q].ticket_status_code=='p')? 'item-disabled' : ''%>" >
+               <%if(q == 0) {%>
+               <td class="td-left align-top" rowspan='<%=oneNewTimeObj.length%>'>
+                 <div class="order-info-ticket">
+                  <%if(oneNewTimeObj[q].feature_label.length>50&&(oneNewTimeObj[q].feature_label.slice(50,51) == 1||oneNewTimeObj[q].feature_label.slice(50,51)==2)){%>
+                   <div class="order-info-tag">国际列车</div>
+                  <%}%>
+                   <!-- <div class="order-num-one">去程</div> -->
+                   <div class="txt-bold txt-lg"><%=oneNewTimeObj[q].stationTrainDTO.from_station_name%><i class="icon icon-to"></i><%=oneNewTimeObj[q].stationTrainDTO.to_station_name%> <%=oneNewTimeObj[q].stationTrainDTO.station_train_code%></div>
+                   <div> 
+                    <%if(oneNewTimeObj[q].feature_label&&(oneNewTimeObj[q].feature_label.length>50&&(oneNewTimeObj[q].feature_label.slice(50,51)=='1'||oneNewTimeObj[q].feature_label.slice(50,51)=='2'))){%>
+                      <%=oneNewTimeObj[q].train_date_local&&oneNewTimeObj[q].train_date_local!=''?oneNewTimeObj[q].train_date_local.split(' ')[0]:oneNewTimeObj[q].start_train_date_page.substr(0,10)%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <%=oneNewTimeObj[q].stationTrainDTO.start_time_local&&oneNewTimeObj[q].stationTrainDTO.start_time_local!=''?oneNewTimeObj[q].stationTrainDTO.start_time_local.slice(11,16):oneNewTimeObj[q].start_train_date_page.substr(11,13)%>
+                    <%}else{%>
+                      <%=oneNewTimeObj[q].start_train_date_page.substr(0,10)%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <%=oneNewTimeObj[q].start_train_date_page.substr(11,13)%>
+                    <%}%> 
+                    开</div>
+                   <%if(oneNewTimeObj[q].dw_flag&&oneNewTimeObj[q].dw_flag!=''){%>
+                    <%var dw_flag_data = oneNewTimeObj[q].dw_flag.split('#')%>
+                    <%if(dw_flag_data.length>=4&&dw_flag_data[4]=='0'){%>
+                      <div class="txt-danger">已停运</div>
+                     <%}%>
+                   <%}%>
+                 </div>
+               </td>
+               <%}%>
+               <%var returnChildrenTip = false%>
+              <%if(oneNewTimeObj[q].feature_label&&oneNewTimeObj[q].feature_label.length>48){%>
+                <%if(oneNewTimeObj[q].feature_label.slice(48,49)=='Y'){%>
+                  <%returnChildrenTip = true%>
+                <%}%>
+              <%}%>
+               <td style='width: 200px;'>
+                 <div class="passenger-operation">
+      							<div class="passenger-check data-val" data-sequence='<%=oneNewTimeObj[q].sequence_no%>' data-value='<%=oneNewTimeObj[q].sequence_no+","+oneNewTimeObj[q].batch_no+","+oneNewTimeObj[q].coach_no+","+oneNewTimeObj[q].seat_no+","+oneNewTimeObj[q].start_train_date_page%>' data-tradeno='<%=oneNewTimeObj[q].trade_no%>' data-returnChildrenTip = "<%=returnChildrenTip%>"  data-ticketStatus='<%=oneNewTimeObj[q].ticket_status_code%>' data-syxFlag='<%=oneNewTimeObj[q].syx_flag%>' data-featureLabel='<%=oneNewTimeObj[q].feature_label%>' data-invoice='<%=oneNewTimeObj[q].invoice_state%>'>
+      								<%if(OrderDTODataList[i].tickets.length!=1) {%>
+                        <!-- 修改点 -->
+                      <input class=" <%=((oneNewTimeObj[q].resign_flag=='1'||oneNewTimeObj[q].resign_flag=='2'||oneNewTimeObj[q].resign_flag=='3')&&(oneNewTimeObj[q].ticket_status_code!=='d'&&oneNewTimeObj[q].ticket_status_code!=='p'&&oneNewTimeObj[q].ticket_status_code!=='f'&&oneNewTimeObj[q].ticket_status_code!=='r'&&oneNewTimeObj[q].ticket_status_code!=='c'))||(oneNewTimeObj[q].syx_flag&&oneNewTimeObj[q].syx_flag=='1')? '' : 'disablecla'%>" type="checkbox" >
+      								<%}%>
+      							</div>
+                  <div><%=oneNewTimeObj[q].passengerDTO.passenger_name%>
+                    <%if(oneNewTimeObj[q].feature_label&&oneNewTimeObj[q].feature_label.slice(15,16)=='1') {%>
+                      
+                      <%if(oneNewTimeObj[q].feature_label.length < 50||((oneNewTimeObj[q].feature_label.length>50||oneNewTimeObj[q].feature_label.length==50)&&(oneNewTimeObj[q].feature_label.slice(50,51)!='1'&&oneNewTimeObj[q].feature_label.slice(50,51)!='2'))){%>
+                      <a class="txt-primary underline ml-sm" href="./ticket_notice.html?<%=oneNewTimeObj[q].ext_ticket_no%>">打印信息单</a>
+                      <%}%>
+      							<%}%>
+      						</div>
+                   <div>
+                     <%=oneNewTimeObj[q].passengerDTO.passenger_id_type_name%>
+                     <%var tickets = OrderDTODataList[i].tickets %>
+                     <%if(tickets[q].trade_no.length > '23'&&tickets[q].passengerDTO.passenger_id_type_code == 'B'){%>
+                      <span><%=tickets[q].trade_no.slice(21,24) == '000'||tickets[q].trade_no.slice(21,24) == 'CHN'? '' : '('+tickets[q].trade_no.slice(21,24)+')'%></span>
+                      <%}%>
+                  </div>
+                 </div>
+               </td>
+               <td>
+                 <div><%=oneNewTimeObj[q].seat_type_name%></div>
+                 <%if(oneNewTimeObj[q].coach_no=="99"){%>
+                  <div>不对号入座</div>
+                 <%}else{%>
+                  <div><%=oneNewTimeObj[q].coach_name%>车<%=oneNewTimeObj[q].seat_name%></div>
+                 <%}%>
+      		<%if(oneNewTimeObj[q].purpose_code=="1J"){%>
+      			<div class="txt-primary">静<i class="icon icon-plaint-fill purpose_tip"></i></div>
+      		<%}%>
+               </td>
+               <td style='position: relative;'>
+                 <div style="display:flex;align-item:center;justify-content:center">
+      			<%=oneNewTimeObj[q].ticket_type_name%> 
+      			  <%if(oneNewTimeObj[q].trade_no.slice(8,9) === 'N' && oneNewTimeObj[q].ticket_type_name === '学生票'){%>
+      				<i class="label-primary studhover" style="cursor: pointer;">学生资质未核验</i>
+              <%}%>
+              <%if(oneNewTimeObj[q].trade_no.slice(8,9) === 'Y' && oneNewTimeObj[q].ticket_type_name === '学生票'){%>
+                <i class="label-primary txt-success studhover" style="cursor: pointer;border: 1px solid #4ea373;">学生资质已核验</i>
+              <%}%>
+              <%if(oneNewTimeObj[q].trade_no.slice(37,38)=='K'||oneNewTimeObj[q].trade_no.slice(37,38)=='L'){%>
+                <span style="display: inline-block;color:#4ca474;border:1px solid #4ca474;margin-left:10px;font-size:12px;padding:0 5px">老年优惠</span>
+              <%}%>
+      		</div>
+          <div>
+            <span class="txt-price"><%=oneNewTimeObj[q].str_ticket_price_page%>元</span>
+            <%if(oneNewTimeObj[q].preference_word&&oneNewTimeObj[q].preference_word != ''){%>
+              <span class="label-discount-new ml-sm"><%=oneNewTimeObj[q].preference_word%></span>
+            <%}%>
+          </div>
+      		<div class="panel-tooltip bottom" style="top: 60px; left: 0px; background-color: rgb(255, 255, 255); width: 100%; display: none;">
+      			<div class="tooltip-arw"></div>
+      			<div class="tooltip-txt">
+              <%if(oneNewTimeObj[q].trade_no.slice(8,9) === 'N' && oneNewTimeObj[q].ticket_type_name === '学生票'){%>
+              <p style='color:#333'><span class="txt-lighter">您的学生资质尚未核验或已失效，</span>请您务必在乘车前到车站指定售票窗口或自动售/取票机办理学生优惠资质核验手续。</p>
+              <%}%>
+              <%if(oneNewTimeObj[q].trade_no.slice(8,9) === 'Y' && oneNewTimeObj[q].ticket_type_name === '学生票'){%>
+              <p style='color:#333'><span class="txt-lighter">您购买的是学生票，</span>请务必随身携带学生证凭证乘车，以便铁路工作人员在车站和列车上核验。</p>
+              <%}%>
+      			</div>
+      		</div>
+      	  </td>
+      				<%if(oneNewTimeObj[q].ticket_status_code=='c') {%>
+               <td>
+                 <div class='ticket-status-name'>
+      							<div>已退票</div>
+      							<%var order = oneNewTimeObj[q].ticket_status_name.replace('已退票','').replace('(业务流水号:','').replace(')',''); %>
+      							<div style="position: relative;"><a href="javascript:;" class="serial-number alertLiushuihao" data-title="<%=order%>">业务流水号</a>
+      									<div class="module-bd" style="position: absolute; height: 200px;display:none">
+      										<div class="panel-tooltip top-left" style="top: -83px; left: -241px; width: 320px;text-align: left;background-color:#fff;padding:5px;">
+      											<div class="tooltip-arw"></div>
+      											<div class="tooltip-txt1" style='color:#000;'>
+      												<!-- <p><span class="txt-lighter">退款金额：</span><span class="txt-price1" style='color: #ff8201;'>￥29.5</span></p> -->
+      												<p><span class="txt-lighter">业务流水号：</span >	<%= order %></p>
+      												<!-- <p><span class="txt-lighter">平台流水号：</span>W2018090335384997</p> -->
+      												<p><span class="txt-lighter">退款状态：</span>成功！在7个工作日内到账</p>
+      											</div>
+      										</div>
+      									</div>
+
+      									<div class="panel-tooltip bottom" style="display:none; background: #fff; top: 30px; left: -10px; width: 140px;">
+      									<div class="tooltip-arw"></div>
+      									<div class="tooltip-txt"><%=order%></div>
+      								</div>
+      							</div>
+      					</div>
+      				</td>
+      				<%} else {%>
+      					<td>
+      							<div class='ticket-status-name'>
+                        <div>	<%=oneNewTimeObj[q].ticket_status_name%>	</div>
+                        <%if(oneNewTimeObj[q].syx_flag&&oneNewTimeObj[q].syx_flag=='1'){%>
+                          <%if(oneNewTimeObj[q].feature_label.length>55&&oneNewTimeObj[q].feature_label.slice(55,56)!=''){%>
+                          <div class="txt-second" style="font-size:12px;">可办理<%=(3*1)-((oneNewTimeObj[q].feature_label.slice(55,56))*1)%>次灵活行</div>
+                          <%}%>
+                        <%}%>
+      										<%if( oneNewTimeObj[q].return_flag =="Y") {%>
+      										<a href="javascript:void(0)" class="txt-primary tuipiao"
+      										data-sequence-no="<%=oneNewTimeObj[q].sequence_no%>"
+      										data-batch-no="<%=oneNewTimeObj[q].batch_no%>"
+      										data-coach-no="<%=oneNewTimeObj[q].coach_no%>"
+      										data-seat-no="<%=oneNewTimeObj[q].seat_no%>"
+      										data-start-train-date-page="<%=oneNewTimeObj[q].start_train_date_page%>"
+      										data-train-code="<%=oneNewTimeObj[q].stationTrainDTO.station_train_code%>"
+      										data-coach-name="<%=oneNewTimeObj[q].coach_name%>"
+      										data-seat-name="<%=oneNewTimeObj[q].seat_name%>"
+      										data-seat-type-name="<%=oneNewTimeObj[q].seat_type_name%>"
+      										data-train-date="<%=oneNewTimeObj[q].train_date%>"
+      										data-from-station-name="<%=oneNewTimeObj[q].stationTrainDTO.from_station_name%>"
+      										data-to-station-name="<%=oneNewTimeObj[q].stationTrainDTO.to_station_name%>"
+      										data-start-time="<%=oneNewTimeObj[q].stationTrainDTO.start_time%>"
+      										data-coach-name="<%=oneNewTimeObj[q].coach_name%>"
+      										data-passenger-name="<%=oneNewTimeObj[q].passengerDTO.passenger_name%>"
+      										data-trade-mode="<%=oneNewTimeObj[q].trade_mode%>"
+      										data-from-station-telecode="<%=oneNewTimeObj[q].stationTrainDTO.from_station_telecode%>"
+      										data-to-station-telecode="<%=oneNewTimeObj[q].stationTrainDTO.to_station_telecode%>"
+      										data-train-no="<%=oneNewTimeObj[q].stationTrainDTO.trainDTO.train_no%>"
+      										data-id-type="<%=oneNewTimeObj[q].passengerDTO.passenger_id_type_code%>"
+      										data-id-no="<%=oneNewTimeObj[q].passengerDTO.passenger_id_no%>"
+      										data-integral-pay-flag="<%=oneNewTimeObj[q].integral_pay_flag%>"
+      										data-if-cash="<%=oneNewTimeObj[q].if_cash%>"
+      										data-invoice-state="<%=oneNewTimeObj[q].invoice_state%>"
+      										data-ext-ticket-no="<%=oneNewTimeObj[q].ext_ticket_no%>"
+      										data-returnChildrenTip = "<%=returnChildrenTip%>"
+                          data-all-enc-str="<%=oneNewTimeObj[q].passengerDTO.allEncStr%>"
+                          data-feature_label="<%=oneNewTimeObj[q].feature_label%>"
+      									>退票</a>
+      									<%}%>
+      							</div>
+      						</td>
+      				<%}%>
+      				<%if(j == 0) {%>
+      					<%if(q == 0) {%>
+               <!-- <td class="br-none" rowspan="<%=OrderDTODataList[i].tickets.length%>">
+                 <div class="txt-price"><i class="rmb"></i><%=OrderDTODataList[i].ticket_total_price_page%>元</div>
+      				</td> -->
+      				<%}%>
+               <%}%>
+             </tr>
+           <%}%>
+         <%}%>
+        </table>
+      </div>
+         <div class="order-item-ft">
+           <table class="order-item-table">
+            <tr>
+              <td class="td-left br-none quanxuan" colspan = '1'>
+    
+                <label class="check-inline">
+                    <%if(OrderDTODataList[i].tickets.length!=1) {%>
+                  <input class="quanxuaninp <%=((OrderDTODataList[i].resign_flag=='1'||OrderDTODataList[i].resign_flag=='2'||OrderDTODataList[i].resign_flag=='3')&&(OrderDTODataList[i].ticket_status_code!=='d'&&OrderDTODataList[i].ticket_status_code!=='p'&&OrderDTODataList[i].ticket_status_code!=='f'&&OrderDTODataList[i].ticket_status_code!=='r'&&OrderDTODataList[i].ticket_status_code!=='c')||(OrderDTODataList[i].syx_flag&&OrderDTODataList[i].syx_flag=='1')) ? '' : 'disablecla'%>" type="checkbox">全选
+                    <%}%>
+                </label>
+                <%if(OrderDTODataList[i].tickets[0].ext_ticket_no !=''){%>
+                  <%if(OrderDTODataList[i].tickets.length!=1){%>
+                    <%var timeArray = []%>
+                      <%for(var z = 0; z< OrderDTODataList[i].tickets.length; z++) {%>
+                       <%if(OrderDTODataList[i].tickets[z].ticket_status_code == "y"&& OrderDTODataList[i].tickets[z].ticket_status_name.toString()=='已退票，未退款' ){%>
+                       <% timeArray.push(z)%>
+                       <%}%>
+                     <%}%>
+                     <!-- <%timeArray.sort(function (a, b) {%>
+                       <%return a-b;%>
+                     <%})%> -->
+                    <%if(timeArray.length!=0){%>
+                      <span style = "color:#FF8000">请在办理退票之日起180日内持购票证件和报销凭证到任一车站完成退款等相关手续</span>
+    
+                      <%}%>
+                   <%}else{%>
+                      <%if(OrderDTODataList[i].tickets[0].ticket_status_code == "y"&& OrderDTODataList[i].tickets[0].ticket_status_name.toString()=='已退票，未退款' ){%>
+                       <span style = "color:#FF8000">请在办理退票之日起180日内持购票证件和报销凭证到任一车站完成退款等相关手续</span>
+                      <%}%>
+                   <%}%>
+                   <%}%>
+              </td>
+                   <td colspan="8" class="order-operation">
+                     <div class="btn-right">
+                       <a href="javascript:void(0)" class="btn orderxiangqing" data-sequenceno='<%=OrderDTODataList[i].sequence_no%>' data-index='0' style='background-color:#ff8201;color:#fff;'>订单详情</a>
+                       <a href="javascript:void(0)" class="btn orderAddChildren" data-sequenceno='<%=OrderDTODataList[i].sequence_no%>' data-index='0'>添加免费乘车儿童</a>
+                <a href="javascript:void(0)" class="btn orderInsurance" data-sequenceno='<%=OrderDTODataList[i].sequence_no%>' data-index='3'   >购/赠/退保险</a>
+                <%var tradeNo = ''%>
+                <%var ticketsfromArr = []%>
+                <%var ticketstoArr = []%>
+                <%if(OrderDTODataList[i].tickets.length==1){%>
+                  <%for(var o = 0; o< OrderDTODataList[i].tickets.length; o++) {%>
+                    <%tradeNo=OrderDTODataList[i].tickets[o].trade_no%>
+                  <%}%>
+                <%}%>
+                       <%if( OrderDTODataList[i].resign_flag=='1' || OrderDTODataList[i].resign_flag=='2') {%>
+                         <a href="javascript:void(0)" class="btn resignTrain" data-sequenceno='<%=OrderDTODataList[i].sequence_no%>' data-type='N' data-start-train-date-page='<%=OrderDTODataList[i].start_train_date_page%>'>改签</a>
+                      <%}else{%>
+                        <%if( OrderDTODataList[i].tickets.length=='1'&&(OrderDTODataList[i].tickets[0].invoice_state == '1'||OrderDTODataList[i].tickets[0].invoice_state == '2')) {%>
+                          <a href="javascript:void(0)" class="btn btn-disabled disabledRebook" style="cursor:pointer" data-sequenceno='<%=OrderDTODataList[i].sequence_no%>' data-type='N' data-start-train-date-page='<%=OrderDTODataList[i].start_train_date_page%>'>改签</a>
+                        <%}else{%>
+                          <a href="javascript:void(0)" class="btn btn-disabled" data-sequenceno='<%=OrderDTODataList[i].sequence_no%>' data-type='N' data-start-train-date-page='<%=OrderDTODataList[i].start_train_date_page%>'>改签</a>
+                        <%}%>
+                      <%}%>
+                      <%var stationArr = ['XJA','NZQ','IOQ']%>
+                      <%var diffFlagArr = []%>
+                      <%if(OrderDTODataList[i].tickets.length>0){%>
+                        <%for(var o = 0; o< OrderDTODataList[i].tickets.length; o++) {%>
+                          <%if(stationArr.indexOf(OrderDTODataList[i].tickets[o].stationTrainDTO.from_station_telecode)!=-1&&stationArr.indexOf(OrderDTODataList[i].tickets[o].stationTrainDTO.to_station_telecode)!=-1){%>
+                            <% diffFlagArr.push('true') %>
+                          <%}else{%>
+                            <% diffFlagArr.push('false') %>
+                          <%}%>
+                          <!-- <% ticketsfromArr.push(OrderDTODataList[i].tickets[o].stationTrainDTO.from_station_telecode)%>
+                          <% ticketstoArr.push(OrderDTODataList[i].tickets[o].stationTrainDTO.to_station_telecode)%> -->
+                          
+                        <%}%>
+                      <%}%>
+                      <%if(diffFlagArr.indexOf('true')!=-1){%>
+                        <!-- syx_flag默认为0：不可随意行 1：可随意行 -->
+                        <%if(OrderDTODataList[i].syx_flag&&OrderDTODataList[i].syx_flag=='1') {%>
+                          <a href="javascript:void(0)" class="btn resignWalk" data-sequenceno='<%=OrderDTODataList[i].sequence_no%>' data-type='N' data-walk="J" data-start-train-date-page='<%=OrderDTODataList[i].start_train_date_page%>'>灵活行</a>
+                        <%}else{%>
+                          <a href="javascript:void(0)" class="btn btn-disabled" data-sequenceno='<%=OrderDTODataList[i].sequence_no%>' data-type='N' data-walk="J" data-start-train-date-page='<%=OrderDTODataList[i].start_train_date_page%>'>灵活行</a>
+                        <%}%>
+                      <%}%>
+                      
+                         <%if( OrderDTODataList[i].resign_flag=='1' || OrderDTODataList[i].resign_flag=='3') {%>
+                        <a href="javascript:void(0)" class="btn resignTrain" data-sequenceno='<%=OrderDTODataList[i].sequence_no%>' data-type='Y'>变更到站</a>
+                        <%}else{%>
+                          <a href="javascript:void(0)" class="btn btn-disabled" data-sequenceno='<%=OrderDTODataList[i].sequence_no%>' data-type='Y'>变更到站</a>
+                        <%}%>
+                        <!-- <a href="javascript:void(0)" class="btn">
+                          退票
+                          <div class="btn-tips-dot">
+                            <div class="panel-tooltip top-right" style="top: -36px; left: -12px;">
+                              <div class="tooltip-arw"></div>
+                              <div class="tooltip-txt">支持批量退票啦！</div>
+                            </div>
+                          </div>
+                        </a> -->
+                        <%if(show_catering_button &&OrderDTODataList[i].return_flag=='Y') {%>
+                         <a href="javascript:void(0)" data-sequence='<%=OrderDTODataList[i].sequence_no%>' class="btn queryCatering">餐饮•特产</a>
+                        <%}%>
+                    </div>
+                   </td>
+                 </tr>
+           </table>
+         </div>
+       </div>
+      <%}%>
+    </script>
+  <!-- 历史纪录模板 -->
+  <script id="not_history_temp" type="text/template">
+      <%for(var i = 0; i< OrderDTODataList.length; i++) {%>
+      	<div class="order-item">
+      		 <div class="order-item-hd">
+      			 <i class="icon icon-fold"></i>
+      			 <div class="order-hd-info"><span class="txt-light">订票日期：</span><span class="dingqiaoDate" data-date="<%=OrderDTODataList[i].order_date%>"> <%=OrderDTODataList[i].order_date.substr(0,10)%></span></div>
+             <div class="order-hd-info"><span class="txt-light">订单号：</span><%=OrderDTODataList[i].sequence_no%></div>
+      			 <%if(OrderDTODataList[i].tickets[0].feature_label.slice(61,62) == "A" || OrderDTODataList[i].tickets[0].feature_label.slice(61,62) == "B"){%>
+              <div class="order-hd-info"><span class="label-primary">预填购票订单</span></div>
+            <%}else{%>
+              <%if(OrderDTODataList[i].tickets[0].alternate_flag == "H"){%>
+                <div class="order-hd-info"><span class="label-primary">候补兑现订单</span></div>
+              <%}%>
+            <%}%>
+            <%if(OrderDTODataList[i].tickets[0].feature_label.length>50&&(OrderDTODataList[i].tickets[0].feature_label.slice(50,51)==1||OrderDTODataList[i].tickets[0].feature_label.slice(50,51)==2)){%>
+              <div class="order-hd-info"><span style="padding-right:5px;"><i class="icon icon-plaint-fill txt-primary" style="margin-right:5px;"></i>出发时间和到达时间为车站所在时区时间！</span></div>
+            <%}%>
+      			</div>
+      		 <div class="order-item-bd">
+      			 <table class="order-item-table" id='<%="query_order_form_"+OrderDTODataList[i].sequence_no%>'>
+      				 <colgroup>
+      					 <col class="col-train">
+      					 <col class="col-passenger">
+      					 <col class="col-seat">
+      					 <col class="col-price">
+      					 <col class="col-state">
+      					 <col>
+      				 </colgroup>
+      			 <%for(var j = 0; j< OrderDTODataList[i].newTimeCodearr.length; j++) {%>
+      				 <%var oneNewTimeObj = OrderDTODataList[i].newTimeObj[OrderDTODataList[i].newTimeCodearr[j]] %>
+               <%for( var q = 0 ; q< oneNewTimeObj.length;q++ ) {%>
+                <%if(oneNewTimeObj[q].feature_label&&oneNewTimeObj[q].feature_label.slice(49,50)!=='M'){%>
+      				 <tr class="is-has-tag has-order-num <%=(oneNewTimeObj[q].ticket_status_code=='c'||oneNewTimeObj[q].ticket_status_code=='d'||oneNewTimeObj[q].ticket_status_code=='p')? 'item-disabled' : ''%>" >
+      					 <%if(q == 0) {%>
+      					 <td class="td-left align-top" rowspan='<%=oneNewTimeObj.length%>'>
+      						 <div class="order-info-ticket">
+                    <%if(oneNewTimeObj[q].feature_label.length>50&&(oneNewTimeObj[q].feature_label.slice(50,51) == 1||oneNewTimeObj[q].feature_label.slice(50,51)==2)){%>
+                      <div class="order-info-tag">国际列车</div>
+                    <%}%>
+      							 <!-- <div class="order-num-one">去程</div> -->
+      							 <div class="txt-bold txt-lg"><%=oneNewTimeObj[q].stationTrainDTO.from_station_name%><i class="icon icon-to"></i><%=oneNewTimeObj[q].stationTrainDTO.to_station_name%> <%=oneNewTimeObj[q].stationTrainDTO.station_train_code%></div>
+                     <div>
+                      <%if(oneNewTimeObj[q].feature_label&&(oneNewTimeObj[q].feature_label.length>50&&(oneNewTimeObj[q].feature_label.slice(50,51)=='1'||oneNewTimeObj[q].feature_label.slice(50,51)=='2'))){%>
+                        <%=oneNewTimeObj[q].train_date_local&&oneNewTimeObj[q].train_date_local!=''?oneNewTimeObj[q].train_date_local.split(' ')[0]:oneNewTimeObj[q].start_train_date_page.substr(0,10)%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <%=oneNewTimeObj[q].stationTrainDTO.start_time_local&&oneNewTimeObj[q].stationTrainDTO.start_time_local!=''?oneNewTimeObj[q].stationTrainDTO.start_time_local.slice(11,16):oneNewTimeObj[q].start_train_date_page.substr(11,13)%>
+                      <%}else{%>
+                        <%=oneNewTimeObj[q].start_train_date_page.substr(0,10)%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <%=oneNewTimeObj[q].start_train_date_page.substr(11,13)%> 
+                      <%}%>
+                       开</div>
+                     <%if(oneNewTimeObj[q].dw_flag&&oneNewTimeObj[q].dw_flag!=''){%>
+                      <%var dw_flag_data = oneNewTimeObj[q].dw_flag.split('#')%>
+                      <%if(dw_flag_data.length>=4&&dw_flag_data[4]=='0'){%>
+                        <div class="txt-danger">已停运</div>
+                      <%}%>
+                     <%}%>
+      						 </div>
+      					 </td>
+      					 <%}%>
+      					 <td style='width: 200px;'>
+      						 <div class="passenger-operation">
+                     
+      								 <div class="passenger-check data-val" data-sequence='<%=oneNewTimeObj[q].sequence_no%>' data-value='<%=oneNewTimeObj[q].sequence_no+","+oneNewTimeObj[q].batch_no+","+oneNewTimeObj[q].coach_no+","+oneNewTimeObj[q].seat_no+","+oneNewTimeObj[q].start_train_date_page%>' data-tradeno='<%=oneNewTimeObj[q].trade_no%>' data-ticketStatus='<%=oneNewTimeObj[q].ticket_status_code%>' data-syxFlag='<%=oneNewTimeObj[q].syx_flag%>' data-featureLabel='<%=oneNewTimeObj[q].feature_label%>'>
+      									 <%if(OrderDTODataList[i].tickets.length!=1) {%>
+      									 <input class=" <%=((oneNewTimeObj[q].resign_flag=='1'||oneNewTimeObj[q].resign_flag=='2'||oneNewTimeObj[q].resign_flag=='3')&&(oneNewTimeObj[q].ticket_status_code!=='d'&&oneNewTimeObj[q].ticket_status_code!=='p'&&oneNewTimeObj[q].ticket_status_code!=='f'&&oneNewTimeObj[q].ticket_status_code!=='r'&&oneNewTimeObj[q].ticket_status_code!=='c'))? '' : 'disablecla'%>" type="checkbox" >
+      									 <%}%>
+      								 </div>
+                     <div><%=oneNewTimeObj[q].passengerDTO.passenger_name%>
+                        <%if(oneNewTimeObj[q].feature_label&&oneNewTimeObj[q].feature_label.slice(15,16)=='1') {%>
+                          <%if(oneNewTimeObj[q].feature_label.length < 50||((oneNewTimeObj[q].feature_label.length>50||oneNewTimeObj[q].feature_label.length==50)&&(oneNewTimeObj[q].feature_label.slice(50,51)!='1'&&oneNewTimeObj[q].feature_label.slice(50,51)!='2'))){%>
+                          <a class="txt-primary underline ml-sm" href="./ticket_notice.html?<%=oneNewTimeObj[q].ext_ticket_no%>">打印信息单</a>
+                          <%}%>
+      									<%}%>
+      							</div>
+      							 <div>
+                       <%=oneNewTimeObj[q].passengerDTO.passenger_id_type_name%>
+                       <%var tickets = OrderDTODataList[i].tickets %>
+                       <%if(tickets[q].trade_no.length > '23'&&tickets[q].passengerDTO.passenger_id_type_code == 'B'){%>
+                      <span><%=tickets[q].trade_no.slice(21,24) == '000'||tickets[q].trade_no.slice(21,24) == 'CHN'? '' : '('+tickets[q].trade_no.slice(21,24)+')'%></span>
+                      <%}%>
+                     </div>
+      						 </div>
+      					 </td>
+      					 <td>
+                   <div><%=oneNewTimeObj[q].seat_type_name%></div>
+                   <%if(oneNewTimeObj[q].coach_no=='99'){%>
+                    <div>不对号入座</div>
+                   <%}else{%>
+                    <div><%=oneNewTimeObj[q].coach_name%>车<%=oneNewTimeObj[q].seat_name%></div>
+                   <%}%>
+
+      						 <%if(oneNewTimeObj[q].purpose_code=="1J"){%>
+      							<div class="txt-primary">静<i class="icon icon-plaint-fill purpose_tip"></i></div>
+      						<%}%>
+      					 </td>
+      					 <td style='position: relative;'>
+      						   <div style="display:flex;align-item:center;justify-content:center">
+                     <%=oneNewTimeObj[q].ticket_type_name%>
+      							  <%if(oneNewTimeObj[q].trade_no.slice(8,9) === 'N' && oneNewTimeObj[q].ticket_type_name === '学生票'){%>
+      								<i class="label-primary studhover" style="cursor: pointer;">学生资质未核验</i>
+                      <%}%>
+                      <%if(oneNewTimeObj[q].trade_no.slice(8,9) === 'Y' && oneNewTimeObj[q].ticket_type_name === '学生票'){%>
+                        <i class="label-primary txt-success studhover" style="cursor: pointer;border: 1px solid #4ea373;">学生资质已核验</i>
+                      <%}%>
+                      <%if(oneNewTimeObj[q].trade_no.slice(37,38)=='K'||oneNewTimeObj[q].trade_no.slice(37,38)=='L'){%>
+                        <span style="display: inline-block;color:#4ca474;border:1px solid #4ca474;margin-left:10px;font-size:12px;padding:0 5px">老年优惠</span>
+                      <%}%>
+      							</div>
+                    <div>
+                      <span class="txt-price"><%=oneNewTimeObj[q].str_ticket_price_page%>元</span>
+                      <%if(oneNewTimeObj[q].preference_word&&oneNewTimeObj[q].preference_word != ''){%>
+                        <span class="label-discount-new ml-sm"><%=oneNewTimeObj[q].preference_word%></span>
+                      <%}%>
+                    </div>
+      						 <div class="panel-tooltip bottom" style="z-index: 1; top: 60px; left: 0px; background-color: rgb(255, 255, 255); width: 100%; display: none;">
+      							<div class="tooltip-arw"></div>
+      							<div class="tooltip-txt">
+      							  <%if(oneNewTimeObj[q].trade_no.slice(8,9) === 'N' && oneNewTimeObj[q].ticket_type_name === '学生票'){%>
+                      <p style='color:#333'><span class="txt-lighter">您的学生资质尚未核验或已失效，</span>请您务必在乘车前到车站指定售票窗口或自动售/取票机办理学生优惠资质核验手续。</p>
+                      <%}%>
+                      <%if(oneNewTimeObj[q].trade_no.slice(8,9) === 'Y' && oneNewTimeObj[q].ticket_type_name === '学生票'){%>
+                      <p style='color:#333'><span class="txt-lighter">您购买的是学生票，</span>请务必随身携带学生证凭证乘车，以便铁路工作人员在车站和列车上核验。</p>
+                      <%}%>
+      							</div>
+      						  </div>
+      						</td>
+      					 <%if(oneNewTimeObj[q].ticket_status_code=='c') {%>
+      					 <td>
+      						 <div class='ticket-status-name'>
+      								 <div>已退票</div>
+      								 <%var order = oneNewTimeObj[q].ticket_status_name.replace('已退票','').replace('(业务流水号:','').replace(')',''); %>
+      								 <div style="position: relative;"><a href="javascript:;" class="serial-number alertLiushuihao" data-title="<%=order%>">业务流水号</a>
+      										 <div class="module-bd" style="position: absolute; height: 200px;display:none">
+      											 <div class="panel-tooltip top-left" style="top: -83px; left: -241px; width: 320px;text-align: left;background-color:#fff;padding:5px;">
+      												 <div class="tooltip-arw"></div>
+      												 <div class="tooltip-txt1" style='color:#000;'>
+      													 <!-- <p><span class="txt-lighter">退款金额：</span><span class="txt-price1" style='color: #ff8201;'>￥29.5</span></p> -->
+      													 <p><span class="txt-lighter">业务流水号：</span >	<%= order %></p>
+      													 <!-- <p><span class="txt-lighter">平台流水号：</span>W2018090335384997</p> -->
+      													 <p><span class="txt-lighter">退款状态：</span>成功！在7个工作日内到账</p>
+      												 </div>
+      											 </div>
+      										 </div>
+
+      										 <div class="panel-tooltip bottom" style="display:none; background: #fff; top: 30px; left: -10px; width: 140px;">
+      										 <div class="tooltip-arw"></div>
+      										 <div class="tooltip-txt"><%=order%></div>
+      									 </div>
+      								 </div>
+      						 </div>
+      					 </td>
+      					 <%} else {%>
+      						 <td>
+      								 <div class='ticket-status-name'>
+      										 <div>	<%=oneNewTimeObj[q].ticket_status_name%>	</div>
+      											 <%if( oneNewTimeObj[q].return_flag =="Y") {%>
+      											 <a href="javascript:void(0)" class="txt-primary tuipiao"
+      											 data-sequence-no="<%=oneNewTimeObj[q].sequence_no%>"
+      											 data-batch-no="<%=oneNewTimeObj[q].batch_no%>"
+      											 data-coach-no="<%=oneNewTimeObj[q].coach_no%>"
+      											 data-seat-no="<%=oneNewTimeObj[q].seat_no%>"
+      											 data-start-train-date-page="<%=oneNewTimeObj[q].start_train_date_page%>"
+      											 data-train-code="<%=oneNewTimeObj[q].stationTrainDTO.station_train_code%>"
+      											 data-coach-name="<%=oneNewTimeObj[q].coach_name%>"
+      											 data-seat-name="<%=oneNewTimeObj[q].seat_name%>"
+      											 data-seat-type-name="<%=oneNewTimeObj[q].seat_type_name%>"
+      											 data-train-date="<%=oneNewTimeObj[q].train_date%>"
+      											 data-from-station-name="<%=oneNewTimeObj[q].stationTrainDTO.from_station_name%>"
+      											 data-to-station-name="<%=oneNewTimeObj[q].stationTrainDTO.to_station_name%>"
+      											 data-start-time="<%=oneNewTimeObj[q].stationTrainDTO.start_time%>"
+      											 data-coach-name="<%=oneNewTimeObj[q].coach_name%>"
+      											 data-passenger-name="<%=oneNewTimeObj[q].passengerDTO.passenger_name%>"
+      											 data-trade-mode="<%=oneNewTimeObj[q].trade_mode%>"
+      											 data-from-station-telecode="<%=oneNewTimeObj[q].stationTrainDTO.from_station_telecode%>"
+      											 data-to-station-telecode="<%=oneNewTimeObj[q].stationTrainDTO.to_station_telecode%>"
+      											 data-train-no="<%=oneNewTimeObj[q].stationTrainDTO.trainDTO.train_no%>"
+      											 data-id-type="<%=oneNewTimeObj[q].passengerDTO.passenger_id_type_code%>"
+      											 data-id-no="<%=oneNewTimeObj[q].passengerDTO.passenger_id_no%>"
+      											 data-integral-pay-flag="<%=oneNewTimeObj[q].integral_pay_flag%>"
+      											 data-if-cash="<%=oneNewTimeObj[q].if_cash%>"
+      											 data-invoice-state="<%=oneNewTimeObj[q].invoice_state%>"
+      											 data-ext-ticket-no="<%=oneNewTimeObj[q].ext_ticket_no%>"
+                             data-all-enc-str="<%=oneNewTimeObj[q].passengerDTO.allEncStr%>"
+                             data-feature_label="<%=oneNewTimeObj[q].feature_label%>"
+      										 >退票</a>
+      										 <%}%>
+      								 </div>
+      							 </td>
+      					 <%}%>
+      					 <%if(j == 0) {%>
+      						 <%if(q == 0) {%>
+      					 <!-- <td class="br-none" rowspan="<%=OrderDTODataList[i].tickets.length%>">
+      						 <div class="txt-price"><i class="rmb"></i><%=OrderDTODataList[i].ticket_total_price_page%>元</div>
+      					 </td> -->
+      					 <%}%>
+      					 <%}%>
+      				 </tr>
+      			 <%}%>
+      			 <%}%>
+           <%}%>
+          </table>
+        </div>
+           <div class="order-item-ft">
+            <table class="order-item-table">
+              <tr>
+                <td class="td-left br-none quanxuan" colspan = '2'>
+                  <label class="check-inline">
+                      <%if(OrderDTODataList[i].tickets.length!=1) {%>
+                    <input class="quanxuaninp <%=(OrderDTODataList[i].resign_flag=='1'||OrderDTODataList[i].resign_flag=='2'||OrderDTODataList[i].resign_flag=='3')&&(OrderDTODataList[i].ticket_status_code!=='d'&&OrderDTODataList[i].ticket_status_code!=='p'&&OrderDTODataList[i].ticket_status_code!=='f'&&OrderDTODataList[i].ticket_status_code!=='r'&&OrderDTODataList[i].ticket_status_code!=='c') ? '' : 'disablecla'%>" type="checkbox">全选
+                      <%}%>
+                  </label>
+                  <%if(OrderDTODataList[i].tickets[0].ext_ticket_no !=''){%>
+                   <%if(OrderDTODataList[i].tickets.length!=1){%>
+                     <%var timeArray = []%>
+                       <%for(var z = 0; z< OrderDTODataList[i].tickets.length; z++) {%>
+                        <%if(OrderDTODataList[i].tickets[z].ticket_status_code == "y"&& OrderDTODataList[i].tickets[z].ticket_status_name.toString()=='已退票，未退款' ){%>
+                        <% timeArray.push(z)%>
+                        <%}%>
+                       <%}%>
+                       <!-- <%timeArray.sort(function (a, b) {%>
+                        <%return a-b;%>
+                     <%})%> -->
+                     <%if(timeArray.length!=0){%>
+                       <span style = "color:#FF8000">请在办理退票之日起180日内持购票证件和报销凭证到任一车站完成退款等相关手续</span>
+                       <%}%>
+                    <%}else{%>
+                       <%if(OrderDTODataList[i].tickets[0].ticket_status_code == "y"&& OrderDTODataList[i].tickets[0].ticket_status_name.toString()=='已退票，未退款' ){%>
+                         <span style = "color:#FF8000">请在办理退票之日起180日内持购票证件和报销凭证到任一车站完成退款等相关手续</span>
+                       <%}%>
+                    <%}%>
+                    <%}%>
+                </td>
+                <td colspan="6" class="order-operation">
+                  <div class="btn-right">
+                    <a href="javascript:void(0)" class="btn  orderxiangqing" data-sequenceno='<%=OrderDTODataList[i].sequence_no%>' data-index='0'  style='background-color:#ff8201;color:#fff;'>订单详情</a>
+                    <a href="javascript:void(0)" class="btn orderInsurance" data-sequenceno='<%=OrderDTODataList[i].sequence_no%>' data-index='3'   >购/赠/退保险</a>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+      				 
+      			
+      	 </div>
+      	 <%}%>
+    </script>
+  <!-- 待付款模板 正常可以付款的 -->
+  <script id="not_complete_temp" type="text/template">
+      	<%for(var i = 0; i< orderDBList.length; i++) {%>
+
+         <div class="order-item-hd">
+           <i class="icon icon-fold"></i>
+           <div class="order-hd-info"><span class="txt-light">订票日期：</span><span class="dingqiaoDate"><%=orderDBList[i].order_date.substr(0,10)%></span></div>
+         </div>
+         <div class="order-item-bd">
+           <table class="order-item-table">
+             <colgroup>
+               <col class="col-train">
+               <col class="col-passenger">
+               <col class="col-seat">
+               <col class="col-price">
+               <col class="col-state">
+               <col>
+             </colgroup>
+      		<%for(var j = 0; j< orderDBList[i].newTimeCodearr.length; j++) {%>
+      			<%var oneNewTimeObj = orderDBList[i].newTimeObj[orderDBList[i].newTimeCodearr[j]] %>
+            <%for( var q = 0 ; q< oneNewTimeObj.length;q++ ) {%>
+             <tr class="is-has-tag has-order-num <%=(oneNewTimeObj[q].ticket_status_code=='c'||oneNewTimeObj[q].ticket_status_code=='p')? 'item-disabled' : ''%>" >
+               <%if(q== 0) {%>
+               <td class="td-left align-top" rowspan='<%=oneNewTimeObj.length%>'>
+                 <div class="order-info-ticket">
+                  <%if(oneNewTimeObj[q].trade_no.length>30&&(oneNewTimeObj[q].trade_no.slice(29,30) == 1||oneNewTimeObj[q].trade_no.slice(29,30)==2)){%>
+                    <div class="order-info-tag">国际列车</div>
+                  <%}%>
+                   <!-- <div class="order-num-one">去程</div> -->
+                   <div class="txt-bold txt-lg"><%=oneNewTimeObj[q].stationTrainDTO.from_station_name%><i class="icon icon-to"></i><%=oneNewTimeObj[q].stationTrainDTO.to_station_name%> <%=oneNewTimeObj[q].stationTrainDTO.station_train_code%></div>
+                   <div>
+                    <%if(oneNewTimeObj[q].trade_no&&(oneNewTimeObj[q].trade_no.length>30&&(oneNewTimeObj[q].trade_no.slice(29,30) == '1'||oneNewTimeObj[q].trade_no.slice(29,30)=='2'))){%>
+                      <%=oneNewTimeObj[q].train_date_local&&oneNewTimeObj[q].train_date_local!=''?oneNewTimeObj[q].train_date_local.split(' ')[0]:oneNewTimeObj[q].start_train_date_page.substr(0,10)%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <%=oneNewTimeObj[q].stationTrainDTO.start_time_local?oneNewTimeObj[q].stationTrainDTO.start_time_local.substr(11,13):oneNewTimeObj[q].start_train_date_page.substr(11,13)%>
+                    <%}else{%>
+                      <%=oneNewTimeObj[q].start_train_date_page.substr(0,10)%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <%=oneNewTimeObj[q].start_train_date_page.substr(11,13)%> 
+                    <%}%>
+                    开</div>
+                   <%if(oneNewTimeObj[q].dw_flag&&oneNewTimeObj[q].dw_flag!=''){%>
+                    <%var dw_flag_data = oneNewTimeObj[q].dw_flag.split('#')%>
+                    <%if(dw_flag_data.length>=4&&dw_flag_data[4]=='0'){%>
+                      <div class="txt-danger">已停运</div>
+                    <%}%>
+                   <%}%>
+                 </div>
+               </td>
+               <%}%>
+               <td style='width: 200px;'>
+                 <div class="passenger-operation">
+      						<div><%=oneNewTimeObj[q].passengerDTO.passenger_name%>
+                    <%if(oneNewTimeObj[q].feature_label&&oneNewTimeObj[q].feature_label.slice(15,16)=='1') {%>
+                      <%if(oneNewTimeObj[q].trade_no.length < 30||((oneNewTimeObj[q].trade_no.length>30||oneNewTimeObj[q].trade_no.length==30)&&(oneNewTimeObj[q].trade_no.slice(29,30) == '1'||oneNewTimeObj[q].trade_no.slice(29,30)=='2'))){%>
+                      <a class="txt-primary underline ml-sm" href="./ticket_notice.html?<%=oneNewTimeObj[q].ext_ticket_no%>">打印信息单</a>
+                      <%}%>
+      								<%}%>
+      						</div>
+                   <div>
+                     <%=oneNewTimeObj[q].passengerDTO.passenger_id_type_name%>
+
+                     <%var tickets = orderDBList[i].tickets %>
+                     <%if(tickets[q].trade_no.length > '23'&&tickets[q].passengerDTO.passenger_id_type_code == 'B'){%>
+                      <span><%=tickets[q].trade_no.slice(21,24) == '000'||tickets[q].trade_no.slice(21,24) == 'CHN'? '' : '('+tickets[q].trade_no.slice(21,24)+')'%></span>
+                      <%}%>
+                    </div>
+                 </div>
+               </td>
+               <td>
+                 <div><%=oneNewTimeObj[q].seat_type_name%></div>
+                 <%if(oneNewTimeObj[q].coach_no=='99'){%>
+                  <div>不对号入座</div>
+                 <%}else{%>
+                  <div><%=oneNewTimeObj[q].coach_name%>车<%=oneNewTimeObj[q].seat_name%></div>
+                 <%}%>
+
+      		<%if(oneNewTimeObj[q].purpose_code=="1J"){%>
+      			<div class="txt-primary">静<i class="icon icon-plaint-fill purpose_tip"></i></div>
+      		<%}%>
+               </td>
+               <td>
+                  <div style="display:flex;align-item:center;justify-content:center">
+      			        <%=oneNewTimeObj[q].ticket_type_name%>
+                    <%if(oneNewTimeObj[q].trade_no.slice(37,38)=='K'||oneNewTimeObj[q].trade_no.slice(37,38)=='L'){%>
+                      <span style="display: inline-block;color:#4ca474;border:1px solid #4ca474;margin-left:10px;font-size:12px;padding:0 5px">老年优惠</span>
+                    <%}%>
+      		        </div>
+              <div>
+                <span class="txt-price"><%=oneNewTimeObj[q].str_ticket_price_page%>元</span>
+                <%if(oneNewTimeObj[q].preference_word&&oneNewTimeObj[q].preference_word != ''){%>
+                  <span class="label-discount-new ml-sm"><%=oneNewTimeObj[q].preference_word%></span>
+                <%}%>
+              </div>
+      				</td>
+      					<td>
+                  <div class='ticket-status-name'><%=oneNewTimeObj[q].ticket_status_name%></div>
+                </td>
+
+      				<%if(j == 0 ) {%>
+      					<%if(q == 0 ) {%>
+      					<!-- <td class="br-none" rowspan="<%=orderDBList[i].tickets.length%>">
+      						<div>总张数：<%=orderDBList[i].tickets.length%></div>
+      						<div>待支付金额：<span class="txt-price"><i class="rmb"></i><%=orderDBList[i].ticket_total_price_page%>元</span></div>
+      				</td> -->
+      				<%}%>
+      				<%}%>
+             </tr>
+           <%}%>
+         <%}%>
+        </table>
+      </div>
+         <div class="order-item-ft">
+          <table class="order-item-table">
+            <td colspan="6" class="order-operation">
+              <div class="btn-right">
+                  <a  href="javascript:void(0)" class="btn" data-sequence='<%=orderDBList[i].sequence_no%>' id='cancelBtn'>取消订单</a>
+                  <!-- pay_resign_flag为y是改签支付，n是正常支付 -->
+                  <a  href="javascript:void(0)" id="countdown<%=i%>" class="btn btn-primary"  data-sequence='<%=orderDBList[i].sequence_no%>' data-payflag='<%=orderDBList[i].pay_resign_flag%>'>网上支付(29分59秒)</a>
+              </div>
+            </td>
+          </table>
+         </div>
+      <%}%>
+    </script>
+
+  <!-- 待付款中排队中和排队失败的模板 -->
+  <script id="paidui_complete_temp" type="text/template">
+      <div class="order-item-hd">
+          <i class="icon icon-fold"></i>
+          <div class="order-hd-info"><span class="txt-light ">订票日期：</span><span class="dingqiaoDate"><%=orderCacheDTO.requestTime.substr(0,10)%></span></div>
+        </div>
+        <div class="order-item-bd">
+          <table class="order-item-table">
+            <colgroup>
+              <col class="col-train">
+              <col class="col-passenger">
+              <col class="col-seat">
+              <col class="col-price">
+              <col class="col-state">
+              <col>
+      		</colgroup>
+      	<%for(var j = 0; j< orderCacheDTO.tickets.length; j++) {%>
+            <tr class="has-order-num <%=(orderCacheDTO.tickets[j].ticket_status_code=='c'||orderCacheDTO.tickets[j].ticket_status_code=='p')? 'item-disabled' : ''%>" >
+              <%if(j == 0) {%>
+              <td class="td-left align-top" rowspan='<%=orderCacheDTO.array_passser_name_page.length%>'>
+                <div class="order-info-ticket">
+                  <!-- <div class="order-num-one">去程</div> -->
+                  <div class="txt-bold txt-lg"><%=orderCacheDTO.fromStationName%><i class="icon icon-to"></i><%=orderCacheDTO.toStationName%> <%=orderCacheDTO.stationTrainCode%></div>
+                  <div>
+                    <%if(orderCacheDTO.trade_no&&(orderCacheDTO.trade_no.length>30&&(orderCacheDTO.trade_no.slice(29,30)=='1'||orderCacheDTO.trade_no.slice(29,30)=='2'))){%>
+                      <%=orderCacheDTO.train_date_local&&orderCacheDTO.train_date_local!=''?orderCacheDTO.train_date_local.split(' ')[0]:orderCacheDTO.startTimeString.substr(0,10)%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <%=orderCacheDTO.stationTrainDTO.start_time_local?orderCacheDTO.stationTrainDTO.start_time_local.substr(11,13):orderCacheDTO.startTimeString.substr(11,13)%>
+                    <%}else{%>
+                      <%=orderCacheDTO.startTimeString.substr(0,10)%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <%=orderCacheDTO.startTimeString.substr(11,13)%> 
+                    <%}%>  
+                    开</div>
+                  <%if(orderCacheDTO.dw_flag&&orderCacheDTO.dw_flag!=''){%>
+                    <%var dw_flag_data = orderCacheDTO.dw_flag.split('#')%>
+                    <%if(dw_flag_data.length>=4&&dw_flag_data[4]=='0'){%>
+                      <div class="txt-danger">已停运</div>
+                     <%}%>
+                  <%}%>
+                </div>
+              </td>
+              <%}%>
+              <td style='width: 200px;'>
+                <div class="passenger-operation">
+      					<div><%=orderCacheDTO.tickets[j].passengerName%></div>
+      					<div><%=orderCacheDTO.tickets[j].passengerIdTypeName%></div>
+                </div>
+              </td>
+              <td>
+      				<div><%=orderCacheDTO.tickets[j].seatTypeName%></div>
+      				<!-- <div>座位空</div> -->
+              </td>
+              <td>
+                <div><%=orderCacheDTO.tickets[j].ticketTypeName%></div>
+                <!-- <div><span class="txt-price">￥ 价格空</span></div> -->
+      			</td>
+
+      				<td>
+      						<div class='ticket-status-name paiduizhongText'>排队中..</div>
+      					</td>
+
+              <%if(j == 0) {%>
+      				<td class="br-none" rowspan="<%=orderCacheDTO.tickets.length%>">
+      					<div>总张数：<%=orderCacheDTO.tickets.length%></div>
+      					<!-- <div>总金额：<span class="txt-price"><i class="rmb"></i>总价格空元</span></div> -->
+      			</td>
+              <%}%>
+            </tr>
+
+        <%}%>
+          </table>
+        </div>
+    </script>
+</body>
+
+</html>
+
+<!-- <script data-main="../personalJS/train_order/main" src="../personalJS/core/lib/require.js"></script> -->
+
+<script data-main="../personalJS/dist/train_order/main_v30014" src="../personalJS/core/lib/require.js"></script> 

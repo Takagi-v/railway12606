@@ -1,174 +1,208 @@
 <template>
-  <div class="passenger-page">
-    <a-form :model="query" layout="inline" class="filter form-railway">
-      <a-form-item>
-        <a-input
-          v-model:value="query.name"
-          placeholder="请输入乘客姓名"
-          allow-clear
-          style="width: 240px"
-        />
-      </a-form-item>
-      <a-form-item>
-        <a-button class="btn-query" @click="applyFilter">查询</a-button>
-      </a-form-item>
-    </a-form>
-
-    <div class="list">
-      <div class="list-actions">
-        <a href="javascript:;" class="list-action add" @click="openCreate">
-          <i class="icon icon-add-circle"></i>
-          添加
-        </a>
-        <a
-          href="javascript:;"
-          class="list-action del"
-          :class="{ disabled: selectedIds.length === 0 }"
-          @click="batchDelete"
-        >
-          <i class="icon icon-del"></i>
-          批量删除
-        </a>
-      </div>
-      <table class="table" cellspacing="0" cellpadding="0">
-        <thead>
-          <tr>
-            <th class="col-select">
-              <input type="checkbox" v-model="allChecked" @change="toggleAll" />
-            </th>
-            <th class="col-index">序号</th>
-            <th class="col-name">姓名</th>
-            <th class="col-type">旅客类型</th>
-            <th class="col-idtype">证件类型</th>
-            <th class="col-idno">证件号码</th>
-            <th class="col-phone">手机核验</th>
-            <th class="col-status">状态</th>
-            <th class="col-actions">操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(p, idx) in filteredPassengers" :key="p.id" :class="{ 'default-row': p.isDefault }">
-            <td class="col-select">
+  <div class="passenger-page-content">
+    <div class="order-panel">
+      <!-- Search Form -->
+          <div class="search-form-mini">
+            <div class="form-item">
               <input 
-                type="checkbox" 
-                :value="p.id" 
-                v-model="selectedIds" 
-                :disabled="p.isDefault"
+                type="text" 
+                class="input-txt" 
+                v-model="query.name" 
+                placeholder="请输入乘客姓名"
+                style="width: 200px; margin-right: 0;"
               />
-            </td>
-            <td class="col-index">{{ idx + 1 }}</td>
-            <td class="col-name">
-              <i class="icon icon-person"></i>
-              <span class="text">{{ p.name }}</span>
-              <span v-if="p.isDefault" class="badge badge-default">本人</span>
-            </td>
-            <td class="col-type">{{ p.type }}</td>
-            <td class="col-idtype">{{ p.idTypeLabel }}</td>
-            <td class="col-idno">{{ p.idNo }}</td>
-            <td class="col-phone">
-              <span :class="['badge', p.phoneVerified === 'Y' ? 'badge-success' : 'badge-warning']">
-                {{ p.phoneVerified === 'Y' ? '已核验' : '未核验' }}
-              </span>
-            </td>
-            <td class="col-status">{{ p.status }}</td>
-            <td class="col-actions">
-              <a 
-                v-if="!p.isDefault" 
-                href="javascript:;" 
-                class="action" 
-                @click="openEdit(p)"
-              >
-                <i class="icon icon-edit"></i>
-                编辑
-              </a>
-              <span v-else class="action disabled">
-                <i class="icon icon-edit"></i>
-                编辑
-              </span>
-              <a 
-                v-if="!p.isDefault" 
-                href="javascript:;" 
-                class="action" 
-                @click="handleDelete(p)"
-              >
-                <i class="icon icon-del"></i>
-                删除
-              </a>
-              <span v-else class="action disabled" title="默认乘客不可删除">
-                <i class="icon icon-del"></i>
-                删除
-              </span>
-            </td>
-          </tr>
-          <tr v-if="filteredPassengers.length === 0">
-            <td colspan="9" class="empty">暂无乘车人</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+              <a href="javascript:;" class="btn-primary" @click="applyFilter" style="padding: 0 15px; margin-left: 10px; height: 30px; line-height: 30px; border-radius: 4px;">查询</a>
+            </div>
+          </div>
 
-    <div class="pagination" v-if="totalPages > 1">
-      <a
-        href="javascript:;"
-        class="page-btn"
-        :class="{ disabled: currentPage === 1 }"
-        @click="prevPage"
-      >
-        上一页
-      </a>
-      <span class="page-info">第 {{ currentPage }} 页，共 {{ totalPages }} 页</span>
-      <a
-        href="javascript:;"
-        class="page-btn"
-        :class="{ disabled: currentPage === totalPages }"
-        @click="nextPage"
-      >
-        下一页
-      </a>
-    </div>
+          <!-- Table Header -->
+          <table class="order-panel-head">
+            <colgroup>
+              <col class="col-num" style="width: 60px;">
+              <col class="col-name" style="width: 100px;">
+              <col class="col-cardtype" style="width: 120px;">
+              <col class="col-cardnum" style="width: 160px;">
+              <col class="col-tel" style="width: 140px;">
+              <col class="col-state" style="width: 80px;">
+              <col class="col-op" style="width: 120px;">
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>序号</th>
+                <th>姓名</th>
+                <th>证件类型</th>
+                <th>证件号码</th>
+                <th>手机／电话</th>
+                <th>核验状态</th>
+                <th>操作</th>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- List Container -->
+          <div class="order-item">
+            <div class="order-item-hd">
+              <div class="order-hd-info">
+                <a href="javascript:void(0);" id='add_contact' @click="openCreate">
+                  <i class="icon icon-add-fill txt-success mr-sm"></i>添加
+                </a>
+              </div>
+              <div class="order-hd-info" id='batch_del'>
+                <a href="javascript:void(0);" @click="batchDelete">
+                  <i class="icon icon-del txt-error mr-sm"></i>批量删除
+                </a>
+              </div>
+            </div>
+            
+            <div class="order-item-bd">
+              <table class="order-item-table">
+                <colgroup>
+                  <col class="col-num" style="width: 60px;">
+                  <col class="col-name" style="width: 100px;">
+                  <col class="col-cardtype" style="width: 120px;">
+                  <col class="col-cardnum" style="width: 160px;">
+                  <col class="col-tel" style="width: 140px;">
+                  <col class="col-state" style="width: 80px;">
+                  <col class="col-op" style="width: 120px;">
+                </colgroup>
+                <tbody>
+                  <tr v-for="(p, idx) in filteredPassengers" :key="p.id">
+                    <td>
+                      <label class="check-inline">
+                        <input 
+                          type="checkbox" 
+                          :value="p.id" 
+                          v-model="selectedIds" 
+                          :disabled="p.isDefault"
+                        />
+                        {{ idx + 1 }}
+                      </label>
+                    </td>
+                    <td class="br-none">
+                      <div class="name-yichu" :title="p.name">
+                        {{ p.name }}
+                        <span v-if="p.isDefault" class="badge badge-default" style="margin-left:5px;font-size:12px;background:#3B99FC;color:#fff;padding:1px 3px;border-radius:2px;">本人</span>
+                      </div>
+                    </td>
+                    <td class="br-none">
+                      <div>{{ p.idTypeLabel }}</div>
+                    </td>
+                    <td class="br-none">
+                      <div>{{ p.idNoMasked }}</div>
+                    </td>
+                    <td class="br-none">
+                      <div>{{ p.phoneMasked || '--' }}</div>
+                    </td>
+                    <td class="br-none">
+                      <div class="verification-status-box">
+                        <!-- ID Verification -->
+                        <span 
+                          class="verification-status-common verification-status-user"
+                          :class="p.status === '正常' ? 'user-check-success' : 'user-check-error'"
+                          :title="p.status === '正常' ? '已通过' : '待核验'"
+                        ></span>
+                        
+                        <!-- Phone Verification (if phone exists) -->
+                        <span 
+                          v-if="p.phone"
+                          class="verification-status-common verification-status-phone"
+                          :class="p.phoneVerified === 'Y' ? 'mobile-check-success' : 'mobile-check-error'"
+                          :title="p.phoneVerified === 'Y' ? '手机核验通过' : '手机核验未通过'"
+                        ></span>
+                      </div>
+                    </td>
+                    <td class="br-none">
+                      <div class="list-operation">
+                        <a v-if="!p.isDefault" href="javascript:void(0);" class="one-del" @click="handleDelete(p)">
+                          <i class="icon icon-del"></i>
+                        </a>
+                        <a v-if="!p.isDefault" href="javascript:void(0);" class="one-edit" @click="openEdit(p)">
+                          <i class="icon icon-edit"></i>
+                        </a>
+                        <span v-if="p.isDefault" style="color:#999;font-size:12px;">默认乘客</span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr v-if="filteredPassengers.length === 0">
+                    <td colspan="7" class="empty" style="padding: 50px 0; color: #999;">暂无乘车人</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="pagination" v-if="totalPages > 1" style="margin-top: 20px; text-align: center;">
+            <a
+              href="javascript:;"
+              class="page-btn"
+              :class="{ disabled: currentPage === 1 }"
+              @click="prevPage"
+              style="margin-right: 10px;"
+            >上一页</a>
+            <span class="page-info">第 {{ currentPage }} 页，共 {{ totalPages }} 页</span>
+            <a
+              href="javascript:;"
+              class="page-btn"
+              :class="{ disabled: currentPage === totalPages }"
+              @click="nextPage"
+              style="margin-left: 10px;"
+            >下一页</a>
+          </div>
+        </div>
+
+        <!-- Add/Edit Modal -->
+        <a-modal
+          v-model:open="showForm"
+          :title="formMode === 'create' ? '新增乘车人' : '编辑乘车人'"
+          :maskClosable="false"
+          :footer="null"
+          width="600px"
+        >
+          <a-form :model="form" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }" class="form-railway">
+            <a-form-item label="姓名" required>
+              <a-input v-model:value="form.name" placeholder="请输入姓名" />
+            </a-form-item>
+            <a-form-item label="证件类型" required>
+              <a-select v-model:value="form.id_type">
+                <a-select-option v-for="opt in idTypeOptions" :key="opt" :value="opt">
+                  {{ opt }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item label="证件号码" required>
+              <a-input v-model:value="form.id_number" placeholder="请输入证件号码" />
+            </a-form-item>
+            <a-form-item label="手机号" required>
+              <a-input v-model:value="form.phone" placeholder="请输入手机号" />
+            </a-form-item>
+            <a-form-item label="旅客类型" required>
+              <a-select v-model:value="form.passenger_type">
+                <a-select-option v-for="opt in passengerTypeOptions" :key="opt" :value="opt">
+                  {{ opt }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+            <div class="modal-footer" style="text-align: right; border-top: 1px solid #e8e8e8; padding-top: 10px; margin-top: 20px;">
+              <a-button @click="closeForm" style="margin-right: 10px;">取消</a-button>
+              <a-button type="primary" @click="submitForm" style="background: #FF8200; border-color: #FF8200;">确定</a-button>
+            </div>
+          </a-form>
+        </a-modal>
   </div>
-  <a-modal
-    v-model:open="showForm"
-    :title="formMode === 'create' ? '新增乘车人' : '编辑乘车人'"
-    :maskClosable="false"
-    :footer="null"
-  >
-    <a-form :model="form" layout="vertical" class="form-railway">
-      <a-form-item label="姓名">
-        <a-input v-model:value="form.name" />
-      </a-form-item>
-      <a-form-item label="证件类型">
-        <a-select v-model:value="form.id_type" style="width: 100%">
-          <a-select-option v-for="opt in idTypeOptions" :key="opt" :value="opt">
-            {{ opt }}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item label="证件号码">
-        <a-input v-model:value="form.id_number" />
-      </a-form-item>
-      <a-form-item label="手机号">
-        <a-input v-model:value="form.phone" />
-      </a-form-item>
-      <a-form-item label="旅客类型">
-        <a-select v-model:value="form.passenger_type" style="width: 100%">
-          <a-select-option v-for="opt in passengerTypeOptions" :key="opt" :value="opt">
-            {{ opt }}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-      <div class="modal-footer">
-        <a-button @click="closeForm">取消</a-button>
-        <a-button type="primary" @click="submitForm">确定</a-button>
-      </div>
-    </a-form>
-  </a-modal>
 </template>
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { getPassengers, createPassenger, updatePassenger, deletePassenger, syncDefaultPassenger } from '@/api/passenger'
+// Import 12306 styles
+import '@/assets/12306-passenger/center.css'
+import '@/assets/12306-passenger/ticket_public_v70001.css'
+import '@/assets/12306-passenger/passenger-custom.css'
+
+// ... rest of script ...
+
 
 const query = ref({ name: '' })
 const loading = ref(false)
@@ -215,13 +249,27 @@ const nextPage = () => {
   if (currentPage.value < totalPages.value) currentPage.value += 1
 }
 
+const maskId = (id) => {
+  if (!id || id.length < 10) return id
+  return id.substring(0, 4) + '**********' + id.substring(id.length - 3)
+}
+
+const maskPhone = (phone) => {
+  if (!phone || phone.length < 7) return phone
+  // 12306 format: (+86)151****3156 or just 151****3156 if no country code
+  // Assuming standard 11 digit mobile for now
+  return '(+86)' + phone.substring(0, 3) + '****' + phone.substring(7)
+}
+
 const mapPassenger = p => ({
   id: p.id,
   name: p.name,
   type: p.passenger_type,
   idTypeLabel: p.id_type,
   idNo: p.id_number,
+  idNoMasked: maskId(p.id_number),
   phone: p.phone,
+  phoneMasked: maskPhone(p.phone),
   phoneVerified: p.verified ? 'Y' : 'N',
   status: p.verified ? '正常' : '待核验',
   isDefault: p.is_default || false
@@ -301,7 +349,10 @@ const submitForm = async () => {
     message.error('请选择旅客类型')
     return
   }
-  const dup = passengers.value.some(p => String(p.idNo) === String(v.id_number) && String(p.idTypeLabel) === String(v.id_type))
+  const dup = passengers.value.some(p => {
+    if (formMode.value === 'edit' && p.id === editingId.value) return false
+    return String(p.idNo) === String(v.id_number) && String(p.idTypeLabel) === String(v.id_type)
+  })
   if (dup) {
     message.error('该证件号的乘车人已存在')
     return

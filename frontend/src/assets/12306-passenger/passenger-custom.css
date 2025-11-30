@@ -1,0 +1,119 @@
+/* Fix overflow and layout issues */
+.center-box {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.center-main {
+  width: calc(100% - 140px) !important;
+  float: right !important;
+  padding: 0 !important;
+  box-sizing: border-box;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+.order-panel {
+  width: 100% !important;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+
+.search-form-mini {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 0;
+  margin-bottom: 10px;
+}
+
+.order-panel-head, .order-item-table {
+  width: 100% !important;
+  table-layout: fixed;
+}
+
+/* Ensure table content doesn't break layout */
+.order-item-table td > div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Button styles */
+.btn-primary {
+  display: inline-block;
+  text-align: center;
+  color: #333;
+  background: #fff;
+  border: 1px solid #dedede;
+  cursor: pointer;
+  box-sizing: border-box; /* Ensure border is included in width/height */
+}
+
+.btn-primary:hover {
+  background: #f7f7f7;
+  color: #FF8200;
+  border-color: #FF8200;
+}
+
+/* Verification Status Icons */
+.verification-status-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Ensure it takes full cell height */
+}
+
+.verification-status-common {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+  margin: 0 2px;
+}
+
+.user-check-success {
+  background-image: url('./user-check-success.png');
+  background-size: contain;
+}
+
+.user-check-error {
+  background-image: url('./user-check-error.png');
+  background-size: contain;
+}
+
+.mobile-check-success {
+  background-image: url('./mobile-check-success.png');
+  background-size: contain;
+}
+
+.mobile-check-error {
+  background-image: url('./mobile-check-error.png');
+  background-size: contain;
+}
+
+/* Layout fixes for table cells */
+.check-inline {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  height: 100%;
+}
+
+.check-inline input {
+  margin-right: 5px;
+}
+
+.list-operation {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  gap: 8px;
+  height: 100%; /* Ensure full height */
+}
+
+.list-operation a {
+  display: inline-block;
+}

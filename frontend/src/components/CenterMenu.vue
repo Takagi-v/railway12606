@@ -6,13 +6,13 @@
         :class="{ active: activeGroup === g.label, clickable: isClickableGroup(g.key) }"
         @click="onGroupClick(g)"
       >
+        {{ g.label }}
         <i
           v-if="g.children && g.children.length"
-          class="icon icon-caret-right caret"
+          class="icon icon-switch"
           :class="{ open: expanded[g.key] }"
           @click.stop="toggleGroup(g.key)"
         ></i>
-        {{ g.label }}
       </h2>
       <ul
         v-if="g.children && g.children.length"
@@ -196,79 +196,74 @@ watch(
 </script>
 
 <style scoped>
-@import url('@/styles/iconfont-12306-local.css');
+@import url('@/assets/12306-icons/fonts/iconfont.css');
+
 .center-menu {
-  width: 168px;
-  background: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
+  width: 130px;
+  background: transparent;
+  border: none;
   list-style: none;
-  padding: 8px 0;
+  padding: 0;
   margin: 0;
 }
 .center-menu .menu-item {
-  padding: 8px 12px;
-  border-bottom: 1px solid #f0f0f0;
-}
-.center-menu .menu-item:last-child {
-  border-bottom: none;
+  margin-bottom: 4px;
 }
 .center-menu .menu-tit {
-  font-size: 15px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
   color: #333;
   margin: 0;
+  padding: 0 10px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   cursor: default;
-  white-space: nowrap;
-  padding: 6px 0;
+  background-color: transparent;
 }
 .center-menu .menu-tit.clickable {
   cursor: pointer;
 }
 .center-menu .menu-tit.active {
-  background: var(--primary-color);
+  background: #3b99fc;
   color: #fff;
-  border-radius: 2px;
 }
-.center-menu .menu-tit .caret {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  margin-right: 8px;
-  color: #b3b3b3;
-  transform: rotate(0deg);
-  transition: transform 0.15s ease;
+.center-menu .menu-tit .icon-switch {
+  font-size: 16px;
+  color: #ccc;
+  cursor: pointer;
+  transition: transform 0.2s;
 }
-.center-menu .menu-tit .caret.open {
-  transform: rotate(90deg);
+.center-menu .menu-tit .icon-switch.open {
+  transform: rotate(180deg);
 }
-.center-menu .menu-tit.active .caret {
+.center-menu .menu-tit.active .icon-switch {
   color: #fff;
 }
 .center-menu .menu-sub {
   list-style: none;
-  padding: 6px 0 0;
+  padding: 0;
   margin: 0;
 }
 .center-menu .menu-sub li a {
   display: block;
-  color: var(--primary-color);
+  height: 30px;
+  line-height: 30px;
+  padding: 0 10px 0 20px;
+  color: #666;
   text-decoration: none;
-  font-size: 13px;
-  padding: 6px 0;
+  font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .center-menu .menu-sub li a:hover {
-  text-decoration: underline;
-}
-.center-menu .menu-sub li.active {
-  background: var(--primary-color);
+  color: #3b99fc;
+  text-decoration: none;
 }
 .center-menu .menu-sub li.active a {
-  color: #fff;
+  color: #3b99fc;
   text-decoration: none;
 }
 </style>

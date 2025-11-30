@@ -74,6 +74,11 @@ const goFeedback = () => router.push({ name: 'user-feedback' })
 
 <style scoped>
 /* 复刻官网 service-list 样式 */
+.service-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 .service-list:before,
 .service-list:after {
   content: '';
