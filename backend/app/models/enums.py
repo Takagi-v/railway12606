@@ -52,6 +52,7 @@ class SeatStatus(Enum):
 class OrderStatus(Enum):
     PENDING = "待支付"
     PAID = "已支付"
+    PARTIALLY_REFUNDED = "部分退票"
     CANCELED = "已取消"
     REFUNDED = "已退票"
 

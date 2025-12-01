@@ -717,7 +717,7 @@
                       href="javascript:"
                       class="btn72"
                       style="cursor: pointer"
-                      @click="showTicketPrice(train)"
+                      @click.prevent="bookTrain(train)"
                     >
                       预订
                       <i class="ico-dh"></i>
@@ -763,6 +763,10 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import dayjs from 'dayjs'
 import { message, DatePicker } from 'ant-design-vue'
+
+// 单独引入 leftTicket 样式，避免污染全局
+import '@/assets/12306-leftticket/leftTicket.css'
+
 import Header12306 from '@/components/Header12306.vue'
 import Footer from '@/components/LoginFooter.vue'
 import CitySelector from '@/components/CitySelector.vue'

@@ -130,6 +130,8 @@ const response = await login({ username, password })
 - 使用 scoped 样式避免全局污染
 - 公共样式定义在 `src/assets/main.css`
 - 使用 CSS 变量定义主题色
+- **特别注意**：对于 12306 复刻页面（如 LeftTicket, Homepage），**严禁**在全局引入其 CSS 文件。
+  - 请参考 [CSS开发规范](CSS_BEST_PRACTICES.md) 进行资源本地化和隔离开发。
 
 ## 功能模块
 

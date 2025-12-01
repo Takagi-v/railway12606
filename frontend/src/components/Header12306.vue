@@ -60,7 +60,7 @@
               aria-label="点击搜索"
               @mousedown.prevent="handleSearch"
             >
-              <i class="hdr-icon hdr-search"></i>
+              <i class="icon icon-search"></i>
             </a>
           </div>
           <!-- 右侧顶部菜单：无障碍 敬老版 English 我的12306 登录/注册 -->
@@ -84,7 +84,12 @@
               </ul>
             </li>
             <li class="menu-item menu-line">|</li>
-            <li class="menu-item menu-nav" role="menuitem">
+            <li
+              class="menu-item menu-nav"
+              role="menuitem"
+              @mouseenter="showMy12306"
+              @mouseleave="hideMy12306"
+            >
               <a
                 href="javascript:;"
                 class="menu-nav-hd item"
@@ -94,7 +99,7 @@
                 我的12306
                 <i class="caret"></i>
               </a>
-              <ul class="menu-nav-bd" role="menu">
+              <ul class="menu-nav-bd" role="menu" :class="{ show: my12306Active }">
                 <li><a href="javascript:;" @click.prevent="goOrderInquiry">火车票订单</a></li>
                 <li><a href="javascript:;">候补订单</a></li>
                 <li><a href="javascript:;">计次•定期票订单</a></li>
@@ -153,13 +158,25 @@
                 <ul class="nav-con nav-two" role="menu" aria-hidden="true">
                   <!-- 按官网行序：单程、往返 | 中转换乘、计次•定期票 -->
                   <li class="nav_dan">
-                    <a href="javascript:;" @click.prevent="openTicket('dc')">单程</a>
+                    <a href="javascript:;" @click.prevent="openTicket('dc')">
+                      <i class="icon icon-dancheng" style="color: #3b99fc; margin-right: 4px; font-size: 18px;"></i>单程
+                    </a>
                   </li>
                   <li class="nav_wang">
-                    <a href="javascript:;" @click.prevent="openTicket('wf')">往返</a>
+                    <a href="javascript:;" @click.prevent="openTicket('wf')">
+                      <i class="icon icon-wangfan" style="color: #3b99fc; margin-right: 4px; font-size: 18px;"></i>往返
+                    </a>
                   </li>
-                  <li><a href="javascript:;" @click.prevent="openTransfer">中转换乘</a></li>
-                  <li><a href="javascript:;" @click.prevent="openSeason">计次•定期票</a></li>
+                  <li>
+                    <a href="javascript:;" @click.prevent="openTransfer">
+                      <i class="icon icon-huancheng" style="color: #3b99fc; margin-right: 4px; font-size: 18px;"></i>中转换乘
+                    </a>
+                  </li>
+                  <li>
+                    <a href="javascript:;" @click.prevent="openSeason">
+                      <i class="icon icon-chepiao" style="color: #3b99fc; margin-right: 4px; font-size: 18px;"></i>计次•定期票
+                    </a>
+                  </li>
                 </ul>
               </div>
               <div class="nav-bd-item nav-col2">
@@ -351,6 +368,24 @@ const filteredSuggestions = computed(() => {
   return suggestions.value.filter(s => s.includes(kw))
 })
 
+// 我的12306 下拉菜单交互优化
+const my12306Active = ref(false)
+let my12306Timer = null
+
+const showMy12306 = () => {
+  if (my12306Timer) {
+    clearTimeout(my12306Timer)
+    my12306Timer = null
+  }
+  my12306Active.value = true
+}
+
+const hideMy12306 = () => {
+  my12306Timer = setTimeout(() => {
+    my12306Active.value = false
+  }, 200) // 延迟200ms隐藏，防止鼠标划出瞬间消失
+}
+
 const onSearchBlur = () => {
   // 延迟关闭，保证选择项点击可用
   setTimeout(() => (searchActive.value = false), 120)
@@ -439,6 +474,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@import '@/assets/12306-icons/fonts/iconfont.css';
+
 /* 容器与栅格 */
 .wrapper {
   width: 1200px;
@@ -446,12 +483,26 @@ onMounted(() => {
 }
 .header {
   background: #fff;
+  position: relative;
+  z-index: 500;
+}
+.header:before {
+  content: '';
+  position: absolute;
+  top: 24px;
+  right: 0;
+  left: 50%;
+  height: 40px;
+  background: #f8f8f8;
+  z-index: 0;
 }
 .header-con {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 0;
+  padding: 19px 0;
+  position: relative;
+  z-index: 1;
 }
 .logo {
   margin: 0;
@@ -477,15 +528,19 @@ onMounted(() => {
 .header-right {
   display: flex;
   align-items: center;
+  background: url('@/assets/12306-icons/train.png') no-repeat left top #f8f8f8;
+  background-size: 1000px 40px;
+  height: 40px;
 }
 .header-search {
-  width: 380px;
+  width: 420px;
   display: flex;
   align-items: center;
+  margin-left: 80px;
 }
 .search-bd {
   position: relative;
-  width: 350px;
+  width: 320px;
 }
 .search-input {
   width: 100%;
@@ -505,12 +560,6 @@ onMounted(() => {
 }
 .hdr-icon {
   display: inline-block;
-}
-.hdr-search {
-  width: 16px;
-  height: 16px;
-  background: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path fill=\"white\" d=\"M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 5 1.5-1.5-5-5zm-6 0C8.01 14 6 11.99 6 9.5S8.01 5 10.5 5 15 7.01 15 9.5 12.99 14 10.5 14z\"/></svg>')
-    center/contain no-repeat;
 }
 
 /* 搜索下拉 */
@@ -582,20 +631,20 @@ onMounted(() => {
 }
 .menu-item {
   height: 40px;
-  color: #333;
+  color: #3b99fc;
   display: flex;
   align-items: center;
   padding: 0 6px;
 }
 .menu-line {
-  color: #999;
+  color: #acd1f9;
   padding: 0 4px;
 }
 .menu-nav {
   position: relative;
 }
 .menu-nav-hd {
-  color: #333;
+  color: #3b99fc;
 }
 .menu-nav .caret {
   display: inline-block;
@@ -627,22 +676,27 @@ onMounted(() => {
   top: 100%;
   left: 0;
   background: #fff;
-  border: 1px solid #ddd;
-  min-width: 180px;
-  padding: 4px 0;
+  border: 1px solid #dedede;
+  min-width: 120px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
   z-index: 20;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .menu-nav:hover .menu-nav-bd {
   display: block;
 }
+.menu-nav-bd.show {
+  display: block;
+}
 .menu-nav-bd li a {
   display: block;
-  padding: 0 12px;
+  padding: 0 15px;
   white-space: nowrap;
   color: #333;
   font-size: 12px;
-  line-height: 26px;
+  line-height: 30px;
 }
 .menu-nav-bd li a:hover {
   background: #f5f5f5;
@@ -724,9 +778,10 @@ onMounted(() => {
   right: 0;
   background: #fff;
   border-bottom: 1px solid #dedede;
-  padding: 16px 0;
-  z-index: 30;
+  padding: 20px 0;
+  z-index: 2000;
   overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 .nav-item:hover .nav-bd {
   display: block;
@@ -773,6 +828,8 @@ onMounted(() => {
 }
 .nav-con li a {
   color: #333;
+  display: flex;
+  align-items: center;
 }
 .nav-con li a:hover {
   color: #3b99fc;

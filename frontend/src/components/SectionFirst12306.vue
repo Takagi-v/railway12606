@@ -1260,8 +1260,9 @@ onUnmounted(() => {
 </script>
 
 <!-- 引入原站样式与图标字体，确保外观一致性 -->
-<style>
-@import url('https://www.12306.cn/index/css/index_y_v50003.css');
+<style scoped>
+/* 使用本地化的 12306 首页样式，并启用 Scoped 防止污染全局 */
+@import '@/assets/12306-homepage/index_y_v50003.css';
 /* 使用本地化的 12306 图标，实现稳定显示 */
 @import url('@/styles/iconfont-12306-local.css');
 /* 引入官网 iconfont 本地副本，确保 search-index 图标与官网一致 */

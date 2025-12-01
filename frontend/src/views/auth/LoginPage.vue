@@ -59,12 +59,7 @@
 
             <!-- 账号登录表单 -->
             <div v-if="activeTab === 'account'" class="login-form-container">
-              <a-form
-                :model="loginForm"
-                layout="vertical"
-                class="login-form"
-                @finish="handleLogin"
-              >
+              <a-form :model="loginForm" layout="vertical" class="login-form" @finish="handleLogin">
                 <a-form-item name="username">
                   <a-input
                     v-model:value="loginForm.username"
@@ -92,7 +87,10 @@
                   </a-input-password>
                 </a-form-item>
 
-                <div v-if="submitError" class="submit-error"><i class="icon icon-plaint-fill error-icon"></i>{{ submitError }}</div>
+                <div v-if="submitError" class="submit-error">
+                  <i class="icon icon-plaint-fill error-icon"></i>
+                  {{ submitError }}
+                </div>
 
                 <a-form-item>
                   <a-button
@@ -108,19 +106,11 @@
               </a-form>
 
               <div class="login-links">
-                <a-button
-                  type="link"
-                  class="register-link"
-                  @click="router.push('/register')"
-                >
+                <a-button type="link" class="register-link" @click="router.push('/register')">
                   注册12306账号
                 </a-button>
                 <span class="links-sep">|</span>
-                <a-button
-                  type="link"
-                  class="forgot-link"
-                  @click="router.push('/forgot-password')"
-                >
+                <a-button type="link" class="forgot-link" @click="router.push('/forgot-password')">
                   忘记密码？
                 </a-button>
               </div>
@@ -143,7 +133,8 @@
             <!-- 服务时间提示 -->
             <div class="service-time">
               <p>
-                铁路12306每日5:00至次日1:00（周二为5:00至24:00）提供购票、改签、变更到站业务办理， 全天均可办理退票等其他服务。
+                铁路12306每日5:00至次日1:00（周二为5:00至24:00）提供购票、改签、变更到站业务办理，
+                全天均可办理退票等其他服务。
               </p>
             </div>
           </div>
@@ -164,9 +155,16 @@
       <LoginFooter />
       <div class="footer-txt">
         <div class="footer-txt-inner">
-          <p class="footer-line">版权所有©2008-2025 中国铁道科学研究院集团有限公司 技术支持：铁旅科技有限公司</p>
-          <p class="footer-line"><img :src="imgGongan" alt="公安备案" class="footer-icon" />京公网安备 11010802038392号  |  京ICP备05020493号-4  |  ICP证：京B2-20202537</p>
-          <div class="footer-right"><img :src="imgFooterSlh" alt="适老化 无障碍服务" class="footer-slh" /></div>
+          <p class="footer-line">
+            版权所有©2008-2025 中国铁道科学研究院集团有限公司 技术支持：铁旅科技有限公司
+          </p>
+          <p class="footer-line">
+            <img :src="imgGongan" alt="公安备案" class="footer-icon" />
+            京公网安备 11010802038392号 | 京ICP备05020493号-4 | ICP证：京B2-20202537
+          </p>
+          <div class="footer-right">
+            <img :src="imgFooterSlh" alt="适老化 无障碍服务" class="footer-slh" />
+          </div>
         </div>
       </div>
     </div>
@@ -210,7 +208,9 @@
           </div>
         </div>
         <div class="verify-actions">
-          <a-button type="primary" class="verify-confirm" @click="confirmVerify" :loading="loading">确定</a-button>
+          <a-button type="primary" class="verify-confirm" @click="confirmVerify" :loading="loading">
+            确定
+          </a-button>
         </div>
       </div>
     </a-modal>
@@ -237,18 +237,18 @@ const loginAttempts = ref(0)
 const maxAttempts = 5
 
 const bgImages = [
-  new URL("../../../pics/banner-login-20200629.jpg", import.meta.url).href,
-  new URL("../../../pics/banner-login-20200924.jpg", import.meta.url).href,
-];
-const logoImage = new URL("../../../pics/logo@2x.png", import.meta.url).href;
-const imgGongan = new URL("../../../pics/gongan.png", import.meta.url).href;
-const imgFooterSlh = new URL("../../../pics/footer-slh.jpg", import.meta.url).href;
- 
-const currentSlide = ref(0);
-const setSlide = (i) => {
-  currentSlide.value = i;
-};
-const bgTimer = ref(null);
+  new URL('../../../pics/banner-login-20200629.jpg', import.meta.url).href,
+  new URL('../../../pics/banner-login-20200924.jpg', import.meta.url).href
+]
+const logoImage = new URL('../../../pics/logo@2x.png', import.meta.url).href
+const imgGongan = new URL('../../../pics/gongan.png', import.meta.url).href
+const imgFooterSlh = new URL('../../../pics/footer-slh.jpg', import.meta.url).href
+
+const currentSlide = ref(0)
+const setSlide = i => {
+  currentSlide.value = i
+}
+const bgTimer = ref(null)
 
 // 验证码相关
 const showCaptcha = ref(false)
@@ -493,38 +493,38 @@ const stopQrPolling = () => {
 }
 
 // 处理登录
-const submitError = ref("");
+const submitError = ref('')
 
 const handleLogin = async () => {
   try {
-    submitError.value = "";
+    submitError.value = ''
 
-    const uname = loginForm.username.trim();
-    const pwd = loginForm.password;
+    const uname = loginForm.username.trim()
+    const pwd = loginForm.password
 
     if (!uname) {
-      submitError.value = "请输入用户名/邮箱/手机号";
-      return;
+      submitError.value = '请输入用户名/邮箱/手机号'
+      return
     }
     if (!pwd) {
-      submitError.value = "请输入密码";
-      return;
+      submitError.value = '请输入密码'
+      return
     }
 
-    errorMessage.value = "";
+    errorMessage.value = ''
 
     const loginData = {
       username: uname,
       password: pwd,
-      loginType: /^1[3-9]\d{9}$/.test(uname) ? "phone" : "account",
-      remember: loginForm.remember,
-    };
+      loginType: /^1[3-9]\d{9}$/.test(uname) ? 'phone' : 'account',
+      remember: loginForm.remember
+    }
 
     if (showCaptcha.value) {
       loginData.captcha = loginForm.captcha
       loginData.captchaToken = captchaToken.value
     }
-    openVerifyModal(loginData);
+    openVerifyModal(loginData)
   } catch (error) {
     console.error('登录失败:', error)
 
@@ -616,21 +616,21 @@ onMounted(() => {
   }
 
   bgTimer.value = setInterval(() => {
-    currentSlide.value = (currentSlide.value + 1) % bgImages.length;
-  }, 15000);
-});
+    currentSlide.value = (currentSlide.value + 1) % bgImages.length
+  }, 15000)
+})
 
 onUnmounted(() => {
-  stopQrPolling();
+  stopQrPolling()
   if (bgTimer.value) {
-    clearInterval(bgTimer.value);
-    bgTimer.value = null;
+    clearInterval(bgTimer.value)
+    bgTimer.value = null
   }
   if (codeTimerRef.value) {
-    clearInterval(codeTimerRef.value);
-    codeTimerRef.value = null;
+    clearInterval(codeTimerRef.value)
+    codeTimerRef.value = null
   }
-});
+})
 
 // 监听activeTab变化
 watch(activeTab, newTab => {
@@ -639,92 +639,89 @@ watch(activeTab, newTab => {
   } else {
     stopQrPolling()
   }
-});
+})
 
-watch(
-  [() => loginForm.username, () => loginForm.password],
-  () => {
-    if (submitError.value) submitError.value = "";
-  }
-);
+watch([() => loginForm.username, () => loginForm.password], () => {
+  if (submitError.value) submitError.value = ''
+})
 
-const verifyVisible = ref(false);
-const verify = reactive({ idLast4: "", code: "" });
-const codeSending = ref(false);
-const codeCooldown = ref(0);
-const codeTimerRef = ref(null);
-const pendingLoginData = ref(null);
+const verifyVisible = ref(false)
+const verify = reactive({ idLast4: '', code: '' })
+const codeSending = ref(false)
+const codeCooldown = ref(0)
+const codeTimerRef = ref(null)
+const pendingLoginData = ref(null)
 
-const openVerifyModal = (data) => {
-  pendingLoginData.value = data;
-  verifyVisible.value = true;
-};
+const openVerifyModal = data => {
+  pendingLoginData.value = data
+  verifyVisible.value = true
+}
 
 const closeVerifyModal = () => {
-  verifyVisible.value = false;
-  verify.idLast4 = "";
-  verify.code = "";
-};
+  verifyVisible.value = false
+  verify.idLast4 = ''
+  verify.code = ''
+}
 
 const sendSmsCode = async () => {
-  if (codeCooldown.value > 0) return;
+  if (codeCooldown.value > 0) return
   try {
-    codeSending.value = true;
-    await new Promise((r) => setTimeout(r, 500));
-    message.success("验证码已发送");
-    codeCooldown.value = 60;
-    if (codeTimerRef.value) clearInterval(codeTimerRef.value);
+    codeSending.value = true
+    await new Promise(r => setTimeout(r, 500))
+    message.success('验证码已发送')
+    codeCooldown.value = 60
+    if (codeTimerRef.value) clearInterval(codeTimerRef.value)
     codeTimerRef.value = setInterval(() => {
-      codeCooldown.value--;
+      codeCooldown.value--
       if (codeCooldown.value <= 0) {
-        clearInterval(codeTimerRef.value);
-        codeTimerRef.value = null;
+        clearInterval(codeTimerRef.value)
+        codeTimerRef.value = null
       }
-    }, 1000);
+    }, 1000)
   } finally {
-    codeSending.value = false;
+    codeSending.value = false
   }
-};
+}
 
 const confirmVerify = async () => {
-  const id4 = verify.idLast4.trim();
-  const code = verify.code.trim();
+  const id4 = verify.idLast4.trim()
+  const code = verify.code.trim()
   if (!/^\d{4}$/.test(id4)) {
-    message.error("请输入证件后4位");
-    return;
+    message.error('请输入证件后4位')
+    return
   }
   if (!/^\d{4,6}$/.test(code)) {
-    message.error("请输入验证码");
-    return;
+    message.error('请输入验证码')
+    return
   }
   try {
-    loading.value = true;
-    const data = { ...pendingLoginData.value, idLast4: id4, smsCode: code };
-    await userStore.login(data);
-    message.success("登录成功");
-    loginAttempts.value = 0;
-    const redirect = route.query.redirect || "/";
-    closeVerifyModal();
-    router.push(redirect);
+    loading.value = true
+    const data = { ...pendingLoginData.value, idLast4: id4, smsCode: code }
+    await userStore.login(data)
+    message.success('登录成功')
+    loginAttempts.value = 0
+    const redirect = route.query.redirect || '/'
+    closeVerifyModal()
+    router.push(redirect)
   } catch (error) {
-    console.error("登录失败:", error);
-    message.error(error.message || "登录失败，请检查信息");
+    console.error('登录失败:', error)
+    message.error(error.message || '登录失败，请检查信息')
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
-watch(verifyVisible, (v) => {
+watch(verifyVisible, v => {
   if (!v) {
-    verify.idLast4 = "";
-    verify.code = "";
+    verify.idLast4 = ''
+    verify.code = ''
     if (codeTimerRef.value) {
-      clearInterval(codeTimerRef.value);
-      codeTimerRef.value = null;
+      clearInterval(codeTimerRef.value)
+      codeTimerRef.value = null
     }
-    codeCooldown.value = 0;
+    codeCooldown.value = 0
   }
-});
+})
 </script>
 
 <style scoped>
@@ -971,7 +968,7 @@ watch(verifyVisible, (v) => {
 }
 
 .login-tabs::after {
-  content: "";
+  content: '';
   position: absolute;
   left: 50%;
   top: 10px;
@@ -1334,8 +1331,6 @@ watch(verifyVisible, (v) => {
   align-items: center;
 }
 
- 
-
 .qr-code-small {
   width: 120px;
   height: 120px;
@@ -1615,7 +1610,9 @@ watch(verifyVisible, (v) => {
 }
 .verify-modal :deep(.ant-modal-content) {
   border-radius: 8px !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18), 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.18),
+    0 2px 10px rgba(0, 0, 0, 0.08) !important;
   border: 1px solid #e6f4ff !important;
   overflow: hidden;
   position: relative;
@@ -1644,7 +1641,7 @@ watch(verifyVisible, (v) => {
   font-size: 16px !important;
 }
 .verify-modal :deep(.ant-modal-close:hover) {
-  background: rgba(0,0,0,0.06) !important;
+  background: rgba(0, 0, 0, 0.06) !important;
   color: #666 !important;
 }
 .verify-header {
@@ -1735,7 +1732,6 @@ watch(verifyVisible, (v) => {
   background: #f26c02;
   border-color: #f26c02;
 }
-
 
 /* 手机设备 (480px及以下) */
 @media (max-width: 480px) {

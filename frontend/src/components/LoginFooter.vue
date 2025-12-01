@@ -37,12 +37,19 @@
         </section>
       </div>
     </div>
-    
+
     <div class="footer-txt">
       <div class="footer-txt-inner">
-        <p class="footer-line">版权所有©2008-2025 中国铁道科学研究院集团有限公司 技术支持：铁旅科技有限公司</p>
-        <p class="footer-line"><img :src="imgGongan" alt="公安备案" class="footer-icon" />京公网安备 11010802038392号  |  京ICP备05020493号-4  |  ICP证：京B2-20202537</p>
-        <div class="footer-right"><img :src="imgFooterSlh" alt="适老化 无障碍服务" class="footer-slh" /></div>
+        <p class="footer-line">
+          版权所有©2008-2025 中国铁道科学研究院集团有限公司 技术支持：铁旅科技有限公司
+        </p>
+        <p class="footer-line">
+          <img :src="imgGongan" alt="公安备案" class="footer-icon" />
+          京公网安备 11010802038392号 | 京ICP备05020493号-4 | ICP证：京B2-20202537
+        </p>
+        <div class="footer-right">
+          <img :src="imgFooterSlh" alt="适老化 无障碍服务" class="footer-slh" />
+        </div>
       </div>
     </div>
   </footer>

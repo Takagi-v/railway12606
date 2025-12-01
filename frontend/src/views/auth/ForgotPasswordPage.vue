@@ -1,19 +1,6 @@
 <template>
   <div class="forgot-password-page">
-    <!-- 顶部导航栏 -->
-    <div class="header">
-      <div class="header-content">
-        <div class="logo">
-          <div class="logo-icon">🚄</div>
-          <span class="logo-text">中国铁路12306</span>
-          <span class="subtitle">12306 CHINA RAILWAY</span>
-        </div>
-        <div class="header-nav">
-          <a-button type="link" @click="$router.push('/login')">登录</a-button>
-          <a-button type="link" @click="$router.push('/register')">注册</a-button>
-        </div>
-      </div>
-    </div>
+    <Header12306 />
 
     <!-- 主要内容区域 -->
     <div class="main-content">
@@ -25,7 +12,7 @@
             :class="{ active: activeTab === 'face' }"
             @click="activeTab = 'face'"
           >
-            <i class="icon-face"></i>
+            <span class="icon icon">&#xe6dc;</span>
             人脸找回
           </div>
           <div
@@ -33,7 +20,7 @@
             :class="{ active: activeTab === 'phone' }"
             @click="activeTab = 'phone'"
           >
-            <i class="icon-phone"></i>
+            <span class="icon icon">&#xe708;</span>
             手机找回
           </div>
           <div
@@ -41,7 +28,7 @@
             :class="{ active: activeTab === 'email' }"
             @click="activeTab = 'email'"
           >
-            <i class="icon-email"></i>
+            <span class="icon icon">&#xe6f5;</span>
             邮箱找回
           </div>
         </div>
@@ -50,27 +37,7 @@
         <div class="tab-content">
           <!-- 人脸找回 -->
           <div v-if="activeTab === 'face'" class="face-recovery">
-            <div class="step-indicator">
-              <div class="step" :class="{ active: faceStep >= 1, completed: faceStep > 1 }">
-                <div class="step-number">1</div>
-                <div class="step-text">提交身份信息</div>
-              </div>
-              <div class="step-line"></div>
-              <div class="step" :class="{ active: faceStep >= 2, completed: faceStep > 2 }">
-                <div class="step-number">2</div>
-                <div class="step-text">验证验证码</div>
-              </div>
-              <div class="step-line"></div>
-              <div class="step" :class="{ active: faceStep >= 3, completed: faceStep > 3 }">
-                <div class="step-number">3</div>
-                <div class="step-text">设置新密码</div>
-              </div>
-              <div class="step-line"></div>
-              <div class="step" :class="{ active: faceStep >= 4 }">
-                <div class="step-number">4</div>
-                <div class="step-text">完成</div>
-              </div>
-            </div>
+            
 
             <div class="qr-content" v-if="faceStep === 1">
               <h3 class="recovery-title">人脸找回</h3>
@@ -82,101 +49,9 @@
 
               <div class="qr-code-container">
                 <div class="qr-code">
-                  <svg
-                    width="160"
-                    height="160"
-                    viewBox="0 0 200 200"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect x="10" y="10" width="180" height="180" fill="white" stroke="#000" stroke-width="2" />
-                    <rect x="20" y="20" width="50" height="50" fill="black" />
-                    <rect x="30" y="30" width="30" height="30" fill="white" />
-                    <rect x="40" y="40" width="10" height="10" fill="black" />
-                    <rect x="130" y="20" width="50" height="50" fill="black" />
-                    <rect x="140" y="30" width="30" height="30" fill="white" />
-                    <rect x="150" y="40" width="10" height="10" fill="black" />
-                    <rect x="20" y="130" width="50" height="50" fill="black" />
-                    <rect x="30" y="140" width="30" height="30" fill="white" />
-                    <rect x="40" y="150" width="10" height="10" fill="black" />
-                    <circle cx="100" cy="100" r="15" fill="#e60012" />
-                    <text x="100" y="105" text-anchor="middle" fill="white" font-size="12" font-weight="bold">🚄</text>
-                    <rect x="80" y="20" width="5" height="5" fill="black" />
-                    <rect x="90" y="20" width="5" height="5" fill="black" />
-                    <rect x="100" y="20" width="5" height="5" fill="black" />
-                    <rect x="110" y="20" width="5" height="5" fill="black" />
-                    <rect x="20" y="80" width="5" height="5" fill="black" />
-                    <rect x="30" y="80" width="5" height="5" fill="black" />
-                    <rect x="40" y="80" width="5" height="5" fill="black" />
-                    <rect x="50" y="80" width="5" height="5" fill="black" />
-                    <rect x="80" y="80" width="5" height="5" fill="black" />
-                    <rect x="120" y="80" width="5" height="5" fill="black" />
-                    <rect x="130" y="80" width="5" height="5" fill="black" />
-                    <rect x="140" y="80" width="5" height="5" fill="black" />
-                    <rect x="80" y="120" width="5" height="5" fill="black" />
-                    <rect x="90" y="120" width="5" height="5" fill="black" />
-                    <rect x="100" y="120" width="5" height="5" fill="black" />
-                    <rect x="110" y="120" width="5" height="5" fill="black" />
-                    <rect x="120" y="120" width="5" height="5" fill="black" />
-                    <rect x="80" y="160" width="5" height="5" fill="black" />
-                    <rect x="90" y="160" width="5" height="5" fill="black" />
-                    <rect x="100" y="160" width="5" height="5" fill="black" />
-                    <rect x="110" y="160" width="5" height="5" fill="black" />
-                    <rect x="120" y="160" width="5" height="5" fill="black" />
-                    <rect x="130" y="160" width="5" height="5" fill="black" />
-                    <rect x="140" y="160" width="5" height="5" fill="black" />
-                    <rect x="150" y="160" width="5" height="5" fill="black" />
-                    <rect x="160" y="160" width="5" height="5" fill="black" />
-                    <rect x="170" y="160" width="5" height="5" fill="black" />
-                    <rect x="25" y="95" width="5" height="5" fill="black" />
-                    <rect x="35" y="95" width="5" height="5" fill="black" />
-                    <rect x="45" y="95" width="5" height="5" fill="black" />
-                    <rect x="55" y="95" width="5" height="5" fill="black" />
-                    <rect x="65" y="95" width="5" height="5" fill="black" />
-                    <rect x="135" y="95" width="5" height="5" fill="black" />
-                    <rect x="145" y="95" width="5" height="5" fill="black" />
-                    <rect x="155" y="95" width="5" height="5" fill="black" />
-                    <rect x="165" y="95" width="5" height="5" fill="black" />
-                    <rect x="175" y="95" width="5" height="5" fill="black" />
-                  </svg>
+                  <img :src="qrImage" alt="12306APP二维码" class="qr-img-large" />
                 </div>
               </div>
-              <div class="qr-instructions">
-                <p class="instruction-text">请使用中国铁路12306手机客户端扫描上方二维码</p>
-                <p class="instruction-note">扫码后按照APP提示完成身份验证即可找回密码</p>
-              </div>
-              <div class="form-actions">
-                <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="proceedFaceStep2">已扫码，继续</a-button>
-              </div>
-            </div>
-
-            <div class="form-content" v-if="faceStep === 2">
-              <a-form :model="verificationForm" layout="vertical" class="recovery-form">
-                <a-form-item label="验证码：" required>
-                  <a-input v-model:value="verificationForm.code" placeholder="请输入收到的验证码" size="large" />
-                </a-form-item>
-                <div class="form-actions">
-                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleVerifyCode('face')">验证</a-button>
-                </div>
-              </a-form>
-            </div>
-
-            <div class="form-content" v-if="faceStep === 3">
-              <a-form :model="passwordForm" layout="vertical" class="recovery-form">
-                <a-form-item label="新密码：" required>
-                  <a-input v-model:value="passwordForm.newPassword" type="password" placeholder="请输入新密码" size="large" />
-                </a-form-item>
-                <a-form-item label="确认新密码：" required>
-                  <a-input v-model:value="passwordForm.confirmPassword" type="password" placeholder="请再次输入新密码" size="large" />
-                </a-form-item>
-                <div class="form-actions">
-                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleSetNewPassword('face')">提交</a-button>
-                </div>
-              </a-form>
-            </div>
-
-            <div class="qr-content" v-if="faceStep === 4">
-              <h3 class="recovery-title">密码重置成功</h3>
-              <p class="recovery-subtitle">即将跳转到登录页面，请使用新密码登录</p>
             </div>
           </div>
 
@@ -205,38 +80,54 @@
             </div>
 
             <div class="form-content">
-              <a-form :model="phoneForm" layout="vertical" class="recovery-form">
+              <a-form
+                :model="phoneForm"
+                layout="horizontal"
+                :label-col="{ span: 6 }"
+                :wrapper-col="{ span: 18 }"
+                class="recovery-form"
+              >
                 <a-form-item label="手机号码：" required>
-                  <a-input
-                    v-model:value="phoneForm.phone"
-                    placeholder="请输入您的手机号码"
-                    size="large"
-                    addon-before="+86"
-                  />
-                  <div class="form-hint">已通过核验的手机号码</div>
+                  <div class="inline-field">
+                    <a-select
+                      v-model:value="phoneForm.countryCode"
+                      placeholder="+86"
+                      size="middle"
+                      style="width: 90px"
+                      class="phone-country-select"
+                    >
+                      <a-select-option value="+86">+86</a-select-option>
+                      <a-select-option value="+852">+852</a-select-option>
+                      <a-select-option value="+853">+853</a-select-option>
+                      <a-select-option value="+886">+886</a-select-option>
+                    </a-select>
+                    <a-input v-model:value="phoneForm.phone" size="middle" />
+                    <span class="inline-hint">已通过核验的手机号码</span>
+                  </div>
                 </a-form-item>
 
                 <a-form-item label="证件类型：" required>
-                  <a-select
-                    v-model:value="phoneForm.idType"
-                    placeholder="请选择证件类型"
-                    size="large"
-                  >
-                    <a-select-option value="身份证">居民身份证</a-select-option>
-                    <a-select-option value="护照">护照</a-select-option>
-                    <a-select-option value="港澳通行证">港澳居民来往内地通行证</a-select-option>
-                    <a-select-option value="台胞证">台湾居民来往大陆通行证</a-select-option>
-                  </a-select>
-                  <div class="form-hint">请选择证件类型</div>
+                  <div class="inline-field">
+                    <a-select
+                      v-model:value="phoneForm.idType"
+                      placeholder="请选择证件类型"
+                      size="middle"
+                      style="width: 100%"
+                    >
+                      <a-select-option value="身份证">居民身份证</a-select-option>
+                      <a-select-option value="护照">护照</a-select-option>
+                      <a-select-option value="港澳通行证">港澳居民来往内地通行证</a-select-option>
+                      <a-select-option value="台胞证">台湾居民来往大陆通行证</a-select-option>
+                    </a-select>
+                    <span class="inline-hint">请选择证件类型</span>
+                  </div>
                 </a-form-item>
 
                 <a-form-item label="证件号码：" required>
-                  <a-input
-                    v-model:value="phoneForm.idNumber"
-                    placeholder="请输入证件号码"
-                    size="large"
-                  />
-                  <div class="form-hint">请输入证件号码</div>
+                  <div class="inline-field">
+                    <a-input v-model:value="phoneForm.idNumber" size="middle" />
+                    <span class="inline-hint">请输入证件号码</span>
+                  </div>
                 </a-form-item>
 
                 <div class="form-actions">
@@ -253,18 +144,30 @@
               </a-form>
 
               <div class="help-text">
-                手机号未通过核验？
-                <a href="#" class="help-link" @click.prevent="activeTab = 'email'">试试邮箱找回</a>
+                手机号未通过核验？试试
+                <a href="#" class="help-link" @click.prevent="activeTab = 'email'">邮箱找回</a>
               </div>
             </div>
 
             <div class="form-content" v-if="phoneStep === 2">
               <a-form :model="verificationForm" layout="vertical" class="recovery-form">
                 <a-form-item label="验证码：" required>
-                  <a-input v-model:value="verificationForm.code" placeholder="请输入短信验证码" size="large" />
+                  <a-input
+                    v-model:value="verificationForm.code"
+                    placeholder="请输入短信验证码"
+                    size="large"
+                  />
                 </a-form-item>
                 <div class="form-actions">
-                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleVerifyCode('phone')">验证</a-button>
+                  <a-button
+                    type="primary"
+                    size="large"
+                    class="submit-btn"
+                    :loading="loading"
+                    @click="handleVerifyCode('phone')"
+                  >
+                    验证
+                  </a-button>
                 </div>
               </a-form>
             </div>
@@ -272,13 +175,31 @@
             <div class="form-content" v-if="phoneStep === 3">
               <a-form :model="passwordForm" layout="vertical" class="recovery-form">
                 <a-form-item label="新密码：" required>
-                  <a-input v-model:value="passwordForm.newPassword" type="password" placeholder="请输入新密码" size="large" />
+                  <a-input
+                    v-model:value="passwordForm.newPassword"
+                    type="password"
+                    placeholder="请输入新密码"
+                    size="large"
+                  />
                 </a-form-item>
                 <a-form-item label="确认新密码：" required>
-                  <a-input v-model:value="passwordForm.confirmPassword" type="password" placeholder="请再次输入新密码" size="large" />
+                  <a-input
+                    v-model:value="passwordForm.confirmPassword"
+                    type="password"
+                    placeholder="请再次输入新密码"
+                    size="large"
+                  />
                 </a-form-item>
                 <div class="form-actions">
-                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleSetNewPassword('phone')">提交</a-button>
+                  <a-button
+                    type="primary"
+                    size="large"
+                    class="submit-btn"
+                    :loading="loading"
+                    @click="handleSetNewPassword('phone')"
+                  >
+                    提交
+                  </a-button>
                 </div>
               </a-form>
             </div>
@@ -291,64 +212,70 @@
 
           <!-- 邮箱找回 -->
           <div v-if="activeTab === 'email'" class="email-recovery">
-            <div class="step-indicator">
-              <div class="step" :class="{ active: emailStep >= 1, completed: emailStep > 1 }">
-                <div class="step-number">1</div>
-                <div class="step-text">填写账户信息</div>
-              </div>
-              <div class="step-line"></div>
-              <div class="step" :class="{ active: emailStep >= 2, completed: emailStep > 2 }">
-                <div class="step-number">2</div>
-                <div class="step-text">验证验证码</div>
-              </div>
-              <div class="step-line"></div>
-              <div class="step" :class="{ active: emailStep >= 3, completed: emailStep > 3 }">
-                <div class="step-number">3</div>
-                <div class="step-text">设置新密码</div>
-              </div>
-              <div class="step-line"></div>
-              <div class="step" :class="{ active: emailStep >= 4 }">
-                <div class="step-number">4</div>
-                <div class="step-text">完成</div>
-              </div>
-            </div>
-
-            <div class="email-form-content" v-if="emailStep === 1">
-              <a-form :model="emailForm" layout="vertical" class="email-recovery-form">
+            <div class="email-form-content">
+              <a-form
+                :model="emailForm"
+                layout="horizontal"
+                :label-col="{ span: 6 }"
+                :wrapper-col="{ span: 18 }"
+                class="email-recovery-form"
+              >
                 <a-form-item required>
                   <template #label>
                     <span class="form-label">
-                      <span class="required-star">*</span>
-                      电子邮件：
+                      <span class="required-star"></span>
+                      电子邮件
                     </span>
                   </template>
-                  <a-input v-model:value="emailForm.email" placeholder="注册时所填的电子邮箱" size="large" class="form-input" />
+                  <div class="inline-field">
+                    <a-input v-model:value="emailForm.email" size="middle" class="form-input" />
+                    <span class="inline-hint">注册时所填的电子邮箱</span>
+                  </div>
                 </a-form-item>
                 <a-form-item required>
                   <template #label>
                     <span class="form-label">
-                      <span class="required-star">*</span>
-                      证件类型：
+                      <span class="required-star"></span>
+                      证件类型
                     </span>
                   </template>
-                  <a-select v-model:value="emailForm.idType" placeholder="请选择证件类型" size="large" class="form-input">
-                    <a-select-option value="身份证">居民身份证</a-select-option>
-                    <a-select-option value="护照">护照</a-select-option>
-                    <a-select-option value="港澳通行证">港澳居民来往内地通行证</a-select-option>
-                    <a-select-option value="台胞证">台湾居民来往大陆通行证</a-select-option>
-                  </a-select>
+                  <div class="inline-field">
+                    <a-select
+                      v-model:value="emailForm.idType"
+                      placeholder="请选择证件类型"
+                      size="middle"
+                      class="form-input"
+                    >
+                      <a-select-option value="身份证">居民身份证</a-select-option>
+                      <a-select-option value="护照">护照</a-select-option>
+                      <a-select-option value="港澳通行证">港澳居民来往内地通行证</a-select-option>
+                      <a-select-option value="台胞证">台湾居民来往大陆通行证</a-select-option>
+                    </a-select>
+                    <span class="inline-hint">请选择证件类型</span>
+                  </div>
                 </a-form-item>
                 <a-form-item required>
                   <template #label>
                     <span class="form-label">
-                      <span class="required-star">*</span>
-                      证件号码：
+                      <span class="required-star"></span>
+                      证件号码
                     </span>
                   </template>
-                  <a-input v-model:value="emailForm.idNumber" placeholder="请输入证件号码" size="large" class="form-input" />
+                  <div class="inline-field">
+                    <a-input v-model:value="emailForm.idNumber" size="middle" class="form-input" />
+                    <span class="inline-hint">请输入证件号码</span>
+                  </div>
                 </a-form-item>
                 <div class="form-actions">
-                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleEmailSubmit">提交</a-button>
+                  <a-button
+                    type="primary"
+                    size="large"
+                    class="submit-btn"
+                    :loading="loading"
+                    @click="handleEmailSubmit"
+                  >
+                    提交
+                  </a-button>
                 </div>
               </a-form>
             </div>
@@ -362,10 +289,23 @@
                       验证码：
                     </span>
                   </template>
-                  <a-input v-model:value="verificationForm.code" placeholder="请输入邮箱验证码" size="large" class="form-input" />
+                  <a-input
+                    v-model:value="verificationForm.code"
+                    placeholder="请输入邮箱验证码"
+                    size="large"
+                    class="form-input"
+                  />
                 </a-form-item>
                 <div class="form-actions">
-                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleVerifyCode('email')">验证</a-button>
+                  <a-button
+                    type="primary"
+                    size="large"
+                    class="submit-btn"
+                    :loading="loading"
+                    @click="handleVerifyCode('email')"
+                  >
+                    验证
+                  </a-button>
                 </div>
               </a-form>
             </div>
@@ -379,7 +319,13 @@
                       新密码：
                     </span>
                   </template>
-                  <a-input v-model:value="passwordForm.newPassword" type="password" placeholder="请输入新密码" size="large" class="form-input" />
+                  <a-input
+                    v-model:value="passwordForm.newPassword"
+                    type="password"
+                    placeholder="请输入新密码"
+                    size="large"
+                    class="form-input"
+                  />
                 </a-form-item>
                 <a-form-item required>
                   <template #label>
@@ -388,10 +334,24 @@
                       确认新密码：
                     </span>
                   </template>
-                  <a-input v-model:value="passwordForm.confirmPassword" type="password" placeholder="请再次输入新密码" size="large" class="form-input" />
+                  <a-input
+                    v-model:value="passwordForm.confirmPassword"
+                    type="password"
+                    placeholder="请再次输入新密码"
+                    size="large"
+                    class="form-input"
+                  />
                 </a-form-item>
                 <div class="form-actions">
-                  <a-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleSetNewPassword('email')">提交</a-button>
+                  <a-button
+                    type="primary"
+                    size="large"
+                    class="submit-btn"
+                    :loading="loading"
+                    @click="handleSetNewPassword('email')"
+                  >
+                    提交
+                  </a-button>
                 </div>
               </a-form>
             </div>
@@ -404,6 +364,7 @@
         </div>
       </div>
     </div>
+    <Footer />
   </div>
 </template>
 
@@ -411,6 +372,8 @@
 import { ref, reactive, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { message } from 'ant-design-vue'
+import Header12306 from '@/components/Header12306.vue'
+import Footer from '@/components/LoginFooter.vue'
 import {
   submitFaceRecovery,
   submitPhoneRecovery,
@@ -421,6 +384,7 @@ import {
 
 const router = useRouter()
 const route = useRoute()
+const qrImage = new URL('../../../pics/download.png', import.meta.url).href
 
 // 当前激活的选项卡
 const activeTab = ref('face')
@@ -444,6 +408,7 @@ const faceForm = reactive({
 })
 
 const phoneForm = reactive({
+  countryCode: '+86',
   phone: '',
   idType: '',
   idNumber: ''
@@ -525,7 +490,10 @@ const handlePhoneSubmit = async () => {
     if (response.code === 200) {
       recoveryToken.value = response.data.token
       message.success('验证码已发送到您的手机')
-      router.push({ path: '/forgot-password/verify', query: { type: 'phone', token: recoveryToken.value } })
+      router.push({
+        path: '/forgot-password/verify',
+        query: { type: 'phone', token: recoveryToken.value }
+      })
     } else {
       message.error(response.message || '提交失败，请重试')
     }
@@ -548,7 +516,10 @@ const handleEmailSubmit = async () => {
     if (response.code === 200) {
       recoveryToken.value = response.data.token
       message.success('验证码已发送到您的邮箱')
-      router.push({ path: '/forgot-password/verify', query: { type: 'email', token: recoveryToken.value } })
+      router.push({
+        path: '/forgot-password/verify',
+        query: { type: 'email', token: recoveryToken.value }
+      })
     } else {
       message.error(response.message || '提交失败，请重试')
     }
@@ -629,7 +600,11 @@ const initFromRoute = () => {
   if (activeTab.value === 'face') faceStep.value = s
 }
 initFromRoute()
-watch(() => route.query, () => initFromRoute(), { deep: true })
+watch(
+  () => route.query,
+  () => initFromRoute(),
+  { deep: true }
+)
 
 const proceedFaceStep2 = () => {
   router.push({ path: '/forgot-password/verify', query: { type: 'face' } })
@@ -639,152 +614,94 @@ const proceedFaceStep2 = () => {
 <style scoped>
 .forgot-password-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #4a90e2 0%, #357abd 50%, #1e5f99 100%);
+  background: #ffffff;
   position: relative;
   overflow: hidden;
 }
 
 .forgot-password-page::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><path d="M0,300 Q300,200 600,300 T1200,300 L1200,600 L0,600 Z" fill="rgba(255,255,255,0.1)"/></svg>')
-    no-repeat center;
-  background-size: cover;
+  display: none;
 }
 
-.header {
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  height: 60px;
-  display: flex;
-  align-items: center;
-  position: relative;
-  z-index: 2;
-}
-
-.header-content {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.logo-icon {
-  width: 32px;
-  height: 32px;
-  background: #e60012;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 16px;
-}
-
-.logo-text {
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
-}
-
-.subtitle {
-  font-size: 12px;
-  color: #666;
-  margin-left: 5px;
-}
-
-.header-nav {
-  display: flex;
-  gap: 10px;
-}
+/* Header 已由统一组件替换，无需本地样式 */
 
 .main-content {
-  padding: 50px 20px;
+  padding: 28px 20px;
+  height: 650px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 60px);
+  align-items: flex-start;
   position: relative;
   z-index: 1;
 }
 
 .forgot-container {
   background: white;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 800px;
+  max-width: 980px;
   overflow: hidden;
 }
 
 .tab-navigation {
   display: flex;
-  border-bottom: 1px solid #e8e8e8;
+  background: #298cce;
 }
 
 .tab-item {
   flex: 1;
-  padding: 16px;
+  padding: 0 16px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  height: 60px;
   font-size: 14px;
-  color: #666;
-  border-bottom: 2px solid transparent;
+  color: #fff;
+  background: transparent;
 }
 
 .tab-item:hover {
-  background: #f5f5f5;
+  background: #3fa2d8;
 }
 
 .tab-item.active {
-  color: #ff6600;
-  border-bottom-color: #ff6600;
-  background: white;
+  color: #ffffff;
+  background: #66c8e8;
 }
 
-.tab-item i {
-  font-size: 24px;
+.tab-item .icon {
+  display: inline-block;
+  font-size: 18px;
+  line-height: 1;
+  margin-right: 4px;
+  opacity: 0.95;
 }
 
-.icon-face::before {
-  content: '👤';
+.tab-item:hover .icon {
+  transform: scale(1.05);
 }
 
-.icon-phone::before {
-  content: '📱';
-}
-
-.icon-email::before {
-  content: '📧';
+.tab-item.active .icon {
+  opacity: 1;
 }
 
 .tab-content {
-  padding: 40px;
+  padding: 36px;
+  height: 450px;
+  overflow-y: auto;
 }
 
 .step-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 28px;
 }
 
 .step {
@@ -795,8 +712,8 @@ const proceedFaceStep2 = () => {
 }
 
 .step-number {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: #f0f0f0;
   color: #999;
@@ -808,7 +725,7 @@ const proceedFaceStep2 = () => {
 }
 
 .step.active .step-number {
-  background: #ff6600;
+  background: #298cce;
   color: #fff;
 }
 
@@ -818,24 +735,24 @@ const proceedFaceStep2 = () => {
 }
 
 .step-text {
-  font-size: 12px;
+  font-size: 14px;
   color: #666;
   white-space: nowrap;
 }
 
 .step.active .step-text {
-  color: #ff6600;
+  color: #298cce;
 }
 
 .step-line {
-  width: 60px;
+  flex: 1;
   height: 2px;
-  background: #f0f0f0;
+  background: #e6e6e6;
   margin: 0 10px;
 }
 
 .form-content {
-  max-width: 400px;
+  max-width: 640px;
   margin: 0 auto;
 }
 
@@ -843,22 +760,68 @@ const proceedFaceStep2 = () => {
   margin-bottom: 20px;
 }
 
+.inline-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  padding-right: 200px;
+}
+
+.inline-field :deep(.ant-input),
+.inline-field :deep(.ant-input-affix-wrapper),
+.inline-field :deep(.ant-select-selector) {
+  flex: 1;
+}
+
+.inline-hint {
+  font-size: 12px;
+  color: #ff7a00;
+  white-space: nowrap;
+  position: absolute;
+  left: calc(100% - 200px);
+  width: 200px;
+  padding-left: 8px;
+  text-align: left;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .form-hint {
   font-size: 12px;
-  color: #999;
+  color: #ff7a00;
   margin-top: 4px;
 }
 
+.recovery-form :deep(.ant-form-item-label > label) {
+  font-size: 13px;
+  color: #333;
+}
+.recovery-form :deep(.ant-form-item) {
+  margin-bottom: 16px;
+}
+.recovery-form :deep(.ant-input),
+.recovery-form :deep(.ant-input-affix-wrapper),
+.recovery-form :deep(.ant-select-selector) {
+  border-radius: 0;
+}
+
+.inline-field .phone-country-select :deep(.ant-select-selector) {
+  flex: initial;
+  width: 100%;
+}
+
 .form-actions {
-  margin-top: 30px;
+  margin-top: 18px;
+  text-align: center;
 }
 
 .submit-btn {
-  width: 100%;
-  height: 44px;
-  font-size: 16px;
+  height: 40px;
+  min-width: 120px;
+  font-size: 15px;
   border-radius: 6px;
-  background: #ff6600;
+  background: #ff7a00;
   border: none;
   color: white;
   font-weight: 500;
@@ -866,9 +829,9 @@ const proceedFaceStep2 = () => {
 }
 
 .submit-btn:hover {
-  background: #e55a00;
+  background: #f26c02;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(242, 108, 2, 0.3);
 }
 
 .submit-btn:active {
@@ -890,13 +853,13 @@ const proceedFaceStep2 = () => {
 }
 
 .help-link {
-  color: #ff6600;
+  color: #1890ff;
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .help-link:hover {
-  color: #e55a00;
+  color: #40a9ff;
   text-decoration: underline;
 }
 
@@ -907,21 +870,21 @@ const proceedFaceStep2 = () => {
 }
 
 .recovery-title {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
   color: #333;
   margin-bottom: 12px;
 }
 
 .recovery-subtitle {
-  font-size: 14px;
+  font-size: 13px;
   color: #666;
   margin-bottom: 30px;
   line-height: 1.4;
 }
 
 .app-name {
-  color: #ff6600;
+  color: #478dcd;
   font-weight: bold;
 }
 
@@ -937,6 +900,13 @@ const proceedFaceStep2 = () => {
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   border: 1px solid #e8e8e8;
+}
+
+.qr-img-large {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  display: block;
 }
 
 .qr-instructions {
@@ -963,12 +933,11 @@ const proceedFaceStep2 = () => {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  min-height: 400px;
-  padding-top: 60px;
+  padding-top: 0;
 }
 
 .email-form-content {
-  padding: 20px 25px;
+  padding: 10px 25px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -976,13 +945,13 @@ const proceedFaceStep2 = () => {
 }
 
 .email-recovery-form {
-  max-width: 380px;
+  max-width: 560px;
   margin: 0 auto;
   width: 100%;
 }
 
 .email-recovery-form .ant-form-item {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .email-recovery-form .form-label {
@@ -1000,7 +969,7 @@ const proceedFaceStep2 = () => {
 }
 
 .email-recovery-form .form-input {
-  border-radius: 4px;
+  border-radius: 0;
   border: 1px solid #d9d9d9;
 }
 
@@ -1015,7 +984,7 @@ const proceedFaceStep2 = () => {
 }
 
 .email-recovery-form .ant-select .ant-select-selector {
-  border-radius: 4px;
+  border-radius: 0;
   border: 1px solid #d9d9d9;
 }
 
@@ -1105,7 +1074,7 @@ const proceedFaceStep2 = () => {
     margin-bottom: 20px;
   }
 
-  .qr-code svg {
+  .qr-img-large {
     width: 140px;
     height: 140px;
   }

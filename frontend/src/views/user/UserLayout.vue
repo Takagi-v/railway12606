@@ -126,6 +126,12 @@ onMounted(() => {
   gap: 30px;
 }
 
+/* Fix for flex layout interference from global styles (center.css clearfix) */
+.center-box::before,
+.center-box::after {
+  display: none !important;
+}
+
 .center-main {
   flex: 1;
   background: #fff;
@@ -133,6 +139,9 @@ onMounted(() => {
   border-radius: 4px;
   min-height: 600px;
   padding: 16px;
+  /* Override global styles from passenger-custom.css */
+  float: none !important;
+  width: auto !important;
 }
 
 .ucenter-nav {

@@ -42,7 +42,8 @@ export const getOrderDetail = orderId => {
 export const payOrder = orderId => {
   return request({
     url: `/orders/${orderId}/pay`,
-    method: 'post'
+    method: 'post',
+    data: {}
   })
 }
 
@@ -52,7 +53,8 @@ export const payOrder = orderId => {
 export const cancelOrder = orderId => {
   return request({
     url: `/orders/${orderId}/cancel`,
-    method: 'post'
+    method: 'post',
+    data: {}
   })
 }
 

@@ -1,56 +1,48 @@
 <template>
   <div class="profile-page">
-    <!-- 欢迎语块 -->
-    <div class="welcome-card">
-      <div class="welcome-left">
-        <div class="welcome-title">
-          <strong>{{ displayName }}</strong>
-          {{ greetingSuffix }}
+    <div class="center-welcome">
+      <div class="welcome_data">
+        <div class="welcome-tit">
+          <img src="@/assets/12306-icons/noticepic.png" alt="" class="welcome-notice">
+          <strong class="welcome-name">{{ displayName }}</strong>
+          <span>{{ greetingSuffix }}</span>
         </div>
-        <p class="welcome-desc">欢迎您登录中国铁路客户服务中心网站。</p>
-        <p class="welcome-desc">如果您的密码在其他网站也使用，建议您修改本网站密码。</p>
+        <div class="welcome-con">
+          <p>
+            欢迎您登录中国铁路客户服务中心网站。<br>
+            <span style="color: red;">如果您的密码在其他网站也使用，建议您修改本网站密码。</span><br>
+            如果您要接收12306的服务邮件，请<a href="javascript:;" class="txt-primary underline">验证邮箱</a>。<br>
+            如果您需要预订车票，请您点击<a href="javascript:;" @click.prevent="go('/leftTicket/single')" class="txt-primary underline">车票预订</a>。
+          </p>
+        </div>
       </div>
-      <div class="welcome-right">
-        <div class="security">
-          <div class="security-title">账户安全</div>
-          <ul class="security-list">
-            <li>
-              <span class="label">手机核验</span>
-              <span class="status">已绑定</span>
-            </li>
-            <li>
-              <span class="label">邮箱绑定</span>
-              <span class="status">未绑定</span>
-            </li>
-            <li>
-              <span class="label">安全等级</span>
-              <span class="status level">中</span>
-            </li>
-          </ul>
-          <div class="security-actions">
-            <a href="javascript:;" @click.prevent="go('/user/profile?section=security')">
-              账号安全
-            </a>
-            <a href="javascript:;" @click.prevent="go('/user/profile?section=phone')">手机核验</a>
+      <ul class="welcome-code">
+        <li id="weixinImg">
+          <div class="code-pic">
+            <img src="@/assets/12306-icons/wechat-qr.png" title="使用微信扫一扫，可通过微信公众号接收12306行程通知" alt="WeChat QR">
           </div>
-        </div>
+          <div class="code-txt">
+            使用微信扫一扫，可通过<br>微信公众号接收12306行程通知
+          </div>
+        </li>
+        <li id="aliImg">
+          <div class="code-pic">
+            <img src="@/assets/12306-icons/alipay-qr.png" title="使用支付宝扫一扫，可通过支付宝通知提醒接收12306行程通知" alt="Alipay QR">
+          </div>
+          <div class="code-txt">
+            使用支付宝扫一扫，可通过<br>支付宝通知提醒接收12306行程通知
+          </div>
+        </li>
+      </ul>
+      <div class="tips-box">
+        <h2>温馨提示：</h2>
+        <p>
+          1.消息通知方式进行相关调整，将通过“铁路12306”App客户端为您推送相关消息（需开启通知权限）。您也可以扫描关注“铁路12306”微信公众号或支付宝生活号，选择通过微信或支付宝接收。列车运行调整的通知仍然发送短信通知给您。
+        </p>
+        <p>
+          2.您可通过“账号安全”中的<a class="index_notice" href="javascript:;" style="color: #0077ff">“通知设置”</a>修改您接收信息服务的方式。
+        </p>
       </div>
-    </div>
-
-    <!-- 常用入口（与官网风格对齐） -->
-    <div class="quick-links">
-      <a href="javascript:;" @click.prevent="go('/user/orders')" class="q-item">
-        <span class="q-icon"></span>
-        火车票订单
-      </a>
-      <a href="javascript:;" @click.prevent="go('/user/passengers')" class="q-item">
-        <span class="q-icon"></span>
-        乘车人
-      </a>
-      <a href="javascript:;" @click.prevent="go('/ticket/schedule')" class="q-item">
-        <span class="q-icon"></span>
-        时刻表
-      </a>
     </div>
   </div>
 </template>
@@ -81,89 +73,111 @@ const greetingSuffix = computed(() => {
 
 <style scoped>
 .profile-page {
-  padding: 8px;
+  width: 100%;
 }
 
-.welcome-card {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 16px;
-  background: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  padding: 16px;
-}
-.welcome-title {
-  font-size: 16px;
+.center-welcome {
+  padding: 20px 30px 30px;
+  background: #fafdff;
+  min-height: 842px;
+  box-sizing: border-box;
+  margin: -16px;
+  width: calc(100% + 32px);
   color: #333;
-  margin-bottom: 8px;
-}
-.welcome-desc {
-  margin: 4px 0;
-  color: #666;
 }
 
-.security {
-  border-left: 1px dashed #eee;
-  padding-left: 16px;
+.welcome-tit {
+  height: 65px;
+  line-height: 65px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
 }
-.security-title {
+
+.welcome-notice {
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.welcome-name {
+  margin-right: 5px;
+  font-weight: bold;
+}
+
+.welcome-con {
+  padding: 10px 20px;
+  margin-top: 15px;
+  border: 1px dashed #9eccfe;
+  background: #fafdff;
+  line-height: 32px;
   font-size: 14px;
-  color: #333;
-  margin-bottom: 8px;
 }
-.security-list {
-  list-style: none;
-  padding: 0;
+
+.welcome-con p {
   margin: 0;
 }
-.security-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 0;
-  color: #666;
-}
-.security-list .status {
-  color: #2e64fe;
-}
-.security-list .level {
-  color: #ff7a00;
-}
-.security-actions {
-  margin-top: 8px;
-}
-.security-actions a {
-  color: #2e64fe;
+
+.txt-primary {
+  color: #0077ff;
   text-decoration: none;
-  margin-right: 12px;
 }
-.security-actions a:hover {
+
+.txt-primary.underline:hover {
   text-decoration: underline;
 }
 
-.quick-links {
+.welcome-code {
   display: flex;
-  gap: 16px;
-  margin-top: 16px;
+  margin: 40px 0 30px;
+  padding: 0;
+  list-style: none;
+  gap: 60px;
 }
-.q-item {
-  display: inline-flex;
+
+.welcome-code li {
+  display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
+  gap: 15px;
+}
+
+.code-pic img {
+  width: 120px;
+  height: 120px;
+  border: 1px solid #eee;
+}
+
+.code-txt {
+  line-height: 24px;
+  font-size: 14px;
+  color: #666;
+}
+
+.tips-box {
+  padding: 10px 20px;
+  border: 2px solid #ffddba;
+  background: #fffbf8;
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.tips-box h2 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: bold;
   color: #333;
+}
+
+.tips-box p {
+  margin: 0 0 5px;
+  text-indent: 2em;
+}
+
+.index_notice {
+  color: #0077ff;
   text-decoration: none;
 }
-.q-item:hover {
-  border-color: #d0d7de;
-}
-.q-icon {
-  width: 18px;
-  height: 18px;
-  background: url('https://www.12306.cn/index/images/logo.png') center/contain no-repeat;
+
+.index_notice:hover {
+  text-decoration: underline;
 }
 </style>
