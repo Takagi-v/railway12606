@@ -16,19 +16,13 @@
           <div v-else>
              <div class="train-line-1">
             <span class="date"><strong>{{ train.date }}</strong></span>
-            <span class="train-no"><strong>{{ train.trainNo }}</strong></span>
-            <span class="stations">
-              <span class="station-item">
-                <span class="station-label">起点站：</span>
-                <span class="station">{{ train.fromStation || '--' }}</span>
-                <span class="time">（{{ train.departTime }}开）</span>
-              </span>
-              <span class="arrow">→</span>
-              <span class="station-item">
-                <span class="station-label">终点站：</span>
-                <span class="station">{{ train.toStation || '--' }}</span>
-                <span class="time">（{{ train.arriveTime }}到）</span>
-              </span>
+            <span class="train-no"><strong>{{ train.trainNo }}</strong><span class="small-text">次</span></span>
+            <span class="station-group">
+              <span class="station-name">{{ train.fromStation || '--' }}</span><span class="small-text">站</span>
+              <span class="time">（<strong>{{ train.departTime }}</strong>开）</span>
+              <span class="separator">—</span>
+              <span class="station-name">{{ train.toStation || '--' }}</span><span class="small-text">站</span>
+              <span class="time">（<strong>{{ train.arriveTime }}</strong>到）</span>
             </span>
           </div>
           <div class="train-line-2">
@@ -67,10 +61,36 @@
           </div>
         </div>
         <div class="passenger-body">
-          <!-- 常用乘车人选择 -->
-          <div class="passenger-selection">
+          <!-- 受让人选择 (Transferee Selection) -->
+          <div class="passenger-selection transferee-selection">
             <div class="label">
-              <i class="icon-user"></i>
+              <i class="custom-icon-user icon-transferee"></i>
+              受让人
+            </div>
+            <div class="list">
+               <label 
+                v-for="p in filteredPassengers" 
+                :key="'transferee-' + p.id" 
+                class="checkbox-item"
+              >
+                <input 
+                  type="checkbox" 
+                  :value="p.id" 
+                  v-model="selectedTransfereeIds"
+                />
+                {{ p.name }}
+                <!-- <span class="tag" style="color: #666;"></span> -->
+              </label>
+              <span v-if="filteredPassengers.length === 0" class="no-passenger-tip">
+                未找到相关受让人
+              </span>
+            </div>
+          </div>
+
+          <!-- 常用乘车人选择 -->
+          <div class="passenger-selection" style="padding-top: 0;">
+            <div class="label">
+              <i class="custom-icon-user icon-passenger"></i>
               乘车人
             </div>
             <div class="list">
@@ -108,7 +128,7 @@
                  </tr>
                </thead>
                <tbody>
-                 <tr v-for="(id, idx) in selectedIds" :key="id">
+                 <tr v-for="(id, idx) in effectiveSelectedIds" :key="id">
                    <td class="col-seq">{{ idx + 1 }}</td>
                    <td class="col-ticket">
                      <select 
@@ -130,7 +150,12 @@
                      {{ getPassengerName(id) }}
                    </td>
                    <td class="col-idtype">
-                     {{ getPassengerIdType(id) }}
+                     <select 
+                        v-model="selectionMap[id].idType"
+                        class="custom-select"
+                      >
+                       <option v-for="opt in idTypeOptions" :key="opt" :value="opt">{{ opt }}</option>
+                     </select>
                    </td>
                    <td class="col-idno">
                      {{ getPassengerIdNo(id) }}
@@ -139,17 +164,33 @@
                      <span class="btn-close" @click="removePassenger(id)">×</span>
                    </td>
                  </tr>
-                 <tr v-if="selectedIds.length === 0">
-                   <td colspan="7" class="empty-row">
-                     请在上方选择乘车人
+                 <tr v-if="effectiveSelectedIds.length === 0">
+                   <td class="col-seq">1</td>
+                   <td class="col-ticket">
+                     <select class="custom-select" v-model="defaultSelection.ticketType">
+                       <option v-for="opt in ticketTypeOptions" :key="opt" :value="opt">{{ opt }}</option>
+                     </select>
                    </td>
+                   <td class="col-seat">
+                     <select class="custom-select" v-model="defaultSelection.seatType">
+                       <option v-for="opt in seatTypeOptions" :key="opt" :value="opt">{{ opt }}</option>
+                     </select>
+                   </td>
+                   <td class="col-name"></td>
+                   <td class="col-idtype">
+                     <select class="custom-select" v-model="defaultSelection.idType">
+                       <option v-for="opt in idTypeOptions" :key="opt" :value="opt">{{ opt }}</option>
+                     </select>
+                   </td>
+                   <td class="col-idno"></td>
+                   <td class="col-op"></td>
                  </tr>
                </tbody>
              </table>
           </div>
           
-          <div class="passenger-actions">
-            <a-button type="link" @click="goPassengers">管理乘车人</a-button>
+          <div class="ad-image-wrapper" style="padding: 0 20px 20px; text-align: center;">
+            <img src="../../../pics/ins_ad7.png" alt="广告图片" style="max-width: 100%; height: auto; border-radius: 4px;">
           </div>
         </div>
       </div>
@@ -170,14 +211,15 @@
       <!-- 温馨提示 -->
       <div class="warm-tips">
         <div class="tips-title">温馨提示：</div>
-        <ol>
-          <li>一张有效身份证件同一乘车日同一车次只能购买一张车票。</li>
-          <li>购票前请确认乘客身份信息准确无误，证件类型与号码需与乘车人一致。</li>
-          <li>儿童、学生等特殊票种需符合相关条件并携带有效证件。</li>
-          <li>提交订单后请尽快完成支付，以免座位被释放。</li>
-          <li>如需改签或退票，请在订单详情中进行相应操作。</li>
-          <li>网络高峰期可能影响提交，请耐心等待或稍后再试。</li>
-        </ol>
+        <div class="tips-content">
+          <p>1. 一张有效身份证件同一乘车日期同一车次只能购买一张车票，高铁动卧列车除外。改签或变更到站后车票的乘车日期在春运期间，如再办理退票将按票面价格20%核收退票费。请合理安排行程，更多改签规则请查看<span class="highlight-blue">《退改说明》</span> 。</p>
+          <p>2. 购买儿童票时，乘车儿童有有效身份证件的，请填写本人有效身份证件信息。自2023年1月1日起，每一名持票成年人旅客可免费携带一名未满6周岁且不单独占用席位的儿童乘车，超过一名时，超过人数应购买儿童优惠票。免费儿童可以在购票成功后添加。</p>
+          <p>3. 购买残疾军人（伤残警察）优待票的，须在购票后、开车前办理换票手续方可进站乘车。换票时，不符合规定的减价优待条件，没有有效"中华人民共和国残疾军人证"或"中华人民共和国伤残人民警察证"的，不予换票，所购车票按规定办理退票手续。</p>
+          <p>4. 一天内3次申请车票成功后取消订单（包含无座票时取消5次计为取消1次），当日将不能在12306继续购票。</p>
+          <p class="bold-tips">5. 购买铁路乘意险的注册用户年龄须在18周岁以上，使用非中国居民身份证注册的用户如购买铁路乘意险，须在<span class="highlight-blue">我的12306——个人信息</span> 如实填写“出生日期”。</p>
+          <p class="bold-tips">6. 父母为未成年子女投保，须在<span class="highlight-blue">我的乘车人</span> 登记未成年子女的有效身份证件信息。</p>
+          <p>7. 未尽事宜详见《铁路旅客运输规程》等有关规定和车站公告。</p>
+        </div>
       </div>
 
     </div>
@@ -186,7 +228,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { message, Modal } from 'ant-design-vue'
 import { searchTrains } from '@/api/train'
@@ -211,12 +253,20 @@ const train = ref({
 
 const passengers = ref([])
 const selectedIds = ref([])
+const selectedTransfereeIds = ref([])
 const searchName = ref('')
 const submitting = ref(false)
 const trainId = ref(String(route.query.trainId || ''))
 
 const seatTypeOptions = ['商务座', '一等座', '二等座', '软卧', '硬卧', '硬座', '无座']
 const ticketTypeOptions = ['成人票', '学生票', '儿童票']
+const idTypeOptions = ['中国居民身份证', '护照', '港澳居民来往内地通行证', '台湾居民来往大陆通行证']
+
+const defaultSelection = ref({
+  ticketType: '成人票',
+  seatType: '二等座',
+  idType: '中国居民身份证'
+})
 
 const selectionMap = ref({})
 
@@ -229,6 +279,23 @@ const mapPassenger = p => ({
   phoneVerified: p.verified ? 'Y' : 'N'
 })
 
+const effectiveSelectedIds = computed(() => {
+  return selectedTransfereeIds.value.length > 0 ? selectedTransfereeIds.value : selectedIds.value
+})
+
+// Mutual exclusion logic
+watch(selectedIds, (newVal) => {
+  if (newVal.length > 0) {
+    selectedTransfereeIds.value = []
+  }
+})
+
+watch(selectedTransfereeIds, (newVal) => {
+  if (newVal.length > 0) {
+    selectedIds.value = []
+  }
+})
+
 const loadPassengers = async () => {
   try {
     const res = await getPassengers()
@@ -236,7 +303,11 @@ const loadPassengers = async () => {
       passengers.value = (res.data || []).map(mapPassenger)
       const map = {}
       passengers.value.forEach(p => {
-        map[p.id] = { seatType: train.value.seatType || '二等座', ticketType: '成人票' }
+        map[p.id] = { 
+          seatType: train.value.seatType || '二等座', 
+          ticketType: '成人票',
+          idType: p.idTypeLabel || '中国居民身份证'
+        }
       })
       selectionMap.value = map
     }
@@ -282,6 +353,10 @@ const initTrainInfo = () => {
     }
     // 模拟 trainId 用于测试
     if (!trainId.value) trainId.value = '1'
+  }
+
+  if (train.value.seatType) {
+    defaultSelection.value.seatType = train.value.seatType
   }
 
   // 如果有车次信息但没有价格或ID，尝试补全
@@ -346,9 +421,7 @@ const onSearch = () => {
   // filteredPassengers is computed, no action needed, but maybe trim
 }
 
-const goPassengers = () => {
-  router.push('/user/passengers')
-}
+
 
 const goBack = () => {
   router.back()
@@ -367,12 +440,16 @@ const getPassengerIdNo = (id) => {
   return p ? p.idNo : ''
 }
 const removePassenger = (id) => {
-  selectedIds.value = selectedIds.value.filter(x => x !== id)
+  if (selectedTransfereeIds.value.includes(id)) {
+    selectedTransfereeIds.value = selectedTransfereeIds.value.filter(x => x !== id)
+  } else {
+    selectedIds.value = selectedIds.value.filter(x => x !== id)
+  }
 }
 
 const submitOrder = async () => {
-  if (selectedIds.value.length === 0) {
-    message.error('请选择乘车人')
+  if (effectiveSelectedIds.value.length === 0) {
+    message.error('请选择乘车人或受让人')
     return
   }
   if (!trainId.value) {
@@ -400,7 +477,7 @@ const processOrderSubmission = async () => {
     travel_date: train.value.date,
     from_station: train.value.fromStation,
     to_station: train.value.toStation,
-    passengers: selectedIds.value.map(id => ({
+    passengers: effectiveSelectedIds.value.map(id => ({
       passenger_id: id,
       ticket_type: normalizeTicketType(selectionMap.value[id]?.ticketType || '成人票'),
       seat_type: selectionMap.value[id]?.seatType || '二等座'
@@ -448,7 +525,7 @@ const normalizeTicketType = t => {
   font-family: Arial, "Microsoft YaHei", sans-serif;
 }
 .wrapper {
-  width: 1200px;
+  width: 978.67px;
   margin: 0 auto;
   padding: 20px 0 50px;
 }
@@ -457,7 +534,8 @@ const normalizeTicketType = t => {
 .order-section {
   border: 1px solid #3b99fc;
   margin-bottom: 20px;
-  border-radius: 4px 4px 0 0;
+  border-radius: 10px;
+  overflow: hidden; /* Ensures children (like header) respect border-radius */
   background: #fff;
   /* Ensure BFC to contain floats and prevent collapse */
   display: flow-root;
@@ -465,7 +543,7 @@ const normalizeTicketType = t => {
   z-index: 1;
 }
 .section-header {
-  height: 40px;
+  height: 32px;
   background: #298cce;;
   color: #fff;
   padding: 0 15px;
@@ -474,12 +552,13 @@ const normalizeTicketType = t => {
   position: relative;
 }
 .section-header .title {
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 14px;
+  color:#E5F8FF;
   margin-right: 10px;
 }
 .section-header .subtitle {
   font-size: 12px;
+  color:#E5F8FF;
   opacity: 0.9;
 }
 .header-tool {
@@ -488,59 +567,61 @@ const normalizeTicketType = t => {
 
 /* Train Info */
 .train-body {
-  padding: 20px;
-  background: #fff;
-  min-height: 100px; /* ensure visibility */
+  padding: 10px 20px;
+  background: #EEF1F8;
+  height: 98px; /* Fixed height as requested */
+  min-height: 98px; /* Ensure it respects the height */
+  box-sizing: border-box; /* Include padding in height calculation */
   display: block;
+  overflow: hidden; /* Prevent content overflow if it exceeds height */
+  position: relative;
 }
 .train-line-1 {
   font-size: 18px;
-  font-weight: bold;
   color: #333;
-  margin-bottom: 15px;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed #999;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 15px;
 }
-.train-line-1 .stations {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.train-line-1 .arrow {
-  margin: 0 5px;
-}
-.station-item {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 4px;
-}
-.station {
-  font-size: 16px;
-  color: #333;
+.train-line-1 strong {
   font-weight: bold;
 }
-.station-label {
-  font-size: 12px;
-  color: #666;
+.station-group {
+  display: flex;
+  align-items: baseline;
+}
+.station-name {
+  font-size: 18px;
   font-weight: normal;
 }
-.train-line-1 .time {
+.small-text {
   font-size: 14px;
   font-weight: normal;
-  color: #666;
+}
+.station-group .small-text {
+  margin-right: 5px;
+}
+.time {
+  font-size: 14px;
+  color: #333;
+}
+.separator {
+  margin: 0 10px;
+  font-weight: bold;
+  color: #333;
 }
 .train-line-2 {
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px dashed #eee;
+  margin-bottom: 5px;
 }
 .seat-item {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   margin-right: 20px;
-  font-size: 14px;
+  font-size: 12px;
 }
 .seat-price {
   color: #ff8200;
@@ -550,11 +631,14 @@ const normalizeTicketType = t => {
   font-size: 12px;
 }
 .seat-price .amount {
-  font-size: 20px;
+  font-size: 12px;
 }
 .train-note {
-  font-size: 14px;
+  font-size: 12px;
   color: #3b99fc;
+  position: absolute;
+  bottom: 6px;
+  left: 20px;
 }
 
 /* Passenger Info */
@@ -566,30 +650,43 @@ const normalizeTicketType = t => {
   padding: 15px 20px;
   border-bottom: 1px dashed #eee;
   display: flex;
-  align-items: flex-start;
-  gap: 15px;
+  flex-direction: column;
+  gap: 10px;
 }
 .passenger-selection .label {
   display: flex;
   align-items: center;
   color: #333;
   font-weight: bold;
-  width: 80px;
-  padding-top: 3px;
+  width: 100%;
+  padding-top: 0;
 }
-.icon-user {
+.custom-icon-user {
   display: inline-block;
-  width: 16px;
-  height: 16px;
-  background: #3b99fc; /* placeholder for icon */
-  border-radius: 50%;
+  width: 20px;
+  height: 20px;
   margin-right: 5px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.custom-icon-user::before {
+  content: none !important;
+}
+.icon-transferee {
+  /* Yellow User Icon SVG */
+  background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 512c141.38 0 256-114.62 256-256S653.38 0 512 0 256 114.62 256 256s114.62 256 256 256z m0 64c-170.66 0-512 85.34-512 256v128c0 35.34 28.66 64 64 64h896c35.34 0 64-28.66 64-64v-128c0-170.66-341.34-256-512-256z" fill="%23ff8200"></path></svg>');
+}
+.icon-passenger {
+  /* Blue User Icon SVG */
+  background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 512c141.38 0 256-114.62 256-256S653.38 0 512 0 256 114.62 256 256s114.62 256 256 256z m0 64c-170.66 0-512 85.34-512 256v128c0 35.34 28.66 64 64 64h896c35.34 0 64-28.66 64-64v-128c0-170.66-341.34-256-512-256z" fill="%233b99fc"></path></svg>');
 }
 .passenger-selection .list {
   flex: 1;
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
+  padding-left: 25px; /* Align with label text (icon 20px + margin 5px) */
 }
 .checkbox-item {
   cursor: pointer;
@@ -597,7 +694,7 @@ const normalizeTicketType = t => {
   align-items: center;
   gap: 4px;
   font-size: 14px;
-  color: #333;
+  color: #666;
 }
 .checkbox-item input {
   margin: 0;
@@ -613,7 +710,7 @@ const normalizeTicketType = t => {
 
 /* Table */
 .passenger-table-wrapper {
-  padding: 20px;
+  padding: 20px 20px 0;
 }
 .passenger-table {
   width: 100%;
@@ -687,28 +784,29 @@ const normalizeTicketType = t => {
   display: flex;
   justify-content: center;
   gap: 20px;
+  margin-bottom: 15px;
 }
 .btn-back {
-  width: 120px;
-  height: 40px;
+  width: 90px;
+  height: 30px;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
 }
 .btn-back:hover {
   background: #f8f8f8;
 }
 .btn-submit {
-  width: 160px;
-  height: 40px;
+  width: 90px;
+  height: 30px;
   background: #ff8200;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: bold;
   color: #fff;
 }
@@ -722,25 +820,36 @@ const normalizeTicketType = t => {
 
 /* Warm Tips */
 .warm-tips {
-  margin-top: 40px;
+  margin-top: 0;
   background: #fffbe5;
   border: 1px solid #fcd693;
-  padding: 20px;
+  padding: 10px 2px;
   color: #333;
   border-radius: 4px;
+  height: 245px;
+  overflow-y: auto; /* Add scroll if content exceeds height */
+  box-sizing: border-box;
 }
 .tips-title {
   font-weight: bold;
   font-size: 14px;
-  margin-bottom: 10px;
-  color: #ff8200; /* Use orange for title as per some 12306 styles, or keep black */
+  font-family: "SimSun", "宋体", serif;
+  margin-bottom: 2px;
   color: #333;
 }
-.warm-tips ol {
-  padding-left: 20px;
+.tips-content p {
+  width: 968.67px;
   margin: 0;
   font-size: 12px;
-  line-height: 1.8;
+  font-family: "SimSun", "宋体", serif;
+  line-height: 20px;
   color: #666;
+  text-align: left;
+}
+.highlight-blue {
+  color: #3b99fc !important;
+}
+.bold-tips {
+  font-weight: bold !important;
 }
 </style>
