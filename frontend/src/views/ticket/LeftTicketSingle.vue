@@ -786,6 +786,20 @@ const showStopStation = train => {
   console.log('Show stops for', train.station_train_code)
 }
 
+const bookTrain = train => {
+  const q = {
+    date: formatDateValue(goDate.value),
+    trainNo: train.station_train_code,
+    trainId: String(train.train_no || ''),
+    fromStation: train.from_station_name,
+    toStation: train.to_station_name,
+    departTime: train.start_time,
+    arriveTime: train.arrive_time,
+    seatType: '二等座'
+  }
+  router.push({ path: '/order/confirm', query: q })
+}
+
 const citySelectorVisible = ref(false)
 const citySelectorTop = ref(0)
 const citySelectorLeft = ref(0)

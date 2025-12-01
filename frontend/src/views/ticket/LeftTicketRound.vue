@@ -786,6 +786,23 @@ const showTicketPrice = train => {
 const showStopStation = train => {
   console.log('Show stops for', train.station_train_code)
 }
+const bookTrain = train => {
+  const isBack = train.direction === 'back'
+  const idStr = String(train.train_no || '')
+  const realId = idStr.includes('-') ? idStr.split('-').pop() : idStr
+  const q = {
+    date: formatDateValue(isBack ? backDate.value : goDate.value),
+    trainNo: train.station_train_code,
+    trainId: realId,
+    fromStation: train.from_station_name,
+    toStation: train.to_station_name,
+    departTime: train.start_time,
+    arriveTime: train.arrive_time,
+    seatType: '二等座'
+  }
+  router.push({ path: '/order/confirm', query: q })
+}
+
 
 const citySelectorVisible = ref(false)
 const citySelectorTop = ref(0)
