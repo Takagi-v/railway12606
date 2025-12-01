@@ -53,6 +53,7 @@ class OrderCreate(BaseModel):
 class OrderPassengerResponse(BaseModel):
     """Order passenger response"""
     name: str
+    id_type: Optional[str] = None
     id_number: str
     seat_type: SeatType
     seat_number: Optional[str]
@@ -74,6 +75,7 @@ class OrderPassengerResponse(BaseModel):
         if hasattr(v, 'passenger') and hasattr(v, 'seat'):
             return {
                 "name": v.passenger.name,
+                "id_type": v.passenger.id_type.value if hasattr(v.passenger.id_type, 'value') else v.passenger.id_type,
                 "id_number": v.passenger.id_number,
                 "seat_type": v.seat_type,
                 "seat_number": v.seat.seat_number,
@@ -99,6 +101,7 @@ class OrderResponse(BaseModel):
     total_price: Decimal
     status: OrderStatus
     passenger_count: int
+    passengers: List[OrderPassengerResponse] = []
     create_time: datetime
     
     @model_validator(mode='before')
@@ -117,6 +120,7 @@ class OrderResponse(BaseModel):
                 "total_price": v.total_price,
                 "status": v.status,
                 "passenger_count": len(v.order_passengers),
+                "passengers": v.order_passengers,
                 "create_time": v.create_time
             }
         return v
