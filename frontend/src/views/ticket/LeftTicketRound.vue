@@ -46,6 +46,8 @@
                     v-model="from"
                     name="leftTicketDTO.from_station_name"
                     placeholder="简拼/全拼/汉字"
+                    @click="showCitySelector('from', $event)"
+                    @input="handleInput('from', $event)"
                   />
                 </div>
               </li>
@@ -73,35 +75,40 @@
                     v-model="to"
                     name="leftTicketDTO.to_station_name"
                     placeholder="简拼/全拼/汉字"
+                    @click="showCitySelector('to', $event)"
+                    @input="handleInput('to', $event)"
                   />
                 </div>
               </li>
               <li>
                 <span class="label">出发日</span>
                 <div class="inp-w" style="z-index: 1200">
-                  <ADatePicker
-                    v-model:value="goDate"
-                    :disabled-date="disabledGoDate"
-                    :allow-clear="false"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    placeholder="选择出发日期"
-                    style="width: 100%"
-                    @change="ensureBackDateValid"
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    class="inp_selected"
+                    name="leftTicketDTO.train_date"
+                    id="train_date"
+                    :value="goDateDisplay"
+                    @click="showDateSelector('go', $event)"
+                    readonly
+                    style="cursor: pointer;"
                   />
                 </div>
               </li>
               <li class="">
                 <span class="label">返程日</span>
                 <div class="inp-w" id="back_div" style="z-index: 1100">
-                  <ADatePicker
-                    v-model:value="backDate"
-                    :disabled-date="disabledBackDate"
-                    :allow-clear="false"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    placeholder="选择返程日期"
-                    style="width: 100%"
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    class="inp_selected"
+                    name="back_train_date"
+                    id="back_train_date"
+                    :value="backDateDisplay"
+                    @click="showDateSelector('back', $event)"
+                    readonly
+                    style="cursor: pointer;"
                   />
                 </div>
               </li>
@@ -221,7 +228,7 @@
           <div class="section clearfix">
             <div class="section-hd">出发车站：</div>
             <div class="section-bd" id="cc_from_station_name_all">
-              <span class="btn-all" id="from_station_name_all" style="cursor: pointer">全部</span>
+              <span class="btn-all" id="from_station_name_all" style="cursor: pointer" @click="selectedFromStations = []">全部</span>
               <ul id="from_station_ul">
                 <li v-for="s in fromStations" :key="s.value">
                   <input
@@ -229,6 +236,7 @@
                     class="check"
                     name="cc_from_station"
                     :value="s.value"
+                    v-model="selectedFromStations"
                     :id="'cc_from_station_' + s.value + '_check'"
                   />
                   <label
@@ -246,7 +254,7 @@
           <div class="section clearfix">
             <div class="section-hd">到达车站：</div>
             <div class="section-bd" id="cc_to_station_name_all">
-              <span class="btn-all" id="to_station_name_all" style="cursor: pointer">全部</span>
+              <span class="btn-all" id="to_station_name_all" style="cursor: pointer" @click="selectedToStations = []">全部</span>
               <ul id="to_station_ul">
                 <li v-for="s in toStations" :key="s.value">
                   <input
@@ -254,6 +262,7 @@
                     class="check"
                     name="cc_to_station"
                     :value="s.value"
+                    v-model="selectedToStations"
                     :id="'cc_to_station_' + s.value + '_check'"
                   />
                   <label
@@ -271,7 +280,7 @@
           <div class="section clearfix">
             <div class="section-hd">车次席别：</div>
             <div class="section-bd" id="cc_seat_type_new_all">
-              <span class="btn-all" id="to_seat_type_new_all">全部</span>
+              <span class="btn-all" id="to_seat_type_new_all" style="cursor: pointer" @click="selectedSeatTypes = []">全部</span>
               <ul id="seat_type_new_ul">
                 <li v-for="st in seatTypeDefs" :key="st.value">
                   <input
@@ -279,6 +288,7 @@
                     class="check"
                     :value="st.value"
                     name="cc_seat_type"
+                    v-model="selectedSeatTypes"
                     :id="'cc_seat_type_' + st.value + '_check'"
                   />
                   <label
@@ -441,26 +451,46 @@
                   到达站
                 </th>
                 <th width="82" colspan="1" rowspan="1" id="startendtime">
-                  <span class="b1" id="s_time" style="cursor: pointer">
+                  <span
+                    id="s_time"
+                    style="cursor: pointer"
+                    :class="{ 'b1': sortField !== 'start_time' }"
+                    @click="handleSort('start_time')"
+                  >
                     <a
                       href="javascript:"
                       title="按出发时间排序"
                       style="width: 1px; height: 1px; position: absolute; display: block"
                     ></a>
                     出发时间
+                    <i v-if="sortField === 'start_time'" :class="sortOrder === 'asc' ? 'icon-asc' : 'icon-desc'"></i>
                   </span>
                   <br />
-                  <span class="b4" id="r_time" style="cursor: pointer">
+                  <span
+                    id="r_time"
+                    style="cursor: pointer"
+                    :class="{ 'b1': sortField !== 'arrive_time' }"
+                    @click="handleSort('arrive_time')"
+                  >
                     <a
                       href="javascript:"
                       title="按到达时间排序"
                       style="width: 1px; height: 1px; position: absolute; display: block"
                     ></a>
                     到达时间
+                    <i v-if="sortField === 'arrive_time'" :class="sortOrder === 'asc' ? 'icon-asc' : 'icon-desc'"></i>
                   </span>
                 </th>
                 <th width="82" colspan="1" rowspan="1">
-                  <span class="b1" id="l_s" style="cursor: pointer">历时</span>
+                  <span
+                    id="l_s"
+                    style="cursor: pointer"
+                    :class="{ 'b1': sortField !== 'lishi' }"
+                    @click="handleSort('lishi')"
+                  >
+                    历时
+                    <i v-if="sortField === 'lishi'" :class="sortOrder === 'asc' ? 'icon-asc' : 'icon-desc'"></i>
+                  </span>
                 </th>
                 <th width="66" colspan="1" rowspan="1">
                   商务座
@@ -701,11 +731,36 @@
       </div>
     </div>
     <Footer />
+    <Teleport to="body">
+      <CitySelector
+        :visible="citySelectorVisible"
+        :top="citySelectorTop"
+        :left="citySelectorLeft"
+        @select="handleCitySelect"
+        @close="closeCitySelector"
+      />
+      <CitySearch
+        :visible="citySearchVisible"
+        :top="citySelectorTop"
+        :left="citySelectorLeft"
+        :search-query="searchQuery"
+        @select="handleCitySelect"
+        @close="closeCitySelector"
+      />
+      <DateSelector
+        :visible="dateSelectorVisible"
+        :top="dateSelectorTop"
+        :left="dateSelectorLeft"
+        :selected-date="currentSelectingDateInput === 'go' ? dayjs(goDate).format('YYYY-MM-DD') : dayjs(backDate).format('YYYY-MM-DD')"
+        @select="handleDateSelectorSelect"
+        @close="closeDateSelector"
+      />
+    </Teleport>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import dayjs from 'dayjs'
 import { message, DatePicker } from 'ant-design-vue'
 
@@ -714,6 +769,9 @@ import '@/assets/12306-leftticket/leftTicket.css'
 
 import Header12306 from '@/components/Header12306.vue'
 import Footer from '@/components/LoginFooter.vue'
+import CitySelector from '@/components/CitySelector.vue'
+import CitySearch from '@/components/CitySearch.vue'
+import DateSelector from '@/components/DateSelector.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { searchTrains } from '@/api/train'
 
@@ -729,22 +787,143 @@ const showStopStation = train => {
   console.log('Show stops for', train.station_train_code)
 }
 
-const bookTrain = train => {
-  const isBack = train.direction === 'back'
-  const idStr = String(train.train_no || '')
-  const realId = idStr.includes('-') ? idStr.split('-').pop() : idStr
-  const q = {
-    date: formatDateValue(isBack ? backDate.value : goDate.value),
-    trainNo: train.station_train_code,
-    trainId: realId,
-    fromStation: train.from_station_name,
-    toStation: train.to_station_name,
-    departTime: train.start_time,
-    arriveTime: train.arrive_time,
-    seatType: '二等座'
+const citySelectorVisible = ref(false)
+const citySelectorTop = ref(0)
+const citySelectorLeft = ref(0)
+const currentSelectingInput = ref('')
+const citySearchVisible = ref(false)
+const searchQuery = ref('')
+
+const updatePosition = (event) => {
+  let targetEl = event.target
+  const inputEl = document.getElementById(currentSelectingInput.value === 'from' ? 'fromStationText' : 'toStationText')
+  
+  if (inputEl) {
+    const inputRect = inputEl.getBoundingClientRect()
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
+    
+    citySelectorTop.value = inputRect.bottom + scrollTop
+    citySelectorLeft.value = inputRect.left + scrollLeft
   }
-  router.push({ path: '/order/confirm', query: q })
 }
+
+const showCitySelector = (type, event) => {
+  currentSelectingInput.value = type
+  searchQuery.value = ''
+  citySearchVisible.value = false
+  updatePosition(event)
+  citySelectorVisible.value = true
+}
+
+const handleInput = (type, event) => {
+  currentSelectingInput.value = type
+  searchQuery.value = event.target.value
+  updatePosition(event)
+  
+  if (searchQuery.value) {
+    citySelectorVisible.value = false
+    citySearchVisible.value = true
+  } else {
+    citySearchVisible.value = false
+    citySelectorVisible.value = true
+  }
+}
+
+const handleCitySelect = city => {
+  if (currentSelectingInput.value === 'from') {
+    from.value = city
+  } else {
+    to.value = city
+  }
+  citySelectorVisible.value = false
+  citySearchVisible.value = false
+}
+
+const closeCitySelector = () => {
+  citySelectorVisible.value = false
+  citySearchVisible.value = false
+}
+
+const dateSelectorVisible = ref(false)
+const dateSelectorTop = ref(0)
+const dateSelectorLeft = ref(0)
+const currentSelectingDateInput = ref('go') // 'go' or 'back'
+
+const showDateSelector = (type, event) => {
+  currentSelectingDateInput.value = type
+  const inputId = type === 'go' ? 'train_date' : 'back_train_date'
+  const inputEl = document.getElementById(inputId)
+  if (inputEl) {
+    const rect = inputEl.getBoundingClientRect()
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
+    
+    dateSelectorTop.value = rect.bottom + scrollTop
+    dateSelectorLeft.value = rect.left + scrollLeft
+    dateSelectorVisible.value = true
+  }
+}
+
+const handleDateSelectorSelect = (dateStr) => {
+  const d = dayjs(dateStr).toDate()
+  if (currentSelectingDateInput.value === 'go') {
+    goDate.value = d
+    updateActiveDateByGoDate()
+    // If back date is before go date, update back date
+    if (dayjs(backDate.value).isBefore(dayjs(goDate.value))) {
+      backDate.value = d
+    }
+  } else {
+    backDate.value = d
+  }
+  search()
+  closeDateSelector()
+}
+
+const closeDateSelector = () => {
+  dateSelectorVisible.value = false
+}
+
+const handleGlobalClick = (e) => {
+  if (citySelectorVisible.value || citySearchVisible.value) {
+    const selector = document.querySelector('.city-selector')
+    const search = document.querySelector('.city-search')
+    const fromInput = document.getElementById('fromStationText')
+    const toInput = document.getElementById('toStationText')
+    
+    const clickedInsideSelector = selector && selector.contains(e.target)
+    const clickedInsideSearch = search && search.contains(e.target)
+    
+    if (!clickedInsideSelector && !clickedInsideSearch && 
+        e.target !== fromInput && 
+        e.target !== toInput) {
+      closeCitySelector()
+    }
+  }
+  
+  if (dateSelectorVisible.value) {
+    const dateSelector = document.querySelector('.cal-wrap')
+    const goInput = document.getElementById('train_date')
+    const backInput = document.getElementById('back_train_date')
+    const clickedInsideDateSelector = dateSelector && dateSelector.contains(e.target)
+    
+    if (!clickedInsideDateSelector && e.target !== goInput && e.target !== backInput) {
+      closeDateSelector()
+    }
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleGlobalClick)
+  syncFromRoute()
+  updateActiveDateByGoDate()
+  search()
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleGlobalClick)
+})
 
 const from = ref('北京')
 const to = ref('上海')
@@ -826,6 +1005,12 @@ const typeDefs = [
   }
 ]
 const selectedTypes = ref([])
+const selectedFromStations = ref([])
+const selectedToStations = ref([])
+const selectedSeatTypes = ref([])
+const sortField = ref('')
+const sortOrder = ref('asc')
+
 const toggleAllTypes = () => {
   if (selectedTypes.value.length === typeDefs.length) {
     selectedTypes.value = []
@@ -834,7 +1019,16 @@ const toggleAllTypes = () => {
   }
 }
 
-const formatDateValue = d => (typeof d === 'string' ? d : dayjs(d).format('YYYY-MM-DD'))
+const handleSort = (field) => {
+  if (sortField.value === field) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortField.value = field
+    sortOrder.value = 'asc'
+  }
+}
+
+const formatDateValue = d => dayjs(d).format('YYYY-MM-DD')
 const normalizeTime = value => {
   const hour = value.slice(0, 2)
   if (hour === '24') {
@@ -864,7 +1058,7 @@ const trainTypeFeatureMap = {
 
 const transformTrain = (train, direction) => {
   const seatMap = {
-    swz_num: '--',
+    swz_num: formatSeatDisplay(train.business_class),
     yxdz_num: '--',
     ydz_num: formatSeatDisplay(train.first_class),
     edz_num: formatSeatDisplay(train.second_class),
@@ -872,8 +1066,8 @@ const transformTrain = (train, direction) => {
     rw_num: formatSeatDisplay(train.soft_sleeper),
     yw_num: formatSeatDisplay(train.hard_sleeper),
     rz_num: '--',
-    yz_num: '--',
-    wz_num: '--',
+    yz_num: formatSeatDisplay(train.hard_seat),
+    wz_num: formatSeatDisplay(train.no_seat),
     qt_num: '--'
   }
   const prefix = direction === 'go' ? '去程 ' : '返程 '
@@ -913,6 +1107,8 @@ const rawTrains = computed(() => [...goTrainsRaw.value, ...backTrainsRaw.value])
 
 const trains = computed(() => {
   let list = rawTrains.value
+  
+  // 1. Filter by Train Type
   const typeLabels = new Set()
   selectedTypes.value.forEach(val => {
     const mapped = filterValueMap[val]
@@ -923,6 +1119,63 @@ const trains = computed(() => {
   if (typeLabels.size > 0) {
     list = list.filter(item => typeLabels.has(item.train_type))
   }
+
+  // 2. Filter by Departure Station
+  if (selectedFromStations.value.length > 0) {
+    const set = new Set(selectedFromStations.value)
+    list = list.filter(item => set.has(item.from_station_name))
+  }
+
+  // 3. Filter by Arrival Station
+  if (selectedToStations.value.length > 0) {
+    const set = new Set(selectedToStations.value)
+    list = list.filter(item => set.has(item.to_station_name))
+  }
+
+  // 4. Filter by Seat Type
+  if (selectedSeatTypes.value.length > 0) {
+    const keysToCheck = []
+    selectedSeatTypes.value.forEach(v => {
+       if (v === 'O') keysToCheck.push('edz_num')
+       if (v === '4') keysToCheck.push('rw_num')
+       if (v === '3') keysToCheck.push('yw_num')
+       if (v === '1') keysToCheck.push('yz_num')
+    })
+    
+    if (keysToCheck.length > 0) {
+       list = list.filter(item => {
+         return keysToCheck.some(key => item[key] !== '无' && item[key] !== '--')
+       })
+    }
+  }
+
+  // 5. Sorting
+  if (sortField.value) {
+    list = [...list].sort((a, b) => {
+      let valA = a[sortField.value]
+      let valB = b[sortField.value]
+      
+      // Handle time comparison
+      if (sortField.value === 'start_time' || sortField.value === 'arrive_time') {
+        // HH:mm format
+        return sortOrder.value === 'asc' 
+          ? valA.localeCompare(valB) 
+          : valB.localeCompare(valA)
+      }
+      
+      // Handle duration (lishi) "HH:mm"
+      if (sortField.value === 'lishi') {
+        const [hA, mA] = valA.split(':').map(Number)
+        const [hB, mB] = valB.split(':').map(Number)
+        const minA = hA * 60 + mA
+        const minB = hB * 60 + mB
+        return sortOrder.value === 'asc' ? minA - minB : minB - minA
+      }
+      
+      return 0
+    })
+  }
+
   return list
 })
 
@@ -1122,11 +1375,7 @@ watch(
   }
 )
 
-onMounted(() => {
-  syncFromRoute()
-  updateActiveDateByGoDate()
-  search()
-})
+
 </script>
 
 <style>
@@ -1165,5 +1414,25 @@ onMounted(() => {
 }
 .quick-s-btn {
   margin-left: 20px;
+}
+.icon-asc {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #fc8302;
+  margin-left: 0;
+  vertical-align: middle;
+}
+.icon-desc {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #fc8302;
+  margin-left: 0;
+  vertical-align: middle;
 }
 </style>
