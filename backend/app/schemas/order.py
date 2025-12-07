@@ -52,6 +52,7 @@ class OrderCreate(BaseModel):
 
 class OrderPassengerResponse(BaseModel):
     """Order passenger response"""
+    passenger_id: int
     name: str
     id_type: Optional[str] = None
     id_number: str
@@ -74,6 +75,7 @@ class OrderPassengerResponse(BaseModel):
         # Handle ORM object
         if hasattr(v, 'passenger') and hasattr(v, 'seat'):
             return {
+                "passenger_id": v.passenger_id,
                 "name": v.passenger.name,
                 "id_type": v.passenger.id_type.value if hasattr(v.passenger.id_type, 'value') else v.passenger.id_type,
                 "id_number": v.passenger.id_number,
