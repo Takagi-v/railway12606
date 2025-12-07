@@ -1,380 +1,187 @@
-# 贡献指南
+# 贡献指南 (Contributing Guide)
 
-感谢您对本项目的关注！这份文档将指导您如何参与项目开发。
+感谢您对 **Railway 12306** 项目的关注！这份文档将指导您如何参与项目的开发和贡献。
+
+## 目录
+
+1. [开始之前](#开始之前)
+2. [环境准备](#环境准备)
+3. [开发流程](#开发流程)
+4. [代码规范](#代码规范)
+5. [提交 Pull Request](#提交-pull-request)
+6. [行为准则](#行为准则)
+
+---
 
 ## 开始之前
 
-1. 阅读 [README.md](./README.md) 了解项目概况
-2. 阅读 [requirement.md](./requirement.md) 了解详细需求
-3. 确保本地环境配置完成
+在开始贡献代码之前，请确保：
+
+1. 阅读 [README.md](./README.md) 了解项目概况及部署方式。
+2. 阅读 [requirement.md](./requirement.md) 了解详细的功能需求。
+3. 检查 [Issues](https://github.com/railway12606/issues) 列表，看看是否有您感兴趣的任务，通过评论认领 Issue。
+
+## 环境准备
+
+为了保证开发环境的一致性，请严格遵循以下配置：
+
+### 1. 后端环境
+
+我们强制要求使用 Python 虚拟环境，以避免系统权限问题。
+
+```bash
+cd backend
+
+# 1. 创建并激活虚拟环境
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 2. 安装依赖
+pip install -r requirements.txt
+
+# 3. 环境变量
+cp .env.example .env
+
+# 4. 数据库准备
+# 请务必参考 README 中的 "数据库配置" 章节，确保创建了正确的用户并赋予了 schema 权限
+```
+
+### 2. 前端环境
+
+```bash
+cd frontend
+npm install
+```
 
 ## 开发流程
 
-### 1. 选择 Issue
+### 1. 分支管理
 
-在 GitHub Issues 中选择一个您想要实现的功能或修复的问题：
+我们使用 **Git Flow** 的简化版本：
 
-- 标记为 `good first issue` 的适合新手
-- 标记为 `help wanted` 的需要支持
-- 查看 Issue 描述了解具体需求
-
-### 2. 创建分支
+*   `main`: 主分支，存放稳定的发布代码。
+*   `dev` (可选): 开发主分支。
+*   **功能分支**: 从 `main` 检出，命名格式 `feat/feature-name`。
+*   **修复分支**: 从 `main` 检出，命名格式 `fix/issue-name`。
 
 ```bash
-# 更新主分支
+# 更新本地代码
 git checkout main
 git pull origin main
 
-# 创建功能分支
-git checkout -b feature/issue-name
-
-# 或创建修复分支
-git checkout -b fix/issue-name
+# 创建新功能分支
+git checkout -b feat/search-trains
 ```
 
-### 3. 开发
+### 2. 本地开发
 
-#### 前端开发
+#### 启动后端
+
+```bash
+cd backend
+source .venv/bin/activate
+uvicorn app.main:app --reload
+```
+*   API 文档: http://localhost:8000/api/docs
+
+#### 启动前端
 
 ```bash
 cd frontend
 npm run dev
 ```
+*   页面预览: http://localhost:5173
 
-开发时注意：
-- 组件应该可复用
-- 使用 TypeScript 类型提示（如果适用）
-- 遵循 Vue 3 Composition API 最佳实践
-- 使用 Ant Design Vue 组件
+### 3. 注意事项
 
-#### 后端开发
+*   **数据库修改**: 如果您修改了 SQLAlchemy 模型 (`app/models/`)，**必须**生成新的迁移脚本：
+    ```bash
+    alembic revision --autogenerate -m "Add booking table"
+    alembic upgrade head
+    ```
+*   **权限问题**: 如果遇到数据库权限报错 (`permission denied`)，请参考 README 中的排查指南，不要随意更改数据库 owner。
 
-```bash
-cd backend
-uvicorn app.main:app --reload
-```
-
-开发时注意：
-- 使用类型提示
-- 编写清晰的文档字符串
-- 遵循 RESTful API 设计原则
-- 添加适当的错误处理
-
-### 4. 测试
-
-#### 前端测试
-- 在浏览器中测试功能
-- 检查控制台是否有错误
-- 测试不同的用户场景
-
-#### 后端测试
-- 访问 http://localhost:8000/api/docs 测试API
-- 使用 Postman 测试复杂场景
-- 检查数据库数据是否正确
-
-### 5. 提交代码
-
-```bash
-# 添加修改的文件
-git add .
-
-# 提交（使用规范的提交信息）
-git commit -m "feat: 添加车次查询功能"
-
-# 推送到远程分支
-git push origin feature/issue-name
-```
-
-### 6. 创建 Pull Request
-
-1. 在 GitHub 上创建 Pull Request
-2. 填写 PR 描述，说明：
-   - 实现了什么功能
-   - 解决了哪个 Issue
-   - 如何测试
-3. 等待代码审查
-4. 根据反馈修改代码
+---
 
 ## 代码规范
 
-### 提交信息规范
+### 1. 提交信息 (Commit Messages)
 
-使用约定式提交格式：
+请使用 [Conventional Commits](https://www.conventionalcommits.org/) 规范：
 
+*   `feat`: 新功能
+*   `fix`: 修复 Bug
+*   `docs`: 文档变更
+*   `style`: 代码格式调整（不影响逻辑）
+*   `refactor`: 重构（无新功能或 Bug 修复）
+*   `chore`: 构建系统或工具变更
+
+**示例**:
 ```
-<类型>(<范围>): <描述>
-
-[可选的正文]
-
-[可选的脚注]
-```
-
-类型：
-- `feat`: 新功能
-- `fix`: 修复问题
-- `docs`: 文档更新
-- `style`: 代码格式（不影响功能）
-- `refactor`: 代码重构
-- `test`: 添加测试
-- `chore`: 构建过程或辅助工具的变动
-
-示例：
-```
-feat(train): 实现车次查询功能
-
-- 添加车次查询API
-- 实现余票计算逻辑
-- 添加筛选功能
-
-Closes #12
+feat(user): 添加用户注册接口
+fix(order): 修复订单金额计算错误的 Bug
+docs: 更新部署文档
 ```
 
-### 前端代码规范
+### 2. 后端规范 (Python)
 
-#### 组件命名
+*   **风格**: 遵循 PEP 8。
+*   **类型提示**: 所有函数参数和返回值必须添加 Type Hints。
+*   **API 设计**:
+    *   RESTful 风格。
+    *   使用 Pydantic Schema 进行数据验证 (`app/schemas/`)。
+    *   业务逻辑尽量封装在 `CRUD` 或 `Service` 层，保持 Router 简洁。
+
+**示例**:
+```python
+# GOOD
+@router.get("/{id}", response_model=schemas.User)
+def read_user(id: int, db: Session = Depends(get_db)):
+    ...
+
+# BAD (无类型提示，逻辑混杂)
+@router.get("/get_user")
+def get_user(id):
+    ...
+```
+
+### 3. 前端规范 (Vue 3)
+
+*   **风格**: 使用 Vue 3 Composition API (`<script setup>`)。
+*   **组件库**: 统一使用 Ant Design Vue 组件，不要引入其他会导致风格割裂的库。
+*   **请求**: API 请求封装在 `src/api/` 目录下，不要在组件中直接调用 `axios`。
+
+**组件示例**:
 ```vue
-<!-- 使用 PascalCase -->
 <script setup>
-// UserProfile.vue
+import { ref } from 'vue';
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore();
 </script>
-```
 
-#### 代码风格
-```javascript
-// 使用 const/let，不使用 var
-const userName = 'John'
-
-// 使用箭头函数
-const handleClick = () => {
-  console.log('clicked')
-}
-
-// 使用解构
-const { name, age } = user
-```
-
-#### Vue 组件结构
-```vue
 <template>
-  <!-- 模板 -->
+  <a-button type="primary" @click="userStore.login">登录</a-button>
 </template>
-
-<script setup>
-// 导入
-import { ref, computed } from 'vue'
-
-// 组件逻辑
-const count = ref(0)
-const doubleCount = computed(() => count.value * 2)
-
-// 方法
-const increment = () => {
-  count.value++
-}
-</script>
-
-<style scoped>
-/* 样式 */
-</style>
 ```
 
-### 后端代码规范
+---
 
-#### 函数定义
-```python
-def get_user_by_id(user_id: int, db: Session) -> User:
-    """
-    根据ID获取用户
-    
-    Args:
-        user_id: 用户ID
-        db: 数据库会话
-        
-    Returns:
-        User: 用户对象
-        
-    Raises:
-        HTTPException: 用户不存在时
-    """
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="用户不存在")
-    return user
-```
+## 提交 Pull Request
 
-#### API 端点
-```python
-@router.get("/users/{user_id}", response_model=Response[UserResponse])
-async def get_user(
-    user_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    """获取用户信息"""
-    user = get_user_by_id(user_id, db)
-    return Response(
-        code=200,
-        message="查询成功",
-        data=UserResponse.model_validate(user)
-    )
-```
+1.  **代码自测**: 确保本地运行无误，没有明显的 Console 报错。
+2.  **提交**: 将代码 push 到您的远程分支。
+3.  **创建 PR**: 在 GitHub 上发起 Pull Request 到 `main` 分支。
+4.  **描述**: 清晰填写 PR 描述模板：
+    *   修改了什么？
+    *   解决了哪个 Issue？(例如 `Closes #123`)
+    *   如果有 UI 变更，请附带截图。
 
-## Issue 创建指南
-
-### 功能请求
-
-```markdown
-### 功能描述
-简要描述需要实现的功能
-
-### 详细说明
-详细描述功能的实现细节和业务逻辑
-
-### 验收标准
-- [ ] 标准1
-- [ ] 标准2
-
-### 相关文档
-链接到相关的需求文档或设计文档
-
-### 技术建议
-可选：给出技术实现建议
-```
-
-### Bug 报告
-
-```markdown
-### Bug 描述
-简要描述问题
-
-### 复现步骤
-1. 步骤1
-2. 步骤2
-3. 看到错误
-
-### 期望行为
-描述期望的正确行为
-
-### 实际行为
-描述实际发生的行为
-
-### 环境信息
-- 浏览器/Python版本：
-- 操作系统：
-- 其他相关信息：
-
-### 截图
-如果适用，添加截图
-
-### 可能的解决方案
-可选：如果您有解决思路，请分享
-```
-
-## Pull Request 指南
-
-### PR 标题
-
-使用清晰的标题描述变更：
-
-- ✅ `feat: 实现车次查询功能`
-- ✅ `fix: 修复订单支付失败的问题`
-- ❌ `更新代码`
-- ❌ `修复bug`
-
-### PR 描述
-
-```markdown
-## 变更说明
-简要说明本次PR的目的和内容
-
-## 关联 Issue
-Closes #12
-
-## 变更类型
-- [ ] Bug 修复
-- [x] 新功能
-- [ ] 重构
-- [ ] 文档更新
-
-## 测试说明
-如何测试这些变更：
-1. 启动后端服务
-2. 访问车次查询页面
-3. 输入北京到上海
-4. 验证结果正确显示
-
-## 截图
-如果有UI变更，请添加截图
-
-## 检查清单
-- [x] 代码遵循项目规范
-- [x] 已在本地测试
-- [x] 更新了相关文档
-- [ ] 添加了测试用例（如果适用）
-```
-
-## 代码审查
-
-### 审查者职责
-
-1. 检查代码质量
-2. 验证功能是否符合需求
-3. 提出改进建议
-4. 确保代码规范
-
-### 提供反馈
-
-- 友好和建设性
-- 具体说明问题
-- 提供改进建议
-- 认可好的做法
-
-示例：
-```
-✅ 建议将这个函数拆分为更小的函数，提高可读性
-
-❌ 这段代码写得不好
-```
-
-## 开发技巧
-
-### 前端开发
-
-1. **使用 Vue DevTools** 调试组件状态
-2. **使用 Vite 的 HMR** 快速预览更改
-3. **使用 Ant Design Vue 的示例** 快速实现UI
-4. **检查浏览器控制台** 查看错误和警告
-
-### 后端开发
-
-1. **使用 FastAPI 自动文档** (/api/docs) 测试接口
-2. **使用 Postman** 保存和组织测试用例
-3. **使用 Python 调试器** 定位问题
-4. **查看日志** 了解程序运行状态
-
-### 数据库
-
-1. **使用数据库客户端** (Navicat/DBeaver) 查看数据
-2. **使用 Alembic** 管理数据库迁移
-3. **定期备份** 开发数据库
-4. **使用事务** 确保数据一致性
-
-## 获取帮助
-
-如果遇到问题：
-
-1. 查看项目文档
-2. 搜索现有的 Issues
-3. 查看相关技术的官方文档
-4. 在 Issue 中提问
-5. 联系项目维护者
+---
 
 ## 行为准则
 
-- 尊重他人
-- 接受建设性批评
-- 关注对项目最有利的事情
-- 展现同理心
+*   **尊重与友善**: 我们是一个开放的社区，请保持礼貌和专业。
+*   **建设性反馈**: 在 Code Review 时，请针对代码提出具体的改进建议。
 
-感谢您的贡献！🎉
-
+感谢您的贡献！让我们一起打造更好的开源项目！ 🚀
