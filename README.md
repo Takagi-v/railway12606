@@ -54,7 +54,7 @@ railway12606/
 
 ## 🚀 部署与启动 (Deployment)
 
-以下是针对 macOS/Linux 环境的标准部署流程。
+以下是针对 macOS/Linux 环境的标准部署流程。并且针对Windows环境下的特殊步骤进行了说明。
 
 ### 一、后端部署 (Normal Flow)
 
@@ -66,6 +66,12 @@ railway12606/
 
 ```bash
 psql postgres
+```
+
+Windows 用户（推荐显式指定连接参数与超级用户，防止出现默认用操作系统用户名尝试作为数据库用户名登录，而如果该数据库角色不存在或没有密码引起失败的问题）：
+
+```powershell
+psql -h localhost -p 5432 -U postgres -d postgres
 ```
 
 执行以下 SQL 语句：
@@ -102,6 +108,25 @@ python scripts/generate_demo_data.py --days 14
 # 6. 启动服务
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
+
+#### Windows 用户部署注意
+
+- 激活虚拟环境（PowerShell）：
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+- 如使用 `venv` 安装依赖出现问题，推荐使用 Conda 环境：
+
+```powershell
+conda create -n railway12606 python=3.11 -y
+conda activate railway12606
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+- 其余流程与 mac/linux 保持一致。
 
 - API 文档地址: http://localhost:8000/api/docs
 
