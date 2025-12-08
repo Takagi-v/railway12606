@@ -26,13 +26,26 @@
             </span>
           </div>
           <div class="train-line-2">
-            <div class="seat-item" v-if="train.seatType">
+            <div class="seat-list" v-if="Object.keys(trainPrices).some(k => trainPrices[k])">
+              <div 
+                v-for="(label, key) in seatTypeKeyMap" 
+                :key="key" 
+                class="seat-item-price" 
+                v-show="trainPrices[seatTypeKeyMap[key]]"
+              >
+                <span class="seat-name">{{ key }}</span>
+                <span class="seat-price">
+                  <span class="currency">¥</span>
+                  <span class="amount">{{ trainPrices[seatTypeKeyMap[key]] }}</span>
+                </span>
+              </div>
+            </div>
+            <div class="seat-item" v-else-if="train.seatType">
               <span class="seat-name">{{ train.seatType }}</span>
               <span class="seat-price">
                 <span class="currency">¥</span>
                 <span class="amount">{{ train.price }}</span>
               </span>
-              <!-- <span class="seat-count">有票</span> -->
             </div>
             <div class="seat-tip" v-else>
               请重新选择车次以获取票价信息
@@ -224,6 +237,98 @@
 
     </div>
     <Footer />
+
+    <!-- Custom Confirmation Modal -->
+    <div v-if="showConfirmModal" class="custom-modal-overlay">
+      <div class="custom-modal">
+        <div class="custom-modal-header">
+          请核对以下信息
+        </div>
+        <div class="custom-modal-body">
+          <div class="modal-train-info">
+            <strong>{{ train.date }}</strong>
+            <span class="train-code"><strong>{{ train.trainNo }}</strong>次</span>
+            <span class="station-info"><strong>{{ train.fromStation }}</strong>（<strong>{{ train.departTime }}</strong>开）— <strong>{{ train.toStation }}</strong>（{{ train.arriveTime }}到）</span>
+          </div>
+          
+          <div class="modal-passenger-table-wrapper">
+            <table class="modal-passenger-table">
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>席别</th>
+                  <th>票种</th>
+                  <th>姓名</th>
+                  <th>证件类型</th>
+                  <th>证件号码</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(id, idx) in effectiveSelectedIds" :key="id">
+                  <td>{{ idx + 1 }}</td>
+                  <td>{{ selectionMap[id]?.seatType || '二等座' }}</td>
+                  <td>{{ selectionMap[id]?.ticketType || '成人票' }}</td>
+                  <td>{{ getPassengerName(id) }}</td>
+                  <td>{{ selectionMap[id]?.idType || '居民身份证' }}</td>
+                  <td>{{ formatIdNo(getPassengerIdNo(id)) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="modal-tip-text">
+            *如果本次列车剩余席位无法满足您的选座需求，系统将自动为您分配席位。
+          </div>
+
+          <!-- Seat Selection -->
+          <div class="seat-selection-area">
+             <div class="seat-label-container">
+               <div class="label-row">
+                 <img src="../../../pics/bg021.png" alt="icon" class="seat-icon-img">
+                 <span class="label-text">选座喽</span>
+               </div>
+               <div class="selected-count">已选座<span class="count-highlight">{{ selectedSeats.length }}/{{ effectiveSelectedIds.length }}</span></div>
+             </div>
+             <div class="seat-map">
+               <div class="seat-group left">
+                 <div 
+                   v-for="seat in ['A', 'B', 'C']" 
+                   :key="seat" 
+                   class="seat-box"
+                   :class="{ active: selectedSeats.includes(seat) }"
+                   @click="toggleSeat(seat)"
+                 >
+                   <span class="seat-icon"></span>
+                   <span class="seat-text">{{ seat }}</span>
+                 </div>
+               </div>
+               <div class="aisle">过道</div>
+               <div class="seat-group right">
+                 <div 
+                   v-for="seat in ['D', 'F']" 
+                   :key="seat" 
+                   class="seat-box"
+                   :class="{ active: selectedSeats.includes(seat) }"
+                   @click="toggleSeat(seat)"
+                 >
+                   <span class="seat-icon"></span>
+                   <span class="seat-text">{{ seat }}</span>
+                 </div>
+               </div>
+             </div>
+          </div>
+
+          <div class="remaining-tickets-info">
+             本次列车，{{ currentSeatTypeLabel }}余票<strong class="red-text">{{ displayedRemainingCount }}</strong>张，无座余票<strong class="red-text">{{ displayedNoSeatCount }}</strong>张。
+          </div>
+
+          <div class="modal-footer-btns">
+            <button class="btn-modal-cancel" @click="closeConfirmModal">返回修改</button>
+            <button class="btn-modal-confirm" @click="confirmSubmitOrder">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -257,6 +362,12 @@ const selectedTransfereeIds = ref([])
 const searchName = ref('')
 const submitting = ref(false)
 const trainId = ref(String(route.query.trainId || ''))
+const showConfirmModal = ref(false)
+const selectedSeats = ref([])
+const remainingTickets = ref({
+  second_class: '--',
+  no_seat: '--'
+})
 
 const seatTypeOptions = ['商务座', '一等座', '二等座', '软卧', '硬卧', '硬座', '无座']
 const ticketTypeOptions = ['成人票', '学生票', '儿童票']
@@ -306,7 +417,7 @@ const loadPassengers = async () => {
         map[p.id] = { 
           seatType: train.value.seatType || '二等座', 
           ticketType: '成人票',
-          idType: p.idTypeLabel || '中国居民身份证'
+          idType: idTypeOptions.includes(p.idTypeLabel) ? p.idTypeLabel : '中国居民身份证'
         }
       })
       selectionMap.value = map
@@ -365,12 +476,38 @@ const initTrainInfo = () => {
   }
 }
 
+const trainSeatCounts = ref({})
+
 const seatTypeKeyMap = {
+  '商务座': 'business_class',
   '一等座': 'first_class',
   '二等座': 'second_class',
   '软卧': 'soft_sleeper',
-  '硬卧': 'hard_sleeper'
+  '硬卧': 'hard_sleeper',
+  '硬座': 'hard_seat',
+  '无座': 'no_seat'
 }
+
+const currentSeatTypeLabel = computed(() => {
+  if (effectiveSelectedIds.value.length > 0) {
+    const firstId = effectiveSelectedIds.value[0]
+    return selectionMap.value[firstId]?.seatType || train.value.seatType || '二等座'
+  }
+  return train.value.seatType || '二等座'
+})
+
+const displayedRemainingCount = computed(() => {
+  const label = currentSeatTypeLabel.value
+  const key = seatTypeKeyMap[label]
+  if (!key || trainSeatCounts.value[key] === undefined) return '--'
+  return trainSeatCounts.value[key]
+})
+
+const displayedNoSeatCount = computed(() => {
+  return trainSeatCounts.value['no_seat'] !== undefined ? trainSeatCounts.value['no_seat'] : '--'
+})
+
+const trainPrices = ref({})
 
 const enrichTrainInfo = async () => {
   try {
@@ -395,13 +532,51 @@ const enrichTrainInfo = async () => {
       if (!trainId.value) {
         trainId.value = String(match.train_id)
       }
-      // 补全价格
+      
+      // Extract available count helper
+      const getCount = (obj) => (obj && obj.available !== undefined) ? String(obj.available) : '--'
+      // Extract price helper
+      const getPrice = (obj) => (obj && obj.price !== undefined) ? String(obj.price) : ''
+
+      // Store all seat counts
+      trainSeatCounts.value = {
+        business_class: getCount(match.business_class),
+        first_class: getCount(match.first_class),
+        second_class: getCount(match.second_class),
+        soft_sleeper: getCount(match.soft_sleeper),
+        hard_sleeper: getCount(match.hard_sleeper),
+        hard_seat: getCount(match.hard_seat),
+        no_seat: '--'
+      }
+
+      // Store all seat prices
+      trainPrices.value = {
+        business_class: getPrice(match.business_class),
+        first_class: getPrice(match.first_class),
+        second_class: getPrice(match.second_class),
+        soft_sleeper: getPrice(match.soft_sleeper),
+        hard_sleeper: getPrice(match.hard_sleeper),
+        hard_seat: getPrice(match.hard_seat),
+        no_seat: getPrice(match.no_seat) || getPrice(match.wz_num) || ''
+      }
+      
+      // Special handling for no_seat variants
+      if (match.no_seat && match.no_seat.available !== undefined) {
+         trainSeatCounts.value.no_seat = String(match.no_seat.available)
+      } else if (match.standing && match.standing.available !== undefined) {
+         trainSeatCounts.value.no_seat = String(match.standing.available)
+      } else if (match.wz_num && match.wz_num !== '--') {
+         trainSeatCounts.value.no_seat = String(match.wz_num)
+      }
+
+      // 补全价格 (if current selected type price is missing)
       if (!train.value.price) {
         const key = seatTypeKeyMap[train.value.seatType]
         if (key && match[key]) {
           train.value.price = match[key].price
         }
       }
+      
       // 补全其他可能缺失的信息
       if (!train.value.departTime) train.value.departTime = match.departure_time
       if (!train.value.arriveTime) train.value.arriveTime = match.arrival_time
@@ -447,6 +622,37 @@ const removePassenger = (id) => {
   }
 }
 
+const toggleSeat = (seat) => {
+  const index = selectedSeats.value.indexOf(seat)
+  if (index > -1) {
+    selectedSeats.value.splice(index, 1)
+  } else {
+    if (selectedSeats.value.length < effectiveSelectedIds.value.length) {
+      selectedSeats.value.push(seat)
+    } else {
+      // Automatically switch seat if limit is reached
+      if (effectiveSelectedIds.value.length > 0) {
+        selectedSeats.value.shift() // Remove the first selected seat
+        selectedSeats.value.push(seat)
+      }
+    }
+  }
+}
+
+const formatIdNo = (idNo) => {
+  if (!idNo || idNo.length < 10) return idNo
+  return idNo.substring(0, 4) + '**********' + idNo.substring(idNo.length - 3)
+}
+
+const closeConfirmModal = () => {
+  showConfirmModal.value = false
+}
+
+const confirmSubmitOrder = async () => {
+  await processOrderSubmission()
+  showConfirmModal.value = false
+}
+
 const submitOrder = async () => {
   if (effectiveSelectedIds.value.length === 0) {
     message.error('请选择乘车人或受让人')
@@ -460,15 +666,9 @@ const submitOrder = async () => {
     }
   }
 
-  Modal.confirm({
-    title: '请再次确认订单信息',
-    content: '请核对乘车人、车次及日期信息，确认无误后点击确定提交订单。',
-    okText: '确定',
-    cancelText: '取消',
-    onOk: async () => {
-      await processOrderSubmission()
-    }
-  })
+  // Open custom modal
+  selectedSeats.value = []
+  showConfirmModal.value = true
 }
 
 const processOrderSubmission = async () => {
@@ -622,6 +822,24 @@ const normalizeTicketType = t => {
   gap: 8px;
   margin-right: 20px;
   font-size: 12px;
+}
+.seat-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.seat-item-price {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}
+.seat-item-price .seat-name {
+  color: #666;
+}
+.seat-item-price .seat-price {
+  color: #ff8c00;
+  font-weight: bold;
 }
 .seat-price {
   color: #ff8200;
@@ -851,5 +1069,221 @@ const normalizeTicketType = t => {
 }
 .bold-tips {
   font-weight: bold !important;
+}
+/* Custom Modal Styles */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.custom-modal {
+  width: 590px;
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-modal-header {
+  height: 37px;
+  background: #298cce;
+  color: #fff;
+  font-size: 16px;
+  line-height: 37px;
+  padding-left: 15px;
+  font-weight: bold;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.custom-modal-body {
+  padding: 15px 20px;
+  /* height: 242.67px; Removed fixed height to allow content to flow naturally, but min-height can be set if needed */
+  min-height: 242.67px; 
+}
+
+.modal-train-info {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.modal-train-info strong {
+  font-weight: bold;
+}
+.modal-train-info .train-code {
+  margin: 0 10px;
+}
+
+.modal-passenger-table-wrapper {
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+}
+.modal-passenger-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.modal-passenger-table th, .modal-passenger-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+.modal-passenger-table th {
+  background: #f8f8f8;
+  color: #666;
+  font-weight: normal;
+}
+
+.modal-tip-text {
+  color: #3B99FC;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+/* Seat Selection Area */
+.seat-selection-area {
+  background: #EEF1F8;
+  padding: 15px 20px;
+  border-radius: 4px;
+  border: 1px dashed #ccc;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: flex-start; /* Align to left as requested */
+  gap: 20px; /* Reduce gap as requested */
+  align-items: center;
+}
+
+.seat-label-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 80px; /* Ensure it doesn't shrink too much */
+}
+
+.label-row {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #ff8c00;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.seat-icon-img {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  object-fit: contain;
+}
+
+.selected-count {
+  color: #333;
+  font-size: 12px;
+  margin-left: 28px; /* Align with text, offsetting icon width + margin */
+}
+
+.count-highlight {
+  color: #ff8c00;
+  font-weight: bold;
+}
+
+.seat-map {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+}
+.seat-group {
+  display: flex;
+  gap: 10px;
+}
+.aisle {
+  color: #999;
+  font-size: 12px;
+  padding: 0 10px;
+}
+
+.seat-box {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  color: #999;
+}
+.seat-box.active {
+  background: #3B99FC; /* Blue background for selected */
+  border-color: #3B99FC;
+  color: #fff;
+}
+/* Simple visual representation of a seat icon using CSS */
+.seat-box .seat-icon {
+  position: absolute;
+  top: 5px;
+  width: 20px;
+  height: 15px;
+  border: 2px solid currentColor;
+  border-radius: 4px 4px 0 0;
+}
+.seat-box .seat-text {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.remaining-tickets-info {
+  margin-bottom: 15px;
+  font-size: 12px;
+  color: #666;
+}
+.red-text {
+  color: #ff0000;
+  font-size: 16px;
+  margin: 0 3px;
+}
+
+.modal-footer-btns {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+.modal-footer-btns button {
+  width: 92px;
+  height: 30px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-modal-cancel {
+  border: 1px solid #ccc;
+  background: #fff;
+}
+.btn-modal-confirm {
+  background: #ff8c00; /* Orange confirm button */
+  color: #fff;
+  border: none;
+}
+.btn-modal-confirm:hover {
+  background: #ff7b00;
 }
 </style>
