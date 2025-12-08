@@ -138,7 +138,7 @@ export function getUserProfile() {
  */
 export function updateUserProfile(data) {
   return request({
-    url: '/auth/profile',
+    url: '/user/profile',
     method: 'put',
     data
   })
