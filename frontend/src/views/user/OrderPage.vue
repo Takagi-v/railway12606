@@ -93,8 +93,16 @@
                    <div class="price-val">{{ p.price || order.total_price }}元</div>
                 </div>
                 <div class="p-status">
-                   <div>{{ order.status }}</div>
-                   <a href="javascript:;" v-if="order.status === '已支付'" class="link-btn">退票</a>
+                   <div v-if="p.refund_status === '已退票'">已退票</div>
+                   <div v-else>
+                     {{ order.status === '部分退票' ? '已支付' : order.status }}
+                   </div>
+                   <a 
+                     href="javascript:;" 
+                     v-if="(order.status === '已支付' || order.status === '部分退票') && p.refund_status !== '已退票'" 
+                     class="link-btn" 
+                     @click="handleRefundClick(order, p)"
+                   >退票</a>
                 </div>
              </div>
           </div>
@@ -170,6 +178,45 @@
         </template>
       </div>
     </div>
+
+
+    <!-- Refund Modal -->
+    <div v-if="refundModalVisible" class="modal-backdrop" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999;"></div>
+    <div v-if="refundModalVisible" role="alertdialog" tabindex="-1" aria-label="提示框" class="modal" style="display: block; position: fixed; width: 540px; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;">
+      <a href="javascript:;" title="关闭" class="modal-close" @click="refundModalVisible = false"><i class="icon icon-close"></i></a>
+      <div class="modal-hd">
+        <div class="modal-tit">退票申请</div>
+      </div>
+      <div class="modal-bd">
+        <div class="message">
+          <div class="msg-ico"><i class="icon icon-doubt"></i></div>
+          <div class="msg-con">
+            <h2 class="msg-tit" tabindex="0">您确认要退票吗？</h2>
+            <div class="msg-info">如有订餐饮或特产，请按规定到网站自行办理退订。</div>
+          </div>
+        </div>
+        <div class="order-cancel-tips">
+          <ul class="order-cancel-count">
+            <li>共计退款：<span class="txt-price txt-lg">{{ currentRefundTicket?.price }}元</span></li>
+            <li>手续费用：<span class="txt-price txt-lg">0元</span><span class="txt-light">（当前时间退票不收取手续费）</span></li>
+            <li>车票票价：<span class="txt-price txt-lg">{{ currentRefundTicket?.price }}元</span></li>
+            <li>应退票款：<span class="txt-price txt-lg">{{ currentRefundTicket?.price }}元</span></li>
+          </ul>
+          <div class="order-cancel-txt"><i class="icon icon-plaint-fill mr"></i>实际核收退票费及应退票款将按最终交易时间计算。</div>
+          <div class="order-cancel-txt"><i class="icon icon-plaint-fill mr"></i>如你需要办理该次列车前续、后续退票业务，请于退票车次票面开车时间前办理。<div class="txt-second"></div></div>
+        </div>
+      </div>
+      <div class="modal-ft">
+        <a href="javascript:;" class="btn cancel" @click="refundModalVisible = false">取消</a>
+        <a href="javascript:;" class="btn btn-primary ok" @click="confirmRefund">确定</a>
+      </div>
+      <div class="modal-ft-tips">
+        <p>1. 使用现金购买或已领取报销凭证的电子票，线上完成退票后，请持相关证件（购票证件、报销凭证）至车站窗口完成退款。如您同时购买了“乘意险”，可在车站窗口退款时一并办理。</p>
+        <p>2. 退票费按如下规则核收：票面乘车站开车时间前8天（含）以上不收取退票费，48小时以上的按票价5%计，24小时以上、不足48小时的按票价10%计，不足24小时的按票价20%计。上述计算的尾数以5角为单位，尾数小于2.5角的舍去、2.5角（含）以上且小于7.5角的计为5角、7.5角（含）以上的进为1元。退票费最低按2元计收。更多退票规则请查看<a class="txt-primary" href="https://mobile.12306.cn/otsmobile/h5/otsbussiness/info/orderWarmTips.html" target="_blank">《退改说明》</a>。</p>
+        <p>3. 应退款项按银行规定时限退还至购票时所使用的网上支付工具账户，请注意查询，如有疑问请致电12306 人工客服查询。</p>
+        <p>4. 跨境旅客旅行须知详见铁路跨境旅客相关运输组织规则和车站公告。</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -187,6 +234,10 @@ const loading = ref(false)
 const keyword = ref('')
 const startDate = ref(dayjs().subtract(30, 'day').format('YYYY-MM-DD'))
 const endDate = ref(dayjs().format('YYYY-MM-DD'))
+
+// Refund Modal State
+const refundModalVisible = ref(false)
+const currentRefundTicket = ref(null)
 
 const setTab = (tab) => {
   activeTab.value = tab
@@ -208,6 +259,7 @@ const mockPassengers = (order) => {
   // Try to parse order_passengers if available, otherwise mock
   if (order.order_passengers && order.order_passengers.length) {
      return order.order_passengers.map(p => ({
+         passenger_id: p.passenger_id || 12345,
          name: p.passenger_name || '张三',
          id_type: '居民身份证',
          seat_type: p.seat_type || '二等座',
@@ -217,6 +269,7 @@ const mockPassengers = (order) => {
      }))
   }
   return [{
+    passenger_id: 12345,
     name: '乌梁海奥都',
     id_type: '居民身份证',
     seat_type: '二等座',
@@ -231,7 +284,7 @@ const fetchOrders = async () => {
   try {
     let statusParam = undefined
     if (activeTab.value === 'pending') statusParam = '待支付'
-    if (activeTab.value === 'upcoming') statusParam = '已支付'
+    if (activeTab.value === 'upcoming') statusParam = ['已支付', '部分退票', '已退票']
     if (activeTab.value === 'history') statusParam = '已取消' // Or handle completed
     
     // Note: Backend API might differ, adjusting to match common patterns
@@ -282,6 +335,30 @@ const onPay = (id) => {
           }
       }
   })
+}
+
+const handleRefundClick = (order, passenger) => {
+  currentRefundTicket.value = {
+    orderId: order.id,
+    passengerId: passenger.passenger_id,
+    passengerName: passenger.name,
+    price: passenger.price,
+  }
+  refundModalVisible.value = true
+}
+
+const confirmRefund = async () => {
+  if (!currentRefundTicket.value) return
+  try {
+    await refundOrder(currentRefundTicket.value.orderId, {
+       passenger_ids: [currentRefundTicket.value.passengerId]
+    })
+    message.success('退票成功')
+    refundModalVisible.value = false
+    fetchOrders()
+  } catch(e) {
+    message.error(e.response?.data?.message || '退票失败')
+  }
 }
 
 watch(activeTab, fetchOrders, { immediate: true })
