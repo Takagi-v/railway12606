@@ -1,0 +1,500 @@
+@import '@/assets/12306-icons/fonts/iconfont.css';
+
+/* 容器与栅格 */
+.wrapper {
+  width: 1200px;
+  margin: 0 auto;
+}
+.nav-box .wrapper {
+  width: 1190px;
+}
+.header {
+  background: #fff;
+  position: relative;
+  z-index: 500;
+}
+.header:before {
+  content: '';
+  position: absolute;
+  top: 24px;
+  right: 0;
+  left: 50%;
+  height: 40px;
+  background: #f8f8f8;
+  z-index: 0;
+}
+.header-con {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 19px 0;
+  position: relative;
+  z-index: 2001; /* 提高 header-con 层级，确保其中的下拉菜单不受下方元素（如 nav-box）遮挡 */
+}
+.logo {
+  margin: 0;
+}
+.logo .logo-link {
+  display: block;
+  width: 200px;
+  height: 50px;
+  text-indent: -9999px; /* 隐藏文字 */
+  /* 远程 image-set 背景图，支持 1x/2x；提供本地回退变量 */
+  background-image: var(
+    --logo-img,
+    image-set(
+      url('https://www.12306.cn/index/images/logo.png') 1x,
+      url('https://www.12306.cn/index/images/logo@2x.png') 2x
+    )
+  );
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: contain;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  background: url('@/assets/12306-icons/train.png') no-repeat left top #f8f8f8;
+  background-size: 1000px 40px;
+  height: 40px;
+}
+.header-search {
+  width: 420px;
+  display: flex;
+  align-items: center;
+  margin-left: 80px;
+}
+.search-bd {
+  position: relative;
+  width: 320px;
+}
+.search-input {
+  width: 100%;
+  height: 34px;
+  line-height: 34px;
+  padding: 0 10px;
+  border: 1px solid #dedede;
+  outline: none;
+}
+.search-btn {
+  height: 34px;
+  line-height: 34px;
+  padding: 0 10px;
+  background: #3b99fc;
+  color: #fff;
+  display: inline-block;
+}
+.hdr-icon {
+  display: inline-block;
+}
+
+/* 搜索下拉 */
+.search-down,
+.search-history {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #dedede;
+  z-index: 10;
+}
+.search-down {
+  top: 36px;
+}
+.search-history {
+  top: 36px;
+  margin-top: 8px;
+}
+.search-down.show,
+.search-history.show {
+  display: block;
+}
+.search-down .close {
+  position: absolute;
+  right: 8px;
+  top: 6px;
+  color: #999;
+}
+.search-history-tit {
+  font-weight: 600;
+  padding: 8px;
+  margin: 0;
+}
+.search-down-list,
+.search-history-list {
+  list-style: none;
+  padding: 8px;
+}
+.search-down-list li,
+.search-history-list li {
+  padding: 6px 8px;
+  cursor: pointer;
+}
+.search-down-list li:hover,
+.search-history-list li:hover {
+  background: #f5f5f5;
+}
+.history-clear {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  color: #999;
+}
+
+/* 顶部菜单（对齐 12306，更轻量紧凑） */
+.header-menu {
+  height: 40px;
+  line-height: 40px;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0;
+  margin: 0 0 0 20px;
+  list-style: none;
+  padding: 0;
+  font-size: 14px;
+}
+.menu-item {
+  height: 40px;
+  color: #3b99fc;
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+}
+.menu-line {
+  color: #acd1f9;
+  padding: 0 4px;
+}
+.menu-nav {
+  position: relative;
+}
+.menu-nav-hd {
+  color: #3b99fc;
+}
+.menu-nav .caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid #b3b3b3;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+/* 顶部菜单链接不换行、统一行高（仅作用于顶层菜单项） */
+.header-menu > .menu-item > a {
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 40px;
+}
+.menu-login {
+  display: flex;
+  align-items: center;
+  line-height: 40px;
+  white-space: nowrap;
+  gap: 4px;
+}
+/* 下拉面板：窄边框、微阴影、紧凑内边距 */
+.menu-nav-bd {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  border: 1px solid #dedede;
+  min-width: 120px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  z-index: 3000 !important; /* 强制提高 z-index，确保高于 nav-box 的 2000 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.menu-nav:hover .menu-nav-bd {
+  display: block;
+}
+.menu-nav-bd.show {
+  display: block;
+}
+.menu-nav-bd li a {
+  display: block;
+  padding: 0 15px;
+  white-space: nowrap;
+  color: #333;
+  font-size: 12px;
+  line-height: 30px;
+}
+.menu-nav-bd li a:hover {
+  background: #f5f5f5;
+}
+.menu-login a {
+  color: #333;
+}
+.menu-login a.ml {
+  margin-left: 8px;
+}
+
+/* 登录后用户名样式：不换行、超长省略、紧凑对齐 */
+.menu-login .user-name {
+  display: inline-block;
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.menu-login .greeting,
+.menu-login .sep {
+  display: inline-block;
+  line-height: 40px;
+}
+.nav-line {
+  height: 1px;
+  margin: 4px 0;
+  background: #eee;
+}
+
+/* 次级导航条 */
+.nav-box {
+  background: #3b99fc;
+  height: 40px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-left: calc((100vw - 100%) / 2);
+  margin-right: calc((100vw - 100%) / 2);
+}
+.nav {
+  width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  list-style: none;
+  box-sizing: border-box;
+}
+.nav-item {
+  display: block;
+}
+.nav-hd {
+  display: block;
+  color: #fff;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 16px;
+}
+.nav-item.active .nav-hd {
+  font-weight: 600;
+}
+.icon-down {
+  display: inline-block;
+  border: none;
+  width: auto;
+  height: auto;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.nav-bd {
+  display: none;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-bottom: 1px solid #dedede;
+  padding: 20px 0;
+  z-index: 2000;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+.nav-item:hover .nav-bd {
+  display: block;
+}
+.nav-bd-item {
+  float: left;
+  min-width: 220px;
+  padding: 0;
+  border-right: 1px solid #ACD1F9;
+  overflow: hidden;
+}
+.nav-bd-item:last-child {
+  border-right: none;
+}
+.nav-bd-item.border-none {
+  border-right: none;
+}
+.border-none {
+  border: none !important;
+}
+.nav-col2 {
+  width: 396px; /* 两列 198px 精确对齐官网 */
+  flex: 0 0 396px;
+}
+.nav-col4 {
+  width: 420px;
+  flex: 0 0 420px;
+}
+.nav-col5 {
+  width: 990px;
+  flex: 0 0 990px;
+}
+.nav-col6 {
+  width: 1190px;
+  flex: 0 0 1190px;
+}
+.nav-tit {
+  font-weight: 600;
+  color: #3b99fc;
+  margin-bottom: 12px;
+}
+.nav-con {
+  list-style: none;
+}
+.nav-con li {
+  line-height: 32px;
+  float: none !important; /* 重置浮动，确保 grid 生效 */
+}
+.nav-con li a {
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+.nav-con li a:hover {
+  color: #3b99fc;
+}
+
+/* 移除 Grid 容器的伪元素，防止占据网格位置 */
+.nav-con::before,
+.nav-con::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* 无大类横向列举（会员服务等）：按官网为右分隔线，末项无线 */
+#J-huiyuanfuwu .nav-con {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0;
+  padding: 8px 0;
+}
+#J-huiyuanfuwu .nav-con li {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+#J-huiyuanfuwu .nav-con li + li {
+  border-left: 1px solid #e5e5e5;
+  margin-left: 38px;
+  padding-left: 38px;
+}
+
+/* 通用：两列按行填充，与官网分栏一致 */
+.nav-con {
+  display: block;
+}
+#J-chepiao .nav-con {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 198px 198px;
+  grid-auto-rows: 32px;
+  column-gap: 0;
+  row-gap: 6px;
+  align-content: start;
+  align-items: start;
+  justify-items: start;
+}
+/* 车票更多只有一列两行，或一行两列？官网是两列 */
+#J-chepiao .nav-bd-item:last-child .nav-con {
+  grid-template-rows: repeat(1, auto);
+}
+
+#J-tuangoufuwu .nav-con {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 198px 198px;
+  grid-auto-rows: 32px;
+  column-gap: 0;
+  row-gap: 6px;
+}
+/* 团购服务特殊宽度修正 */
+#J-tuangoufuwu .nav-bd-item.nav-col6 {
+  width: 396px;
+  flex: 0 0 396px;
+}
+
+/* 站车服务宽度修正 */
+#J-zhanchefuwu .nav-bd-item.nav-col4 {
+  width: 792px; /* 4 col */
+  flex: 0 0 792px;
+}
+#J-zhanchefuwu .nav-con {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 198px 198px 198px 198px; /* 4列 */
+  grid-auto-rows: 32px;
+  column-gap: 0;
+  row-gap: 6px;
+}
+
+#J-shanlvfuwu .nav-con {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 198px 198px 198px; /* 三列 */
+  grid-auto-rows: 32px;
+  column-gap: 0;
+  row-gap: 6px;
+}
+/* 商旅服务宽度修正 */
+#J-shanlvfuwu .nav-bd-item.nav-col6 {
+  width: 594px; /* 3 col */
+  flex: 0 0 594px;
+}
+
+
+#J-chuxingzhinan .nav-con {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 198px 198px;
+  grid-auto-rows: 32px;
+  column-gap: 24px;
+  row-gap: 6px;
+}
+
+#J-xinxichaxun .nav-bd-item.nav-col5 {
+  width: 990px;
+}
+#J-xinxichaxun .nav-bd-item.nav-col5 .nav-con {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 198px 198px 198px 198px 198px; /* 5 cols */
+  grid-auto-rows: 32px;
+  column-gap: 0;
+  row-gap: 6px;
+}
+#J-xinxichaxun .nav-bd-item:last-child {
+  width: 198px;
+  min-width: 198px;
+  padding-top: 36px; 
+  border-right: none;
+}
+/* 修正：移除 nav-con 的 padding-top，避免重复叠加 */
+#J-xinxichaxun .nav-bd-item:last-child .nav-con.nav-con-pt {
+  padding-top: 0 !important;
+}
+#J-xinxichaxun .nav-bd-item:last-child .nav-con {
+  display: grid;
+  grid-template-columns: 198px;
+  grid-auto-rows: 32px;
+  column-gap: 0;
+  row-gap: 6px;
+  margin-top: 0; /* 确保无额外间距 */
+}
+
+/* 导航条占满整行 */
+.nav-box {
+  width: 100%;
+}

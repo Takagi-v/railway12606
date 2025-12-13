@@ -35,6 +35,11 @@ app = FastAPI(
     openapi_url=f"{settings.API_PREFIX}/openapi.json"
 )
 
+# Add security middleware
+app.add_middleware(SecurityMiddleware)
+app.add_middleware(RateLimitMiddleware, max_requests=100, window_seconds=60)
+app.add_middleware(RequestValidationMiddleware)
+
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
@@ -43,11 +48,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Add security middleware
-app.add_middleware(SecurityMiddleware)
-app.add_middleware(RateLimitMiddleware, max_requests=100, window_seconds=60)
-app.add_middleware(RequestValidationMiddleware)
 
 # Add exception handlers
 app.add_exception_handler(HTTPException, http_exception_handler)

@@ -144,17 +144,20 @@ class RequestValidationMiddleware(BaseHTTPMiddleware):
         
         # 检查Content-Type（对于POST/PUT请求）
         if request.method in ["POST", "PUT", "PATCH"]:
-            content_type = request.headers.get("content-type", "")
-            if not content_type.startswith(("application/json", "multipart/form-data")):
-                # 允许某些特殊路径
-                if not request.url.path.startswith("/docs") and not request.url.path.startswith("/openapi"):
-                    return JSONResponse(
-                        status_code=415,
-                        content=APIResponse(
-                            code=415,
-                            message="不支持的媒体类型",
-                            data=None
-                        ).model_dump()
-                    )
+            content_length = request.headers.get("content-length")
+            # Only validate content type if there is content
+            if content_length and int(content_length) > 0:
+                content_type = request.headers.get("content-type", "")
+                if not content_type.startswith(("application/json", "multipart/form-data")):
+                    # 允许某些特殊路径
+                    if not request.url.path.startswith("/docs") and not request.url.path.startswith("/openapi"):
+                        return JSONResponse(
+                            status_code=415,
+                            content=APIResponse(
+                                code=415,
+                                message="不支持的媒体类型",
+                                data=None
+                            ).model_dump()
+                        )
         
         return await call_next(request)
