@@ -223,6 +223,7 @@ import { useRouter, useRoute } from 'vue-router'
 import LoginFooter from '@/components/LoginFooter.vue'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
+import { sendLoginVerifyCode } from '@/api/auth'
 
 const router = useRouter()
 const route = useRoute()
@@ -461,24 +462,7 @@ const startQrPolling = () => {
     clearInterval(qrCheckTimer.value)
   }
 
-  qrCheckTimer.value = setInterval(async () => {
-    try {
-      // 模拟检查二维码状态
-      const random = Math.random()
-      if (random < 0.1) {
-        // 10%概率扫码成功
-        qrStatus.value = 'scanned'
-        setTimeout(() => {
-          // 模拟确认登录
-          message.success('扫码登录成功')
-          router.push('/')
-          stopQrPolling()
-        }, 2000)
-      }
-    } catch (error) {
-      console.error('检查二维码状态失败:', error)
-    }
-  }, 2000)
+  // 扫码登录功能暂未实现，仅展示二维码，不进行轮询检测
 }
 
 const stopQrPolling = () => {
@@ -665,19 +649,45 @@ const closeVerifyModal = () => {
 
 const sendSmsCode = async () => {
   if (codeCooldown.value > 0) return
+  const idLast4 = verify.idLast4.trim()
+  if (!/^\d{4}$/.test(idLast4)) {
+    message.error('请输入证件号后4位')
+    return
+  }
+
   try {
     codeSending.value = true
-    await new Promise(r => setTimeout(r, 500))
-    message.success('验证码已发送')
-    codeCooldown.value = 60
-    if (codeTimerRef.value) clearInterval(codeTimerRef.value)
-    codeTimerRef.value = setInterval(() => {
-      codeCooldown.value--
-      if (codeCooldown.value <= 0) {
-        clearInterval(codeTimerRef.value)
-        codeTimerRef.value = null
+    const username = pendingLoginData.value.username
+    const res = await sendLoginVerifyCode({ username, idLast4 })
+    
+    if (res.code === 200) {
+      if (res.data && res.data.code) {
+         message.success('验证码已发送: ' + res.data.code)
+      } else {
+         message.success('验证码已发送')
       }
-    }, 1000)
+      
+      codeCooldown.value = 60
+      if (codeTimerRef.value) clearInterval(codeTimerRef.value)
+      codeTimerRef.value = setInterval(() => {
+        codeCooldown.value--
+        if (codeCooldown.value <= 0) {
+          clearInterval(codeTimerRef.value)
+          codeTimerRef.value = null
+        }
+      }, 1000)
+    } else {
+       // request.js might have handled this if code != 200, but if we get here, show message
+       if (res.message) message.error(res.message)
+    }
+  } catch (error) {
+    console.error('发送验证码失败:', error)
+    // request.js has handled API errors. Only show if it's not an API error (no response) and not a generic message.
+    if (!error.response && !error.message?.includes('Request failed')) {
+        // Only show if we haven't shown it via request.js
+        // But request.js throws Error(msg) for logic errors too. 
+        // Safer to just log or show if strictly needed.
+    }
   } finally {
     codeSending.value = false
   }
@@ -687,7 +697,7 @@ const confirmVerify = async () => {
   const id4 = verify.idLast4.trim()
   const code = verify.code.trim()
   if (!/^\d{4}$/.test(id4)) {
-    message.error('请输入证件后4位')
+    message.error('请输入证件号后4位')
     return
   }
   if (!/^\d{4,6}$/.test(code)) {
@@ -696,7 +706,11 @@ const confirmVerify = async () => {
   }
   try {
     loading.value = true
-    const data = { ...pendingLoginData.value, idLast4: id4, smsCode: code }
+    const data = { 
+      ...pendingLoginData.value, 
+      id_last_4: id4, 
+      sms_code: code 
+    }
     await userStore.login(data)
     message.success('登录成功')
     loginAttempts.value = 0
@@ -705,7 +719,10 @@ const confirmVerify = async () => {
     router.push(redirect)
   } catch (error) {
     console.error('登录失败:', error)
-    message.error(error.message || '登录失败，请检查信息')
+    // request.js handles API errors
+    if (!error.response && !error.message?.includes('Request failed')) {
+       // message.error(error.message || '登录失败，请检查信息')
+    }
   } finally {
     loading.value = false
   }

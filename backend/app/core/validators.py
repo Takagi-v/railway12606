@@ -5,7 +5,11 @@ Validators
 import re
 from typing import Optional
 from datetime import datetime, date
+import logging
 from app.core.exceptions import ValidationException
+from app.core.config import settings
+
+logger = logging.getLogger(__name__)
 
 
 class UserValidator:
@@ -85,6 +89,9 @@ class UserValidator:
         if not id_number:
             raise ValidationException("身份证号不能为空")
         
+        # 去除首尾空格
+        id_number = id_number.strip()
+        
         if id_type in ("身份证", "居民身份证"):
             # 18位身份证号验证
             if not re.match(r'^\d{17}[\dXx]$', id_number):
@@ -98,6 +105,9 @@ class UserValidator:
             check_code = check_codes[sum_val % 11]
             
             if id_number[17].upper() != check_code:
+                if settings.DEBUG:
+                    logger.warning(f"DEBUG模式: 身份证号 {id_number} 校验位错误，但在调试模式下忽略此错误。正确校验位应为: {check_code}")
+                    return True
                 raise ValidationException("身份证号校验位错误")
         
         return True

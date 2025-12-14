@@ -276,7 +276,8 @@ const onPay = (id) => {
           try {
               await payOrder(id)
               message.success('支付成功')
-              fetchOrders()
+              // 跳转到支付成功页面
+              router.push({ path: '/order/success', query: { orderId: id } })
           } catch(e) {
               message.error('支付失败')
           }

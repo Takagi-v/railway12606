@@ -48,6 +48,8 @@ class UserLogin(BaseModel):
     username: str
     password: str
     captcha: Optional[str] = None
+    id_last_4: Optional[str] = None
+    sms_code: Optional[str] = None
 
 
 class UserUpdate(BaseModel):

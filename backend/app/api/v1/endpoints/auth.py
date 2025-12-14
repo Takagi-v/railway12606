@@ -1,9 +1,10 @@
 """Authentication Endpoints
 用户认证相关API
 """
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Body
 from sqlalchemy.orm import Session
 from datetime import timedelta
+import random
 
 from app.db.session import get_db
 from app.schemas.user import UserRegister, UserLogin, UserResponse, TokenResponse
@@ -15,8 +16,56 @@ from app.core.config import settings
 from app.api.deps import get_current_user
 from app.core.exceptions import ValidationException, AuthenticationException
 from app.core.validators import UserValidator
+from pydantic import BaseModel
 
 router = APIRouter()
+
+# Simple in-memory storage for verification codes (for demonstration)
+VERIFY_CODES = {}
+
+class VerifyCodeRequest(BaseModel):
+    username: str
+    id_last_4: str
+
+@router.post("/login/verify-code", response_model=Response)
+async def send_verify_code(req: VerifyCodeRequest, db: Session = Depends(get_db)):
+    """
+    发送登录验证码
+    验证用户名和证件号后4位，如果匹配则生成4位验证码
+    """
+    # Find user
+    user = db.query(User).filter(
+        (User.username == req.username) | 
+        (User.phone == req.username)
+    ).first()
+    
+    if not user:
+        # Avoid user enumeration, but for this specific logic we need to match info
+        raise ValidationException("用户信息不匹配")
+        
+    # Check ID last 4 digits
+    if not user.id_number or len(user.id_number) < 4:
+         raise ValidationException("用户信息不完整")
+         
+    real_last_4 = user.id_number[-4:]
+    if real_last_4 != req.id_last_4:
+        raise ValidationException("证件号后4位不匹配")
+        
+    # Generate 4-digit code
+    code = str(random.randint(1000, 9999))
+    print(f"====== [DEBUG] Generated Verification Code for user [{user.username}]: {code} ======")
+    VERIFY_CODES[user.username] = code
+    # Also store by phone if username is phone, or whatever was used to login
+    VERIFY_CODES[req.username] = code
+    if user.phone:
+        VERIFY_CODES[user.phone] = code
+        
+    # In a real app, send via SMS. Here return it as requested.
+    return Response(
+        code=200,
+        message="验证码已生成",
+        data={"code": code}
+    )
 
 
 @router.post("/register", response_model=Response[UserResponse], status_code=status.HTTP_201_CREATED)
@@ -100,6 +149,8 @@ async def login(login_data: UserLogin, db: Session = Depends(get_db)):
     - **username**: 用户名或手机号
     - **password**: 密码
     - **captcha**: 验证码（可选）
+    - **id_last_4**: 证件号后4位（可选，特定验证流程需要）
+    - **sms_code**: 短信验证码（可选，特定验证流程需要）
     """
     # Find user by username or phone
     user = db.query(User).filter(
@@ -112,6 +163,21 @@ async def login(login_data: UserLogin, db: Session = Depends(get_db)):
     
     if not verify_password(login_data.password, user.password):
         raise AuthenticationException("用户名或密码错误")
+
+    # Check for additional verification if provided
+    if login_data.id_last_4 and login_data.sms_code:
+        # Verify ID last 4
+        if not user.id_number or user.id_number[-4:] != login_data.id_last_4:
+            raise AuthenticationException("证件号后4位不匹配")
+            
+        # Verify SMS Code
+        stored_code = VERIFY_CODES.get(login_data.username) or VERIFY_CODES.get(user.username) or VERIFY_CODES.get(user.phone)
+        if not stored_code or stored_code != login_data.sms_code:
+             raise AuthenticationException("验证码错误或已过期")
+             
+        # Clear code after successful use (optional but good practice)
+        if login_data.username in VERIFY_CODES:
+            del VERIFY_CODES[login_data.username]
     
     # Create access token and refresh token
     access_token = create_access_token(data={"sub": str(user.id)})

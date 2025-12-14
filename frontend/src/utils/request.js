@@ -72,11 +72,16 @@ request.interceptors.response.use(
       const { status, data } = error.response
 
       switch (status) {
+        case 400:
+          message.error(data?.detail || data?.message || '请求参数错误')
+          break;
+
         case 401:
           // 未授权，清除token并跳转到登录页
           const userStore = useUserStore()
           userStore.logout()
-          message.error('登录已过期，请重新登录')
+          // 优先显示后端返回的具体错误信息（如：密码错误、证件号不匹配等），如果没有则显示默认信息
+          message.error(data?.detail || data?.message || '登录已过期，请重新登录')
           router.push('/login')
           break
 
@@ -107,14 +112,20 @@ request.interceptors.response.use(
           break
 
         default:
-          message.error(data?.message || `请求失败 (${status})`)
+          message.error(data?.detail || data?.message || `请求失败 (${status})`)
       }
     } else if (error.request) {
       // 网络错误
       message.error('网络连接失败，请检查网络设置')
     } else {
       // 其他错误
-      message.error(error.message || '请求失败')
+      const msg = error.message || '请求失败'
+      // 过滤掉 Axios 默认的 "Request failed with status code xxx" 错误信息
+      if (msg.startsWith('Request failed with status code')) {
+         message.error('请求失败，请稍后重试')
+      } else {
+         message.error(msg)
+      }
     }
 
     return Promise.reject(error)

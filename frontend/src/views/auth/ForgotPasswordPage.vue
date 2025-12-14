@@ -481,6 +481,10 @@ const handleFaceSubmit = async () => {
 
 // 处理手机找回提交
 const handlePhoneSubmit = async () => {
+  // 自动去除空格
+  if (phoneForm.phone) phoneForm.phone = phoneForm.phone.trim()
+  if (phoneForm.idNumber) phoneForm.idNumber = phoneForm.idNumber.trim()
+  
   if (!validateForm(phoneForm, 'phone')) return
 
   try {
@@ -507,6 +511,10 @@ const handlePhoneSubmit = async () => {
 
 // 处理邮箱找回提交
 const handleEmailSubmit = async () => {
+  // 自动去除空格
+  if (emailForm.email) emailForm.email = emailForm.email.trim()
+  if (emailForm.idNumber) emailForm.idNumber = emailForm.idNumber.trim()
+
   if (!validateForm(emailForm, 'email')) return
 
   try {

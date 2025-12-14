@@ -95,6 +95,22 @@ export function sendSmsCode(data) {
 }
 
 /**
+ * 发送登录验证码 (校验身份证后4位)
+ * @param {Object} data { username, idLast4 }
+ * @returns {Promise}
+ */
+export function sendLoginVerifyCode(data) {
+  return request({
+    url: '/auth/login/verify-code',
+    method: 'post',
+    data: {
+      username: data.username,
+      id_last_4: data.idLast4
+    }
+  })
+}
+
+/**
  * 获取图形验证码
  * @returns {Promise}
  */
@@ -341,6 +357,19 @@ export function submitEmailRecovery(data) {
 export function verifyRecoveryCode(data) {
   return request({
     url: '/auth/password/recovery/verify',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 重发找回密码验证码
+ * @param {Object} data { token }
+ * @returns {Promise}
+ */
+export function resendRecoveryCode(data) {
+  return request({
+    url: '/auth/password/recovery/resend',
     method: 'post',
     data
   })
