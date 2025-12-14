@@ -49,9 +49,23 @@ export const updatePassenger = (id, data) => {
 /**
  * 删除乘客
  */
+/**
+ * 删除乘客
+ */
 export const deletePassenger = id => {
   return request({
     url: `/passengers/${id}`,
     method: 'delete'
+  })
+}
+
+/**
+ * 批量删除乘客
+ */
+export const batchDeletePassengers = ids => {
+  return request({
+    url: '/passengers/batch-delete',
+    method: 'post',
+    data: ids
   })
 }

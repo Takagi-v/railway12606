@@ -24,9 +24,13 @@ class PassengerCreate(PassengerBase):
     pass
 
 
-class PassengerUpdate(PassengerBase):
+class PassengerUpdate(BaseModel):
     """Update passenger schema"""
-    pass
+    name: Optional[str] = Field(None, min_length=2, max_length=50)
+    id_type: Optional[IdType] = None
+    id_number: Optional[str] = None
+    phone: Optional[str] = Field(None, min_length=11, max_length=11)
+    passenger_type: Optional[PassengerType] = Field(None, description="成人/学生/儿童")
 
 
 class PassengerResponse(PassengerBase):
