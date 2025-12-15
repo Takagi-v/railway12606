@@ -195,7 +195,7 @@
 <script setup>
 import { computed, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
-import { getPassengers, createPassenger, updatePassenger, deletePassenger, syncDefaultPassenger } from '@/api/passenger'
+import { getPassengers, createPassenger, updatePassenger, deletePassenger, syncDefaultPassenger, batchDeletePassengers } from '@/api/passenger'
 // Import 12306 styles
 import '@/assets/12306-passenger/center.css'
 import '@/assets/12306-passenger/ticket_public_v70001.css'
@@ -393,13 +393,15 @@ const handleDelete = async p => {
 const batchDelete = async () => {
   if (selectedIds.value.length === 0) return
   try {
-    await Promise.all(selectedIds.value.map(id => deletePassenger(id)))
-    message.success('批量删除成功')
-    selectedIds.value = []
-    allChecked.value = false
-    await loadPassengers()
+    const res = await batchDeletePassengers(selectedIds.value)
+    if (res.code === 200) {
+      message.success('批量删除成功')
+      selectedIds.value = []
+      allChecked.value = false
+      await loadPassengers()
+    }
   } catch (e) {
-    message.error('批量删除失败')
+    // 错误信息由 request.js 拦截器统一处理
   }
 }
 
