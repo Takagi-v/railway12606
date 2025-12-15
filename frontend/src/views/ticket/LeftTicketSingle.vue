@@ -82,7 +82,7 @@
               </li>
               <li>
                 <span class="label">出发日</span>
-                <div class="inp-w" style="z-index: 1200">
+                <div class="inp-w">
                   <input
                     autocomplete="off"
                     type="text"
@@ -99,7 +99,7 @@
               </li>
               <li class="">
                 <span class="label">返程日</span>
-                <div class="inp-w" id="back_div" style="z-index: 1100">
+                <div class="inp-w" id="back_div">
                   <input
                     autocomplete="off"
                     type="text"
@@ -1328,9 +1328,7 @@ const syncFromRoute = () => {
 }
 
 watch(filterTime, () => {
-  if (rawTrains.value.length) {
-    search()
-  }
+  search()
 })
 
 watch(

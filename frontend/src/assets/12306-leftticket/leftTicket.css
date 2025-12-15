@@ -206,15 +206,16 @@ body {
     border-collapse: collapse;
     table-layout: fixed;
 }
+
 /* 覆盖返程日期及站点输入框尺寸 */
 
 
 .leftticket-page .inp_selected,
 .leftticket-page .inp-w .inp-txt {
-  width: 120px;
-  height: 25px;
-  line-height: 24px;
-  box-sizing: border-box;
+    width: 120px;
+    height: 25px;
+    line-height: 24px;
+    box-sizing: border-box;
 }
 
 .t-list th {
