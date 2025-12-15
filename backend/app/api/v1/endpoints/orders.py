@@ -77,6 +77,10 @@ async def create_order(
     
     # 开始事务处理
     try:
+        occupied_seat_ids = []
+        # 复制选座偏好（如果有）
+        preferences = list(order_data.seat_selection) if order_data.seat_selection else []
+
         for p_req in order_data.passengers:
             # 1. 确定票价
             price = 0
@@ -93,12 +97,36 @@ async def create_order(
                 raise ValidationException(f"该车次不支持{p_req.seat_type.value}")
                 
             # 2. 查找可用座位 (使用悲观锁防止超卖)
-            seat = db.query(Seat).filter(
+            base_query = db.query(Seat).filter(
                 Seat.train_id == train.id,
                 Seat.travel_date == order_data.travel_date,
                 Seat.seat_type == p_req.seat_type,
                 Seat.status == SeatStatus.AVAILABLE
-            ).with_for_update(skip_locked=True).first()
+            )
+
+            # 排除当前循环中已选中的座位
+            if occupied_seat_ids:
+                base_query = base_query.filter(Seat.id.notin_(occupied_seat_ids))
+            
+            # 优先按座位号排序，尽量分配相邻座位（如同车厢同排）
+            base_query = base_query.order_by(Seat.seat_number)
+
+            seat = None
+            # 尝试匹配选座偏好
+            if preferences:
+                pref = preferences[0]
+                # 匹配座位号后缀，例如 "A号"
+                # 注意：座位号格式为 "01车01A号"，所以匹配 "%A号"
+                target_suffix = f"%{pref}号"
+                pref_seat = base_query.filter(Seat.seat_number.like(target_suffix)).with_for_update(skip_locked=True).first()
+                
+                if pref_seat:
+                    seat = pref_seat
+                    preferences.pop(0) # 移除已满足的偏好
+            
+            # 如果没有偏好或偏好无法满足，分配任意可用座位
+            if not seat:
+                seat = base_query.with_for_update(skip_locked=True).first()
             
             if not seat:
                 raise BusinessException(f"{p_req.seat_type.value}余票不足")
@@ -107,6 +135,7 @@ async def create_order(
             seat.status = SeatStatus.LOCKED
             seat.locked_until = datetime.now() + timedelta(minutes=45)
             seats_to_update.append(seat)
+            occupied_seat_ids.append(seat.id)
             
             # 4. 准备订单乘客数据
             total_price += price

@@ -181,7 +181,7 @@
                       <tr class="tr_box" v-for="(p, idx) in passengers" :key="idx">
                         <td align="center" width="60px">{{ idx + 1 }}</td>
                         <td align="center" width="270px">{{ p.name }} {{ maskIdNumber(p.id_number) }}</td>
-                        <td align="center" width="270px">{{ formatSeatType(p.seat_type) }} {{ p.seat_number || '待分配' }}</td>
+                        <td align="center" width="270px">{{ formatSeatType(p.seat_type) }} {{ formatSeatNumber(p.seat_number) }}</td>
                         <td class="td_box_1">
                           <span v-if="isRefunded(p.refund_status)">已退票</span>
                           <span v-else>—</span>
@@ -247,6 +247,31 @@ const formatSeatType = (seatType) => {
   return seatTypeMap[seatType] || seatType
 }
 
+const formatSeatNumber = (seatStr) => {
+  if (!seatStr) return '待分配'
+  // If it's already in new format, return it
+  if (seatStr.includes('车') && seatStr.includes('号')) return seatStr
+  
+  // If it's old format "01-001"
+  if (seatStr.includes('-')) {
+    const parts = seatStr.split('-')
+    if (parts.length === 2) {
+       // Convert logic: 01-001 -> 01车01A号 (Approximate)
+       const carriage = parts[0]
+       const seatIdx = parseInt(parts[1], 10)
+       if (!isNaN(seatIdx)) {
+           const row = Math.ceil(seatIdx / 5)
+           const col = (seatIdx - 1) % 5
+           const letters = ['A', 'B', 'C', 'D', 'F']
+           const letter = letters[col] || 'A'
+           return `${carriage}车${String(row).padStart(2, '0')}${letter}号`
+       }
+       return `${parts[0]}车${parts[1]}号`
+    }
+  }
+  return seatStr
+}
+
 // 判断是否已退票
 const isRefunded = (status) => {
   return status === 'refunded' || status === '已退票'
@@ -282,7 +307,7 @@ const trackingEvents = computed(() => {
         date: formatDateWithWeekday(p.refund_time || order.value.update_time || new Date()),
         time: formatTime(p.refund_time || order.value.update_time || new Date()),
         action: '已退票(互联网/手机端)',
-        detail: `${p.name} ${order.value.train_number}（${formatSeatType(p.seat_type)} ${p.seat_number || '待分配'}）${order.value.departure_station}-${order.value.arrival_station}`,
+        detail: `${p.name} ${order.value.train_number}（${formatSeatType(p.seat_type)} ${formatSeatNumber(p.seat_number)}）${order.value.departure_station}-${order.value.arrival_station}`,
         timestamp: dayjs(p.refund_time || order.value.update_time || new Date()).valueOf()
       })
     }

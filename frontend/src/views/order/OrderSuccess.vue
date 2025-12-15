@@ -156,20 +156,39 @@ const viewOrderDetails = () => {
 const formatSeatNumber = (seatStr) => {
   if (!seatStr) return { coach: '--', seatNo: '--' }
   
-  // Format: "01-007" -> coach: 01, seatNo: 007
+  // Example: "04车045号" or "1车01A"
+  // Try to split by '车'
+  if (seatStr.includes('车')) {
+    const parts = seatStr.split('车')
+    if (parts.length === 2) {
+      return { coach: parts[0], seatNo: parts[1] }
+    }
+  }
+
+  // Format: "01-001" -> coach: 01, seatNo: 001 or convert to 01A
   if (seatStr.includes('-')) {
     const parts = seatStr.split('-')
     if (parts.length === 2) {
+      const carriage = parts[0]
+      const seatIdx = parseInt(parts[1], 10)
+      
+      // Try to convert to new format A/B/C/D/F
+      if (!isNaN(seatIdx)) {
+          const row = Math.ceil(seatIdx / 5)
+          const col = (seatIdx - 1) % 5
+          const letters = ['A', 'B', 'C', 'D', 'F']
+          const letter = letters[col] || 'A'
+          // Return formatted parts: Coach 01, Seat 01A号
+          return { 
+              coach: carriage, 
+              seatNo: `${String(row).padStart(2, '0')}${letter}号` 
+          }
+      }
+
       return { coach: parts[0], seatNo: parts[1] + '号' }
     }
   }
 
-  // Example: "04车045号" or "1车01A"
-  // Try to split by '车'
-  const parts = seatStr.split('车')
-  if (parts.length === 2) {
-    return { coach: parts[0], seatNo: parts[1] }
-  }
   return { coach: '--', seatNo: seatStr }
 }
 

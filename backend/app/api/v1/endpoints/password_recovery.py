@@ -4,6 +4,7 @@ Password Recovery Endpoints
 """
 from datetime import datetime, timedelta
 import secrets
+from typing import Optional
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from loguru import logger
@@ -43,7 +44,7 @@ def _generate_token() -> str:
     return secrets.token_urlsafe(32)
 
 
-def _find_user_by_identity(db: Session, *, email: str | None = None, phone: str | None = None,
+def _find_user_by_identity(db: Session, *, email: Optional[str] = None, phone: Optional[str] = None,
                            id_type: str, id_number: str) -> User:
     """根据身份信息查找用户"""
     # 兼容"身份证"和"居民身份证"

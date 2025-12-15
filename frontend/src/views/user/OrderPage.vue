@@ -85,9 +85,9 @@
                   <div class="id-type">{{ p.id_type || '居民身份证' }}</div>
                 </div>
                 <div class="p-seat">
-                   <div>{{ p.seat_type || '二等座' }}</div>
-                   <div>{{ p.seat_no || '02车09F号' }}</div>
-                </div>
+                  <div>{{ p.seat_type || '二等座' }}</div>
+                  <div>{{ formatSeatNumber(p.seat_number || p.seat_no) }}</div>
+               </div>
                 <div class="p-price">
                    <div>{{ p.ticket_type || '成人票' }}</div>
                    <div class="price-val">{{ p.price || order.total_price }}元</div>
@@ -118,10 +118,10 @@
         <div class="order-item-ft" v-else v-show="!order.folded">
            <div class="ft-right">
              <router-link :to="`/order/${order.id}`" class="btn-detail">订单详情</router-link>
-             
-             <template v-if="order.status === '已支付'">
-               <a href="javascript:;" class="btn-common">添加免费乘车儿童</a>
-               <a href="javascript:;" class="btn-common">购/赠/退保险</a>
+            
+            <template v-if="order.status === '已支付' || order.status === '部分退票'">
+              <a href="javascript:;" class="btn-common">添加免费乘车儿童</a>
+              <a href="javascript:;" class="btn-common">购/赠/退保险</a>
                <a href="javascript:;" class="btn-common">改签</a>
                <a href="javascript:;" class="btn-common">变更到站</a>
                <a href="javascript:;" class="btn-common">餐饮·特产</a>
@@ -254,6 +254,31 @@ const formatDate = (d) => {
   return dayjs(d).format('YYYY-MM-DD')
 }
 
+const formatSeatNumber = (seatStr) => {
+  if (!seatStr) return '无座'
+  // If it's already in new format, return it
+  if (seatStr.includes('车') && seatStr.includes('号')) return seatStr
+  
+  // If it's old format "01-001"
+  if (seatStr.includes('-')) {
+    const parts = seatStr.split('-')
+    if (parts.length === 2) {
+       // Convert logic: 01-001 -> 01车01A号 (Approximate)
+       const carriage = parts[0]
+       const seatIdx = parseInt(parts[1], 10)
+       if (!isNaN(seatIdx)) {
+           const row = Math.ceil(seatIdx / 5)
+           const col = (seatIdx - 1) % 5
+           const letters = ['A', 'B', 'C', 'D', 'F']
+           const letter = letters[col] || 'A'
+           return `${carriage}车${String(row).padStart(2, '0')}${letter}号`
+       }
+       return `${parts[0]}车${parts[1]}号`
+    }
+  }
+  return seatStr
+}
+
 // Mock logic for passengers if not in API response
 const mockPassengers = (order) => {
   // Try to parse order_passengers if available, otherwise mock
@@ -263,7 +288,7 @@ const mockPassengers = (order) => {
          name: p.passenger_name || '张三',
          id_type: '居民身份证',
          seat_type: p.seat_type || '二等座',
-         seat_no: '02车09F号', // Mock seat no
+         seat_number: p.seat_number || p.seat_no || '无座',
          ticket_type: p.ticket_type || '成人票',
          price: p.price || order.total_price
      }))
@@ -273,7 +298,7 @@ const mockPassengers = (order) => {
     name: '乌梁海奥都',
     id_type: '居民身份证',
     seat_type: '二等座',
-    seat_no: '02车09F号',
+    seat_number: '无座',
     ticket_type: '成人票',
     price: order.total_price
   }]
@@ -493,15 +518,19 @@ watch(activeTab, fetchOrders, { immediate: true })
 .order-item-bd {
   display: flex;
   padding: 0; /* Remove padding to let borders touch edges */
+  align-items: stretch; /* Ensure children stretch to equal height */
 }
 .train-info {
   width: 35%;
-  padding: 30px 20px 20px; /* Increase top padding */
+  padding: 20px;
   border-right: 1px solid #dedede;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center; /* Center horizontally */
+  text-align: center;
+  align-self: stretch;
+  float: none;
 }
 .train-name {
   font-size: 16px;
@@ -516,6 +545,7 @@ watch(activeTab, fetchOrders, { immediate: true })
   flex: 1;
   display: flex;
   flex-direction: column;
+  float: none;
 }
 .passenger-row {
   display: flex;
@@ -703,5 +733,35 @@ watch(activeTab, fetchOrders, { immediate: true })
   color: #FF8200;
   border-color: #FF8200;
   text-decoration: none;
+}
+</style>
+
+<style>
+/* Global style override for layout issues that require high specificity and no scoping issues */
+.order-page-content .order-item-bd {
+  display: flex !important;
+  align-items: stretch !important;
+  padding: 0 !important;
+}
+
+.order-page-content .train-info {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  align-self: stretch !important;
+  float: none !important;
+  height: auto !important;
+}
+
+.order-page-content .passengers-info {
+  display: flex !important;
+  flex-direction: column !important;
+  float: none !important;
+  height: auto !important;
+}
+
+.order-page-content .passenger-row {
+  display: flex !important;
 }
 </style>

@@ -677,6 +677,7 @@ const processOrderSubmission = async () => {
     travel_date: train.value.date,
     from_station: train.value.fromStation,
     to_station: train.value.toStation,
+    seat_selection: selectedSeats.value,
     passengers: effectiveSelectedIds.value.map(id => ({
       passenger_id: id,
       ticket_type: normalizeTicketType(selectionMap.value[id]?.ticketType || '成人票'),

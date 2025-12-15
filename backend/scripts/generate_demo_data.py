@@ -115,19 +115,35 @@ def seats_exist_for(db: Session, train_id: int, d: date) -> bool:
     return db.query(Seat.id).filter(Seat.train_id == train_id, Seat.travel_date == d).first() is not None
 
 
-def gen_seat_numbers(prefix: str, count: int) -> List[str]:
-    # 简单生成座位号：车厢-座位序号，如 01-001
+def gen_seat_numbers(count: int, start_carriage: int = 1) -> Tuple[List[str], int]:
+    # 生成座位号：0X车XXX号，如 02车09F号
     numbers: List[str] = []
-    carriage_capacity = 60  # 每车厢约 60 个座位
-    carriage = 1
-    idx_in_carriage = 1
+    seat_letters = ['A', 'B', 'C', 'D', 'F']
+    seats_per_row = len(seat_letters)
+    rows_per_carriage = 20  # 假设每节车厢20排
+    
+    carriage = start_carriage
+    row = 1
+    letter_idx = 0
+    
     for i in range(count):
-        numbers.append(f"{carriage:02d}-{idx_in_carriage:03d}")
-        idx_in_carriage += 1
-        if idx_in_carriage > carriage_capacity:
-            carriage += 1
-            idx_in_carriage = 1
-    return numbers
+        letter = seat_letters[letter_idx]
+        # 格式：01车01A号
+        numbers.append(f"{carriage:02d}车{row:02d}{letter}号")
+        
+        letter_idx += 1
+        if letter_idx >= seats_per_row:
+            letter_idx = 0
+            row += 1
+            if row > rows_per_carriage:
+                carriage += 1
+                row = 1
+                
+    # Return next available carriage start (if current carriage is used partially, we might want to skip to next for different class, or continue)
+    # For simplicity, let's say different classes start in different carriages.
+    # If we finished in middle of carriage, next class starts in next carriage.
+    next_carriage = carriage if row == 1 and letter_idx == 0 else carriage + 1
+    return numbers, next_carriage
 
 
 def create_daily_seats(db: Session, train: Train, d: date) -> None:
@@ -135,10 +151,16 @@ def create_daily_seats(db: Session, train: Train, d: date) -> None:
         return
 
     # 生成各席别座位
-    def add_seats(seat_type: SeatType, count: int):
+    # Track carriage number to avoid overlap between seat types
+    current_carriage = 1
+
+    def add_seats(seat_type: SeatType, count: int, start_c: int) -> int:
         if count <= 0:
-            return
-        for seat_no in gen_seat_numbers(seat_type.name[:1], count):
+            return start_c
+        
+        seats, next_c = gen_seat_numbers(count, start_c)
+        
+        for seat_no in seats:
             db.add(
                 Seat(
                     train_id=train.id,
@@ -149,11 +171,12 @@ def create_daily_seats(db: Session, train: Train, d: date) -> None:
                     locked_until=None,
                 )
             )
+        return next_c
 
-    add_seats(SeatType.FIRST_CLASS, train.first_class_seats or 0)
-    add_seats(SeatType.SECOND_CLASS, train.second_class_seats or 0)
-    add_seats(SeatType.SOFT_SLEEPER, train.soft_sleeper_seats or 0)
-    add_seats(SeatType.HARD_SLEEPER, train.hard_sleeper_seats or 0)
+    current_carriage = add_seats(SeatType.FIRST_CLASS, train.first_class_seats or 0, current_carriage)
+    current_carriage = add_seats(SeatType.SECOND_CLASS, train.second_class_seats or 0, current_carriage)
+    current_carriage = add_seats(SeatType.SOFT_SLEEPER, train.soft_sleeper_seats or 0, current_carriage)
+    current_carriage = add_seats(SeatType.HARD_SLEEPER, train.hard_sleeper_seats or 0, current_carriage)
     db.commit()
 
 

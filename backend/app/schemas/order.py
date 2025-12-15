@@ -22,6 +22,7 @@ class OrderCreate(BaseModel):
     train_id: int = Field(..., gt=0, description="车次ID必须大于0")
     travel_date: date = Field(..., description="乘车日期")
     passengers: List[OrderPassengerCreate] = Field(..., min_items=1, max_items=6, description="乘客列表，最多6人")
+    seat_selection: Optional[List[str]] = Field(None, description="选座偏好，如 ['A', 'B', 'C']")
     
     @field_validator('travel_date')
     def validate_travel_date(cls, v):
