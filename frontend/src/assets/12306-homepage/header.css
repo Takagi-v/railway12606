@@ -385,12 +385,15 @@
   font-size: 14px;
   font-weight: 500;
   color: #333;
+  width: 198px;
+  padding-left: 30px;
+  border-right: 1px solid #ACD1F9;
+  box-sizing: border-box; /* Ensure padding doesn't increase width if global box-sizing isn't set, though usually it is */
 }
-#J-huiyuanfuwu .nav-con li + li {
-  border-left: 1px solid #e5e5e5;
-  margin-left: 38px;
-  padding-left: 38px;
+#J-huiyuanfuwu .nav-con li:last-child {
+  border-right: none;
 }
+/* Removed old li + li style */
 
 /* 通用：两列按行填充，与官网分栏一致 */
 .nav-con {
