@@ -55,6 +55,7 @@ class UserUpdate(BaseModel):
     real_name: Optional[str] = Field(None, min_length=2, max_length=50)
     phone: Optional[str] = Field(None, min_length=11, max_length=11)
     email: Optional[EmailStr] = None
+    user_type: Optional[UserType] = None
     
     @validator('phone')
     def phone_valid(cls, v):

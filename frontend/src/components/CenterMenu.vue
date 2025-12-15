@@ -139,7 +139,7 @@ const goItem = it => {
     router.push({ path: it.path, query: it.query || {} })
     return
   }
-  const keepUser = ['火车票订单', '乘车人']
+  const keepUser = ['火车票订单', '乘车人', '查看个人信息']
   if (!keepUser.includes(it.label)) {
     router.push({ path: '/service/railway-pass', query: { menu: it.label } })
     return
