@@ -1,0 +1,255 @@
+# ============================================
+# REQ-2: 用户认证与个人中心
+# 负责人: [待填写]
+# 关联前端: frontend/src/views/auth/, frontend/src/views/user/
+# 关联后端: backend/app/api/v1/endpoints/auth.py, users.py
+# ============================================
+
+id: REQ-2
+name: 用户认证与个人中心
+functional_description: |
+  [待填写] 用户注册、登录、找回密码及个人信息管理功能。
+ui_description: |
+  [待填写]
+scenarios: []
+
+children:
+  # ------------------------------------------
+  # REQ-2-1: 用户登录
+  # ------------------------------------------
+  - id: REQ-2-1
+    name: 用户登录
+    functional_description: |
+      [待填写] 用户通过用户名/手机号和密码登录系统。
+    ui_description: |
+      参考图片路径: requirements/assets/2.用户认证与个人中心/2.1.png
+      [待填写] 登录表单布局
+    scenarios:
+      - name: 正常登录
+        steps: []
+      - name: 异常-密码错误
+        steps: []
+      - name: 异常-验证码错误
+        steps: []
+    children:
+      - id: REQ-2-1-1
+        name: 用户名/手机号输入
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-1-2
+        name: 密码输入
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-1-3
+        name: 图形验证码
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-1-4
+        name: 登录按钮
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-1-5
+        name: 注册入口链接
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-1-6
+        name: 忘记密码链接
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+  # ------------------------------------------
+  # REQ-2-2: 用户注册
+  # ------------------------------------------
+  - id: REQ-2-2
+    name: 用户注册
+    functional_description: |
+      [待填写] 新用户注册账号。
+    ui_description: |
+      参考图片路径: requirements/assets/2.用户认证与个人中心/2.2.png
+    scenarios:
+      - name: 正常注册
+        steps: []
+      - name: 异常-用户名已存在
+        steps: []
+      - name: 异常-密码格式不符
+        steps: []
+    children:
+      - id: REQ-2-2-1
+        name: 用户类型选择
+        functional_description: "[待填写] 成人/学生"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-2-2
+        name: 登录名输入
+        functional_description: "[待填写] 6-30位，仅数字或字母"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-2-3
+        name: 邮箱输入
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-2-4
+        name: 真实姓名输入
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-2-5
+        name: 证件类型选择
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-2-6
+        name: 证件号码输入
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-2-7
+        name: 手机号输入
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-2-8
+        name: 密码设置
+        functional_description: "[待填写] 6-20位，包含字母和数字"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-2-9
+        name: 确认密码
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-2-10
+        name: 注册按钮
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+  # ------------------------------------------
+  # REQ-2-3: 找回密码
+  # ------------------------------------------
+  - id: REQ-2-3
+    name: 找回密码
+    functional_description: |
+      [待填写] 用户通过验证方式重置密码。
+    ui_description: |
+      参考图片路径: requirements/assets/2.用户认证与个人中心/2.3.png
+    scenarios: []
+    children:
+      - id: REQ-2-3-1
+        name: 输入账号信息
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-3-2
+        name: 验证码验证
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-3-3
+        name: 设置新密码
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-3-4
+        name: 完成页面
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+  # ------------------------------------------
+  # REQ-2-4: 个人信息管理
+  # ------------------------------------------
+  - id: REQ-2-4
+    name: 个人信息管理
+    functional_description: |
+      [待填写] 查看和编辑个人信息。
+    ui_description: |
+      参考图片路径: requirements/assets/2.用户认证与个人中心/2.4.png
+    scenarios:
+      - name: 查看个人信息
+        steps: []
+      - name: 编辑个人信息
+        steps: []
+    children:
+      - id: REQ-2-4-1
+        name: 基本信息展示
+        functional_description: "[待填写] 用户名、真实姓名、证件信息（部分隐藏）"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-4-2
+        name: 联系方式编辑
+        functional_description: "[待填写] 手机号、邮箱（可编辑）"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-4-3
+        name: 编辑/保存/取消按钮
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+  # ------------------------------------------
+  # REQ-2-5: 退出登录
+  # ------------------------------------------
+  - id: REQ-2-5
+    name: 退出登录
+    functional_description: |
+      [待填写] 用户退出当前登录状态。
+    ui_description: "[待填写]"
+    scenarios:
+      - name: 正常退出
+        steps: []
+
+  # ------------------------------------------
+  # REQ-2-6: 导航栏用户状态
+  # ------------------------------------------
+  - id: REQ-2-6
+    name: 导航栏用户状态
+    functional_description: |
+      [待填写] 顶部导航栏显示用户登录状态、用户名、下拉菜单。
+    ui_description: |
+      参考图片路径: requirements/assets/2.用户认证与个人中心/2.6.png
+    scenarios: []
+    children:
+      - id: REQ-2-6-1
+        name: 未登录状态
+        functional_description: "[待填写] 显示登录/注册入口"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-6-2
+        name: 已登录状态
+        functional_description: "[待填写] 显示用户名、个人中心入口"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-2-6-3
+        name: 用户下拉菜单
+        functional_description: "[待填写] 个人中心、订单、退出登录"
+        ui_description: "[待填写]"
+        scenarios: []

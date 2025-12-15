@@ -1,0 +1,288 @@
+# ============================================
+# REQ-3: 订单系统
+# 负责人: [待填写]
+# 关联前端: frontend/src/views/order/, frontend/src/views/user/OrderPage.vue
+# 关联后端: backend/app/api/v1/endpoints/orders.py
+# ============================================
+
+id: REQ-3
+name: 订单系统
+functional_description: |
+  [待填写] 订单创建、支付、管理、退票等完整订单生命周期。
+ui_description: |
+  [待填写]
+scenarios: []
+
+children:
+  # ------------------------------------------
+  # REQ-3-1: 订单确认页
+  # ------------------------------------------
+  - id: REQ-3-1
+    name: 订单确认页
+    functional_description: |
+      [待填写] 确认购票信息，选择乘客，提交订单。
+    ui_description: |
+      参考图片路径: requirements/assets/3.订单系统/3.1.png
+    scenarios:
+      - name: 正常提交订单
+        steps: []
+      - name: 异常-未选择乘客
+        steps: []
+      - name: 异常-余票不足
+        steps: []
+    children:
+      - id: REQ-3-1-1
+        name: 车次信息展示
+        functional_description: "[待填写] 车次号、出发/到达站、日期时间、历时"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-1-2
+        name: 乘客选择
+        functional_description: "[待填写] 从已有乘客列表中选择，支持多选"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-1-3
+        name: 票种选择
+        functional_description: "[待填写] 成人票/学生票/儿童票"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-1-4
+        name: 席别选择
+        functional_description: "[待填写] 一等座/二等座/软卧/硬卧"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-1-5
+        name: 订单金额汇总
+        functional_description: "[待填写] 显示乘客数量、各席别价格、总价"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-1-6
+        name: 提交订单按钮
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-1-7
+        name: 添加乘客入口
+        functional_description: "[待填写] 快速跳转到添加乘客页"
+        ui_description: "[待填写]"
+        scenarios: []
+
+  # ------------------------------------------
+  # REQ-3-2: 订单详情页
+  # ------------------------------------------
+  - id: REQ-3-2
+    name: 订单详情页
+    functional_description: |
+      [待填写] 展示订单完整信息，提供操作入口。
+    ui_description: |
+      参考图片路径: requirements/assets/3.订单系统/3.2.png
+    scenarios: []
+    children:
+      - id: REQ-3-2-1
+        name: 订单编号展示
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-2-2
+        name: 订单状态展示
+        functional_description: "[待填写] 待支付/已支付/已取消/已退票/已完成"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-2-3
+        name: 车次详细信息
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-2-4
+        name: 乘客列表
+        functional_description: "[待填写] 姓名、证件、席别、座位号、票价、退票状态"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-2-5
+        name: 价格明细
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-2-6
+        name: 订单时间线
+        functional_description: "[待填写] 创建时间、支付时间、取消时间等"
+        ui_description: "[待填写]"
+        scenarios: []
+
+  # ------------------------------------------
+  # REQ-3-3: 订单支付
+  # ------------------------------------------
+  - id: REQ-3-3
+    name: 订单支付
+    functional_description: |
+      [待填写] 模拟支付流程（一键支付）。
+    ui_description: |
+      参考图片路径: requirements/assets/3.订单系统/3.3.png
+    scenarios:
+      - name: 正常支付
+        steps: []
+      - name: 异常-订单已超时
+        steps: []
+    children:
+      - id: REQ-3-3-1
+        name: 支付倒计时
+        functional_description: "[待填写] 45分钟支付倒计时"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-3-2
+        name: 支付按钮
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-3-3
+        name: 支付确认弹窗
+        functional_description: "[待填写] 一键支付确认"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-3-4
+        name: 支付成功页
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+  # ------------------------------------------
+  # REQ-3-4: 取消订单
+  # ------------------------------------------
+  - id: REQ-3-4
+    name: 取消订单
+    functional_description: |
+      [待填写] 取消待支付状态的订单。
+    ui_description: "[待填写]"
+    scenarios:
+      - name: 正常取消
+        steps: []
+    children:
+      - id: REQ-3-4-1
+        name: 取消按钮
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-4-2
+        name: 取消确认弹窗
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+  # ------------------------------------------
+  # REQ-3-5: 退票功能
+  # ------------------------------------------
+  - id: REQ-3-5
+    name: 退票功能
+    functional_description: |
+      [待填写] 对已支付订单进行退票（支持部分退票）。
+    ui_description: |
+      参考图片路径: requirements/assets/3.订单系统/3.5.png
+    scenarios:
+      - name: 全部退票
+        steps: []
+      - name: 部分退票
+        steps: []
+    children:
+      - id: REQ-3-5-1
+        name: 退票按钮
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-5-2
+        name: 退票乘客选择
+        functional_description: "[待填写] 选择要退票的乘客"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-5-3
+        name: 退票手续费展示
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-5-4
+        name: 退款金额展示
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-5-5
+        name: 退票确认弹窗
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+  # ------------------------------------------
+  # REQ-3-6: 订单列表页（个人中心）
+  # ------------------------------------------
+  - id: REQ-3-6
+    name: 订单列表页
+    functional_description: |
+      [待填写] 个人中心的订单管理列表。
+    ui_description: |
+      参考图片路径: requirements/assets/3.订单系统/3.6.png
+    scenarios: []
+    children:
+      - id: REQ-3-6-1
+        name: 订单筛选Tab
+        functional_description: "[待填写] 未出行/历史订单/全部"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-6-2
+        name: 订单卡片
+        functional_description: "[待填写] 订单号、状态、车次、乘客、价格、时间"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-6-3
+        name: 订单操作按钮
+        functional_description: "[待填写] 根据状态显示：支付/取消/查看/退票"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-6-4
+        name: 空状态展示
+        functional_description: "[待填写] 暂无订单"
+        ui_description: "[待填写]"
+        scenarios: []
+
+  # ------------------------------------------
+  # REQ-3-7: 订单超时处理
+  # ------------------------------------------
+  - id: REQ-3-7
+    name: 订单超时处理
+    functional_description: |
+      [待填写] 订单超过45分钟未支付自动取消。
+    ui_description: "[待填写]"
+    scenarios:
+      - name: 自动取消
+        steps: []
+    children:
+      - id: REQ-3-7-1
+        name: 超时提示
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
+
+      - id: REQ-3-7-2
+        name: 座位自动释放
+        functional_description: "[待填写]"
+        ui_description: "[待填写]"
+        scenarios: []
