@@ -163,8 +163,9 @@ async def create_order(
 
 
 @router.get("", response_model=Response[List[OrderResponse]])
+
 async def get_orders(
-    status: Optional[OrderStatus] = Query(None, description="订单状态筛选"),
+    status: Optional[List[OrderStatus]] = Query(None, description="订单状态筛选"),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -175,12 +176,13 @@ async def get_orders(
     """
     from app.models.order import Order
     
-    query = db.query(Order).filter(Order.user_id == current_user.id)
+    # 按照创建时间降序排列
+    query = db.query(Order).filter(Order.user_id == current_user.id).order_by(Order.create_time.desc())
     
     if status:
-        query = query.filter(Order.status == status)
+        query = query.filter(Order.status.in_(status))
         
-    orders = query.order_by(Order.create_time.desc()).all()
+    orders = query.all()
     
     return Response(
         code=200,

@@ -104,6 +104,7 @@ class UserValidator:
             sum_val = sum(int(id_number[i]) * weights[i] for i in range(17))
             check_code = check_codes[sum_val % 11]
             
+            # Allow lowercase 'x' as well by upper()
             if id_number[17].upper() != check_code:
                 if settings.DEBUG:
                     logger.warning(f"DEBUG模式: 身份证号 {id_number} 校验位错误，但在调试模式下忽略此错误。正确校验位应为: {check_code}")

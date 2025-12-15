@@ -59,6 +59,10 @@ async def update_profile(
     # Update real_name if provided
     if user_update.real_name:
         current_user.real_name = user_update.real_name
+
+    # Update user_type if provided
+    if user_update.user_type:
+        current_user.user_type = user_update.user_type
     
     db.commit()
     db.refresh(current_user)

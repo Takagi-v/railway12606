@@ -68,6 +68,60 @@ async def send_verify_code(req: VerifyCodeRequest, db: Session = Depends(get_db)
     )
 
 
+def _sync_default_passenger(db: Session, user: User):
+    """
+    Ensure default passenger exists for the user
+    """
+    try:
+        # Check if default passenger already exists
+        default_passenger = db.query(Passenger).filter(
+            Passenger.user_id == user.id,
+            Passenger.is_default == True
+        ).first()
+        
+        # Map user_type to passenger_type
+        # user.user_type is an Enum
+        user_type_val = user.user_type.value if hasattr(user.user_type, 'value') else str(user.user_type)
+        
+        passenger_type_map = {
+            "成人": PassengerType.ADULT,
+            "学生": PassengerType.STUDENT
+        }
+        passenger_type = passenger_type_map.get(user_type_val, PassengerType.ADULT)
+        
+        if default_passenger:
+            # Update existing default passenger with current user info
+            default_passenger.name = user.real_name
+            default_passenger.id_type = user.id_type
+            default_passenger.id_number = user.id_number
+            default_passenger.phone = user.phone
+            default_passenger.passenger_type = passenger_type
+            default_passenger.verified = True
+            
+            db.commit()
+            db.refresh(default_passenger)
+        else:
+            # Create new default passenger from user info
+            new_default_passenger = Passenger(
+                user_id=user.id,
+                name=user.real_name,
+                id_type=user.id_type,
+                id_number=user.id_number,
+                phone=user.phone,
+                passenger_type=passenger_type,
+                verified=True,
+                is_default=True
+            )
+            
+            db.add(new_default_passenger)
+            db.commit()
+            db.refresh(new_default_passenger)
+    except Exception as e:
+        # Log error but don't fail the main operation
+        print(f"Failed to sync default passenger: {str(e)}")
+        db.rollback()
+
+
 @router.post("/register", response_model=Response[UserResponse], status_code=status.HTTP_201_CREATED)
 async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     """
@@ -134,6 +188,9 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
         new_user.roles.append(default_role)
         db.commit()
     
+    # Sync default passenger
+    _sync_default_passenger(db, new_user)
+    
     return Response(
         code=200,
         message="注册成功",
@@ -178,6 +235,9 @@ async def login(login_data: UserLogin, db: Session = Depends(get_db)):
         # Clear code after successful use (optional but good practice)
         if login_data.username in VERIFY_CODES:
             del VERIFY_CODES[login_data.username]
+    
+    # Sync default passenger
+    _sync_default_passenger(db, user)
     
     # Create access token and refresh token
     access_token = create_access_token(data={"sub": str(user.id)})

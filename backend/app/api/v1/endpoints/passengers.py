@@ -17,6 +17,7 @@ from app.core.exceptions import (
 from app.core.validators import UserValidator
 from app.db.session import get_db
 from app.models.enums import PassengerType
+from app.models.order import OrderPassenger
 from app.models.passenger import Passenger
 from app.models.user import User
 from app.schemas.common import Response
@@ -190,7 +191,8 @@ async def update_passenger(
         raise NotFoundException("乘客不存在")
     
     # Update passenger fields
-    for field, value in passenger_data.model_dump().items():
+    update_data = passenger_data.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
         setattr(passenger, field, value)
     
     try:
@@ -208,6 +210,53 @@ async def update_passenger(
         message="修改成功",
         data=PassengerResponse.model_validate(passenger)
     )
+
+
+@router.post("/batch-delete", response_model=Response)
+async def batch_delete_passengers(
+    passenger_ids: List[int],
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    批量删除乘客
+    """
+    if not passenger_ids:
+        raise ValidationException("请选择要删除的乘客")
+
+    # 1. Verify all passengers exist and belong to user
+    passengers = db.query(Passenger).filter(
+        Passenger.id.in_(passenger_ids),
+        Passenger.user_id == current_user.id
+    ).all()
+    
+    if len(passengers) != len(set(passenger_ids)):
+        # Some IDs were not found or don't belong to user
+        raise ValidationException("部分乘客不存在或无法操作")
+        
+    # 2. Check for default passenger
+    for p in passengers:
+        if p.is_default:
+            raise BusinessException(f"乘客 {p.name} 是默认乘客，不允许删除")
+            
+    # 3. Check for orders
+    # Get all passenger IDs that have orders
+    passengers_with_orders = db.query(OrderPassenger.passenger_id).filter(
+        OrderPassenger.passenger_id.in_(passenger_ids)
+    ).all()
+    
+    if passengers_with_orders:
+        # Find names for error message
+        p_ids_with_orders = {p[0] for p in passengers_with_orders}
+        names = [p.name for p in passengers if p.id in p_ids_with_orders]
+        raise BusinessException(f"乘客 {', '.join(names)} 已有购票记录，无法删除")
+        
+    # 4. Delete all
+    for p in passengers:
+        db.delete(p)
+    db.commit()
+    
+    return Response(code=200, message="批量删除成功")
 
 
 @router.delete("/{passenger_id}", response_model=Response)
@@ -232,8 +281,13 @@ async def delete_passenger(
     if passenger.is_default:
         raise BusinessException("默认乘客（用户本人）不允许删除")
     
-    # TODO: Check if passenger has uncompleted orders
-    # For now, just delete
+    # Check if passenger has any associated orders
+    has_orders = db.query(OrderPassenger).filter(
+        OrderPassenger.passenger_id == passenger_id
+    ).first()
+    
+    if has_orders:
+        raise BusinessException("该乘客已有购票记录，无法删除")
     
     db.delete(passenger)
     db.commit()

@@ -21,7 +21,9 @@ class IdType(Enum):
 
 class UserType(Enum):
     ADULT = "成人"
+    CHILD = "儿童"
     STUDENT = "学生"
+    DISABILITY_SOLDIER = "残疾军人"
 
 
 class PassengerType(Enum):

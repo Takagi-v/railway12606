@@ -22,7 +22,19 @@ export const getOrders = params => {
   return request({
     url: '/orders',
     method: 'get',
-    params
+    params,
+    paramsSerializer: params => {
+      const searchParams = new URLSearchParams()
+      Object.keys(params).forEach(key => {
+        if (params[key] === undefined || params[key] === null) return
+        if (Array.isArray(params[key])) {
+          params[key].forEach(val => searchParams.append(key, val))
+        } else {
+          searchParams.append(key, params[key])
+        }
+      })
+      return searchParams.toString()
+    }
   })
 }
 
