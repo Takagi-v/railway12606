@@ -15,6 +15,7 @@ from app.schemas.password_recovery import (
     PhoneRecoveryRequest,
     EmailRecoveryRequest,
     RecoveryVerifyRequest,
+    RecoveryResendRequest,
     PasswordResetRequest,
     RecoveryTokenResponse
 )
@@ -45,7 +46,13 @@ def _generate_token() -> str:
 def _find_user_by_identity(db: Session, *, email: str | None = None, phone: str | None = None,
                            id_type: str, id_number: str) -> User:
     """根据身份信息查找用户"""
-    query = db.query(User).filter(User.id_type == id_type, User.id_number == id_number)
+    # 兼容"身份证"和"居民身份证"
+    if id_type in ("身份证", "居民身份证"):
+        # 数据库Enum中目前仅包含"身份证"，查询时统一使用"身份证"避免报错
+        query = db.query(User).filter(User.id_type == "身份证", User.id_number == id_number)
+    else:
+        query = db.query(User).filter(User.id_type == id_type, User.id_number == id_number)
+        
     if email:
         query = query.filter(User.email == email)
     if phone:
@@ -67,6 +74,7 @@ def _create_recovery_record(user_id: int, recovery_type: str) -> RecoveryTokenRe
     }
     # 发送验证码的逻辑（短信/邮件）在此简化为日志输出
     logger.info(f"[PasswordRecovery] send code={code} to user_id={user_id} via {recovery_type}")
+    print(f"====== [DEBUG] Password Recovery Code: {code} ======")
     return RecoveryTokenResponse(token=token, expire_time=expire_time)
 
 
@@ -126,17 +134,43 @@ async def verify_recovery_code(payload: RecoveryVerifyRequest):
     if record["expire"] < datetime.utcnow():
         RECOVERY_STORE.pop(payload.token, None)
         raise ValidationException("验证码已过期，请重新获取")
-    # 在调试模式下放宽验证码校验，支持占位流程
-    if not settings.DEBUG:
-        if record["code"] != payload.verification_code:
-            raise ValidationException("验证码错误")
-    else:
-        logger.info("[PasswordRecovery] DEBUG 模式，跳过验证码内容校验")
+    
+    # 严格校验验证码
+    if record["code"] != payload.verification_code:
+        raise ValidationException("验证码错误")
+
     if record["type"] != payload.type:
         raise ValidationException("恢复类型不匹配")
 
     record["verified"] = True
     return Response(code=200, message="验证码验证成功")
+
+
+@router.post("/resend", response_model=Response, status_code=status.HTTP_200_OK)
+async def resend_recovery_code(payload: RecoveryResendRequest):
+    """
+    重发验证码
+    """
+    record = RECOVERY_STORE.get(payload.token)
+    if not record:
+        raise ValidationException("恢复凭证无效，请重新提交")
+        
+    # Generate new code
+    code = _generate_code()
+    expire_time = datetime.utcnow() + timedelta(minutes=DEFAULT_EXPIRE_MINUTES)
+    
+    # Update record
+    record["code"] = code
+    record["expire"] = expire_time
+    record["verified"] = False  # Reset verification status
+    
+    # Log sending (simulated)
+    user_id = record["user_id"]
+    recovery_type = record["type"]
+    logger.info(f"[PasswordRecovery] Resend code={code} to user_id={user_id} via {recovery_type}")
+    print(f"====== [DEBUG] Resent Password Recovery Code: {code} ======")
+    
+    return Response(code=200, message="验证码已重新发送")
 
 
 @router.post("/reset", response_model=Response, status_code=status.HTTP_200_OK)

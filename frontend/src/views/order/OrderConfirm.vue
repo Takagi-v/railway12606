@@ -699,7 +699,12 @@ const processOrderSubmission = async () => {
       })
     }
   } catch (e) {
-    message.error('提交失败')
+    console.error('提交失败', e)
+    // request.js 已经处理了 API 错误提示，这里不需要重复提示，除非是非 API 错误
+    if (!e.response && !e.message?.includes('Request failed')) {
+      // 避免显示 "Request failed with status code 400" 这样的默认 axios 错误
+      // 如果是业务逻辑错误，可以在这里提示
+    }
   } finally {
     submitting.value = false
   }

@@ -36,7 +36,17 @@
           <div class="form-content">
             <a-form layout="vertical" class="recovery-form">
               <a-form-item label="验证码：" required>
-                <a-input v-model:value="code" :placeholder="placeholderText" size="large" />
+                <div class="verify-code-input-group">
+                  <a-input v-model:value="code" :placeholder="placeholderText" size="large" />
+                  <a-button 
+                    size="large" 
+                    :disabled="!canResend" 
+                    @click="handleResend"
+                    class="resend-btn"
+                  >
+                    {{ canResend ? '获取验证码' : `${countdown}s后重发` }}
+                  </a-button>
+                </div>
               </a-form-item>
               <div class="form-actions">
                 <a-button
@@ -63,10 +73,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { verifyRecoveryCode } from '@/api/auth'
+import { verifyRecoveryCode, resendRecoveryCode } from '@/api/auth'
 import Header12306 from '@/components/Header12306.vue'
 import Footer from '@/components/LoginFooter.vue'
 
@@ -78,15 +88,58 @@ const token = route.query.token || ''
 const loading = ref(false)
 const code = ref('')
 
+const countdown = ref(60)
+const canResend = ref(false)
+let timer = null
+
 const placeholderText =
   type === 'email' ? '请输入邮箱验证码' : type === 'face' ? '请输入APP验证码' : '请输入短信验证码'
+
+const startCountdown = () => {
+  canResend.value = false
+  countdown.value = 60
+  if (timer) clearInterval(timer)
+  timer = setInterval(() => {
+    countdown.value--
+    if (countdown.value <= 0) {
+      clearInterval(timer)
+      canResend.value = true
+    }
+  }, 1000)
+}
+
+onMounted(() => {
+  startCountdown()
+})
+
+onUnmounted(() => {
+  if (timer) clearInterval(timer)
+})
+
+const handleResend = async () => {
+  if (!token) {
+    message.error('参数错误，请重新开始流程')
+    return
+  }
+  try {
+    const res = await resendRecoveryCode({ token })
+    if (res.code === 200) {
+      message.success('验证码已重新发送')
+      startCountdown()
+    } else {
+      message.error(res.message || '发送失败')
+    }
+  } catch (e) {
+    message.error('发送失败，请稍后重试')
+  }
+}
 
 const submitVerify = async () => {
   if (!code.value) {
     message.error('请输入验证码')
     return
   }
-  // 占位流程：若携带token则调用后台标记已验证；DEBUG模式后端会忽略验证码内容
+  // 若携带token则调用后台验证
   loading.value = true
   try {
     if (token) {
@@ -219,6 +272,14 @@ const goBack = () => {
 }
 .recovery-form {
   margin-bottom: 20px;
+}
+.verify-code-input-group {
+  display: flex;
+  gap: 12px;
+}
+.resend-btn {
+  width: 140px;
+  flex-shrink: 0;
 }
 .form-actions {
   margin-top: 18px;

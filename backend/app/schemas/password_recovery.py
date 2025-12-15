@@ -37,6 +37,11 @@ class RecoveryVerifyRequest(BaseModel):
     type: str = Field(..., description="找回类型：face | phone | email")
 
 
+class RecoveryResendRequest(BaseModel):
+    """重发验证码请求"""
+    token: str
+
+
 class PasswordResetRequest(BaseModel):
     """重置密码请求"""
     model_config = ConfigDict(populate_by_name=True, extra="ignore")
