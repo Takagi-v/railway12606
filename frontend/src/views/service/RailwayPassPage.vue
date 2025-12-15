@@ -8,7 +8,7 @@
           <a
             href="javascript:;"
             class="crumb-link"
-            @click.prevent="go('/user/profile?group=个人中心')"
+            @click.prevent="go('/user/profile?section=view')"
           >
             个人中心
           </a>
@@ -42,7 +42,13 @@ import CenterMenu from '@/components/CenterMenu.vue'
 
 const router = useRouter()
 const route = useRoute()
-const go = path => router.push(path)
+const go = path => {
+  if (path.includes('/user/profile')) {
+    router.push({ path: '/user/profile', query: { section: 'view' } })
+    return
+  }
+  router.push(path)
+}
 const mainRef = ref(null)
 const onMenuHeightChange = h => {
   const base = 600

@@ -130,6 +130,12 @@ const toggleGroup = key => {
 }
 
 const goItem = it => {
+  // 特殊处理"查看个人信息"在所有上下文中的跳转
+  if (it.label === '查看个人信息') {
+    router.push({ path: '/user/profile', query: { section: 'view' } })
+    return
+  }
+
   const keep = ['火车票订单', '乘车人']
   if (props.context === 'service') {
     if (!keep.includes(it.label)) {

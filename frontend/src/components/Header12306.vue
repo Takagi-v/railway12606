@@ -111,7 +111,7 @@
                 <li><a href="javascript:;">我的保险</a></li>
                 <li><a href="javascript:;">我的会员</a></li>
                 <li class="nav-line"></li>
-                <li><a href="javascript:;">查看个人信息</a></li>
+                <li><a href="javascript:;" @click.prevent="goUserInfo">查看个人信息</a></li>
                 <li><a href="javascript:;">账户安全</a></li>
                 <li class="nav-line"></li>
                 <li><a href="javascript:;" @click.prevent="goPassengers">乘车人</a></li>
@@ -505,6 +505,7 @@ const goMy12306 = () => router.push({ path: '/user/profile', query: { group: '�
 const goOrderInquiry = () => router.push('/user/orders')
 const goPassengers = () => router.push('/user/passengers')
 const goProfile = () => router.push({ path: '/user/profile', query: { group: '个人中心' } })
+const goUserInfo = () => router.push({ path: '/user/profile', query: { section: 'view' } })
 
 // 登录态与用户名显示
 const userStore = useUserStore()

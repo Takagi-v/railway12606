@@ -138,13 +138,11 @@
         <div class="form-item">
           <div class="form-label"><span class="required">*</span>优惠(待)类型：</div>
           <div class="form-bd">
-            <select class="input input-railway" v-model="editForm.passenger_type" style="width: 200px; height: 30px;">
-              <option value="1">成人</option>
-              <option value="2">儿童</option>
-              <option value="3">学生</option>
-              <option value="4">残疾军人</option>
-            </select>
-          </div>
+              <select class="input input-railway" v-model="editForm.passenger_type" style="width: 200px; height: 30px;">
+                <option value="1">成人</option>
+                <option value="3">学生</option>
+              </select>
+            </div>
         </div>
       </div>
     </div>
@@ -268,9 +266,7 @@ const startEdit = (section) => {
   } else if (section === 'append') {
     const typeMap = {
       '成人': '1',
-      '儿童': '2',
-      '学生': '3',
-      '残疾军人': '4'
+      '学生': '3'
     }
     editForm.passenger_type = typeMap[user.value.user_type] || '1'
     isEditingAppend.value = true
@@ -299,9 +295,7 @@ const saveEdit = async (section) => {
        // Map dropdown values to backend UserType enum values
        const typeMap = {
          '1': '成人',
-         '2': '儿童', 
-         '3': '学生',
-         '4': '残疾军人'
+         '3': '学生'
        }
        data.user_type = typeMap[editForm.passenger_type]
     }
@@ -312,6 +306,7 @@ const saveEdit = async (section) => {
       await userStore.fetchUserProfile() // Refresh data
       if (section === 'basic') isEditingBasic.value = false
       if (section === 'contact') isEditingContact.value = false
+      if (section === 'append') isEditingAppend.value = false
     } else {
       message.error(res.message || '保存失败')
     }
