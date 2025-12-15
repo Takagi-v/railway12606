@@ -191,21 +191,37 @@ async def get_orders(
     )
 
 
-@router.get("/{order_id}", response_model=Response[OrderDetailResponse])
+@router.get("/{order_identifier}", response_model=Response[OrderDetailResponse])
 async def get_order_detail(
-    order_id: int = Path(..., gt=0, description="订单ID"),
+    order_identifier: str = Path(..., description="订单ID或订单号"),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
     查询订单详情
+    
+    - **order_identifier**: 可以是订单ID（数字，通常较短）或订单号（22位数字字符串）
     """
     # 查询订单是否存在且属于当前用户
     from app.models.order import Order
-    order = db.query(Order).filter(
-        Order.id == order_id,
-        Order.user_id == current_user.id
-    ).first()
+    
+    # 判断是ID还是订单号
+    # 订单号格式: 时间戳(14位) + 用户ID后4位 + 随机4位 = 22位纯数字
+    # 数据库ID通常是较小的整数（1-10位）
+    is_db_id = order_identifier.isdigit() and len(order_identifier) <= 10
+    
+    if is_db_id:
+        # 短数字，按数据库ID查询
+        order = db.query(Order).filter(
+            Order.id == int(order_identifier),
+            Order.user_id == current_user.id
+        ).first()
+    else:
+        # 长数字或非数字，按订单号查询
+        order = db.query(Order).filter(
+            Order.order_number == order_identifier,
+            Order.user_id == current_user.id
+        ).first()
     
     if not order:
         from app.core.exceptions import NotFoundException

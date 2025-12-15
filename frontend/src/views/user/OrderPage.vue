@@ -117,7 +117,7 @@
         </div>
         <div class="order-item-ft" v-else v-show="!order.folded">
            <div class="ft-right">
-             <router-link :to="`/order/${order.id}`" class="btn-detail">订单详情</router-link>
+             <router-link :to="`/order/${order.order_number}`" class="btn-detail">订单详情</router-link>
              
              <template v-if="order.status === '已支付'">
                <a href="javascript:;" class="btn-common">添加免费乘车儿童</a>
