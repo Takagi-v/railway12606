@@ -1,183 +1,304 @@
 # ============================================
 # REQ-1: 车票查询与展示
 # 负责人: [待填写]
-# 关联前端: frontend/src/views/ticket/
+# 关联前端: frontend/src/views/ticket/LeftTicketSingle.vue, LeftTicketRound.vue
 # 关联后端: backend/app/api/v1/endpoints/trains.py
 # ============================================
 
 id: REQ-1
 name: 车票查询与展示
 functional_description: |
-  [待填写] 输入行程信息并查看车票列表。
+  用户在该模块输入行程基本信息（出发/到达地、日期、票种、往返类型），系统根据输入条件从后端 API 获取车次数据，
+  并提供强大的实时筛选、排序和展示功能。用户可以直接点击“预订”进入购票流程。
+  核心要素：
+  - 支持单程与往返两种搜索模式。
+  - 具备热门城市选择及实时拼音、汉字搜索。
+  - 展示完整的车次、车站、历时、票价及余票信息（包含状态标识如“智”、“复”、“静”）。
+  - 提供多维度的前端实时过滤及后端接口搜索。
 ui_description: |
   参考图片路径: requirements/assets/1.车票查询与展示/1.png
-  [待填写] 整体页面布局描述
-scenarios: []
+  整体页面采用 12306 经典蓝白配色。
+  - 顶部导航栏：显示登录状态及个人中心入口。
+  - 搜索区域：蓝色背景面板，包含双行输入结构。
+  - 日期切换栏：在结果上方，展示 15 天的滑动页签，当前选中日期高亮。
+  - 筛选区域：白色背景卡片，默认收起（折叠高度 60px），展开后展示所有筛选维度（发车时间、车次类型、车站、席别）。
+  - 结果列表：宽屏表格（1200px），包含 16 列数据，支持表头点击排序。
+scenarios:
+  - name: 完整购票查询流程
+    steps:
+      - action: 在“出发地”输入“北京”，在“目的地”输入“上海”
+        expectation: 两个城市名正确显示。
+      - action: 选择出发日期为“2025-12-30”
+        expectation: 日历框关闭，输入框显示选中日期。
+      - action: 点击“查询”按钮
+        expectation: API被调用，下方列表显示对应的车次结果（如 G21, G101 等）。
 
 children:
   # ------------------------------------------
-  # REQ-1-1: 输入查询条件
+  # REQ-1-1: 综合搜索表单 (Single/Round)
   # ------------------------------------------
   - id: REQ-1-1
-    name: 输入查询条件
+    name: 综合搜索表单
     functional_description: |
-      [待填写] 页面顶部的输入区域，用于设置出发地、目的地、日期及乘客类型。
+      用户在此设置查询核心条件。
+      - 类型切换：点击“单程”或“往返”时，路由在 `/leftTicket/single` 和 `/leftTicket/round` 间切换。
+      - 状态填充：url 查询参数（departure_city, arrival_city, travel_date）会自动同步到输入框。
     ui_description: |
       参考图片路径: requirements/assets/1.车票查询与展示/1.1.png
-      [待填写] 查询表单的布局描述
+      左侧为单程/往返单选组，中间为车站选择与互换，右侧为日期与票种。
     scenarios:
-      - name: 正常提交查询
+      - name: URL 参数同步测试
         steps:
-          - action: "[待填写]"
-            expectation: "[待填写]"
-      - name: 异常-缺少目的地
-        steps:
-          - action: "[待填写]"
-            expectation: "[待填写]"
+          - action: 手动修改浏览器地址为 `/leftTicket/single?departure_city=南京&arrival_city=杭州`
+            expectation: 出发地输入框自动填充为“南京”，目的地填充为“杭州”，并自动触发一次搜索。
     children:
       - id: REQ-1-1-1
-        name: 出发地选择
-        functional_description: "[待填写]"
+        name: 往返/单程切换
+        functional_description: "切换 radio 按钮，单程模式下返程日置灰禁用，往返模式下返程日可点击。"
         ui_description: |
           参考图片路径: requirements/assets/1.车票查询与展示/1.1.1.png
-        scenarios: []
-
+          位于表单最左侧，竖向排列。禁用状态下颜色为灰色（#999）。
+        scenarios:
+          - name: 切换至单程
+            steps:
+              - action: 点击“单程”
+                expectation: URL 切换至 `/leftTicket/single`，返程日输入框变为灰色且样式显示为 `disabled`。
+          - name: 切换至往返
+            steps:
+              - action: 点击“往返”
+                expectation: URL 切换至 `/leftTicket/round`，返程日输入框恢复正常状态。
       - id: REQ-1-1-2
-        name: 目的地选择
-        functional_description: "[待填写]"
+        name: 智能城市选择组件 (CitySelector)
+        functional_description: |
+          - 聚焦输入框时弹出选择浮层。
+          - 拼音/首字母匹配：输入 "bj" 或 "beijing" 自动弹出搜索结果（CitySearch）。
+          - 热门城市：展示 20 个热门城市。
+          - 拼音分层：按 ABCDE 等分组展示国内所有站点，支持组内分页。
         ui_description: |
           参考图片路径: requirements/assets/1.车票查询与展示/1.1.2.png
-        scenarios: []
-
+          左侧侧边栏区分“国内”与“国际”，顶部有蓝色背景提示文案“拼音支持首字母输入”。
+        scenarios:
+          - name: 快速选择热门城市
+            steps:
+              - action: 点击“出发地”输入框
+                expectation: 弹出城市选择浮层，显示“热门”标签页下的城市。
+              - action: 点击“北京”
+                expectation: 出发地内容变为“北京”，浮层关闭。
+          - name: 键盘首字母搜索
+            steps:
+              - action: 在输入框开始输入 "sh"
+                expectation: 浮层自动切换至检索模式，列表显示“上海”、“沈阳”等。
       - id: REQ-1-1-3
-        name: 出发日选择
-        functional_description: "[待填写]"
+        name: 双月日历组件 (DateSelector)
+        functional_description: |
+          - 展示当前月及下一月两个完整日历。
+          - 时间跨度限制：无法选择今天之前的日期。
+          - 特殊标记：今天标记为“今天”，周末及节假日文字颜色为红色（#c60b02）。
+          - 快速选择：底部提供“今天”快捷按钮。
         ui_description: |
           参考图片路径: requirements/assets/1.车票查询与展示/1.1.3.png
-        scenarios: []
-
+          点击日期输入框弹出，宽度 560px，包含左右月切换箭头。
+        scenarios:
+          - name: 选择生效日期
+            steps:
+              - action: 点击“出发日”弹出日历
+              - action: 点击一个有效的未来日期（如下周一）
+                expectation: 输入框显示该日期，格式为 YYYY-MM-DD 周X，日历关闭。
+          - name: 禁用日期点击
+            steps:
+              - action: 尝试点击“昨天”的日期
+                expectation: 点击无效，日历不关闭，颜色显示为淡灰色（#ccc）。
       - id: REQ-1-1-4
-        name: 返程日选择（往返模式）
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-1-1-5
-        name: 单程/往返切换
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-1-1-6
-        name: 普通/学生票种选择
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        name: 出发/到达地位互换
+        functional_description: "点击按钮，交换 from 和 to 的值，并自动触发一次查询。"
+        ui_description: |
+          参考图片路径: requirements/assets/1.车票查询与展示/1.1.4.png
+          位于出发地和目的地输入框之间的圆形按钮。
+        scenarios:
+          - name: 快速反向查询
+            steps:
+              - action: 设置出发地为“北京”，目的地为“上海”
+              - action: 点击中间的互换图标
+                expectation: 出发地变为“上海”，目的地变为“北京”，结果列表自动刷新为返程结果。
 
   # ------------------------------------------
-  # REQ-1-2: 车次列表展示
+  # REQ-1-2: 15天日期快速切换
   # ------------------------------------------
   - id: REQ-1-2
-    name: 车次列表展示
+    name: 15天日期快速切换
     functional_description: |
-      [待填写] 展示查询结果的表格，显示车次详情及各席位余票情况。
+      结果列表上方的页签，展示从今天起的连续 15 天。点击任何日期页签，自动更新搜索结果并同步到顶部的出发日输入框。
     ui_description: |
       参考图片路径: requirements/assets/1.车票查询与展示/1.2.png
-      [待填写] 表格样式、列定义
+      当前选中日期显示为蓝色实心背景（#3B99FC），文字白色。非选中日期显示“MM-DD”，选中日期显示“MM-DD 周X”。
     scenarios:
-      - name: 按出发时间排序
-        steps: []
-      - name: 按历时排序
-        steps: []
-      - name: 按价格排序
-        steps: []
-    children:
-      - id: REQ-1-2-1
-        name: 车次信息列
-        functional_description: "[待填写] 车次号、车型标识"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-1-2-2
-        name: 出发/到达站列
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-1-2-3
-        name: 时间/历时列
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-1-2-4
-        name: 席别余票列
-        functional_description: "[待填写] 一等座、二等座、软卧、硬卧余票显示"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-1-2-5
-        name: 预订按钮
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+      - name: 快速查看邻近日期
+        steps:
+          - action: 点击第二个页签（明天的日期）
+            expectation: 顶部日期输入框同步更新，下方列表显示明天的所有车次。
 
   # ------------------------------------------
-  # REQ-1-3: 筛选功能
+  # REQ-1-3: 实时筛选面板 (技术实现细节)
   # ------------------------------------------
   - id: REQ-1-3
-    name: 筛选功能
+    name: 实时筛选面板
     functional_description: |
-      [待填写] 对车次列表进行筛选过滤。
+      系统采用“后端检索+前端实时二次过滤”混合模式：
+      - 后端过滤 (API-level)：发车时间段（filterTime）改变时，会重新向后端发送带 `min_departure_time` 的请求。
+      - 前端过滤 (Client-level)：车次类型（G/D/Z）、车站、席别选中的变化通过 Vue `computed` 属性实时过滤 `rawTrains`，不产生网络开销。
     ui_description: |
       参考图片路径: requirements/assets/1.车票查询与展示/1.3.png
-    scenarios: []
+      “筛选”按钮具备向上/向下箭头切换，点击时平滑改变 `.sear-sel-bd` 的高度。
     children:
       - id: REQ-1-3-1
-        name: 车次类型筛选
-        functional_description: "[待填写] G/D/Z 车次类型过滤"
-        ui_description: "[待填写]"
-        scenarios: []
-
+        name: 时间段快速选择
+        functional_description: "下拉框采用 8 位字符串标识范围（如 06001200 表示 06:00-12:00），并在发送请求前转换为 HH:MM 格式。"
+        ui_description: |
+          参考图片路径: requirements/assets/1.车票查询与展示/1.3.1.png
+          下拉框位于“发车时间”输入框右侧，在筛选面板右上角
+        scenarios:
+          - name: 筛选早间车次
+            steps:
+              - action: 在“发车时间”下拉框选择“06:00--12:00”
+                expectation: 页面进入 Loading 状态，API 请求参数包含 `min_departure_time: 06:00`，列表仅显示上午出发的车次。
       - id: REQ-1-3-2
-        name: 出发时间段筛选
-        functional_description: "[待填写] 00:00-06:00, 06:00-12:00, 12:00-18:00, 18:00-24:00"
-        ui_description: "[待填写]"
-        scenarios: []
-
+        name: 车次类型过滤 (逻辑映射)
+        functional_description: "前端映射表：G/复->高铁，D/智->动车，Z/T/K->直达。选中一个类型后，需匹配该车次的 `train_type` 属性。"
+        ui_description: |
+          参考图片路径: requirements/assets/1.车票查询与展示/1.3.2.png
+        scenarios:
+          - name: 仅看高铁
+            steps:
+              - action: 取消勾选“全部”，仅勾选“GC-高铁/城际”
+                expectation: 列表瞬间过滤，仅保留车次号以 G 或 C 开头的车次。
       - id: REQ-1-3-3
-        name: 出发/到达车站筛选
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
+        name: 动态车站过滤
+        functional_description: "根据当前查询结果中的实际出现的所有车站生成多选列表。"
+        ui_description: |
+          参考图片路径: requirements/assets/1.车票查询与展示/1.3.3.png
+        scenarios:
+          - name: 缩小车站范围
+            steps:
+              - action: 筛选某个具体的出发车站（如北京南）或到达车站（如广阳）
+                expectation: 列表仅显示从“北京南”出发或到达“广阳”的车次。
       - id: REQ-1-3-4
-        name: 席别筛选
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        name: 席别过滤
+        functional_description: "过滤一等座、二等座、软卧等具有余票的车次。"
+        ui_description: |
+          参考图片路径: requirements/assets/1.车票查询与展示/1.3.4.png
+        scenarios:
+          - name: 有座车次过滤
+            steps:
+              - action: 勾选“二等座”
+                expectation: 屏蔽所有二等座显示为“无”或者“--”的车次。
 
   # ------------------------------------------
-  # REQ-1-4: 排序功能
+  # REQ-1-4: 车次结果列表展示
   # ------------------------------------------
   - id: REQ-1-4
-    name: 排序功能
-    functional_description: |
-      [待填写] 对车次列表进行排序。
-    ui_description: "[待填写]"
-    scenarios: []
+    name: 车次结果列表展示
+    functional_description: "采用表格形式展示，支持数据响应式布局，处理空状态加载。"
+    ui_description: |
+      参考图片路径: requirements/assets/1.车票查询与展示/1.4.png
+      宽 1200px。蓝色表头（#3B99FC），主体行背景色交替间隔（斑马纹）。
     children:
       - id: REQ-1-4-1
-        name: 按出发时间排序
-        functional_description: "[待填写]"
-        scenarios: []
-
+        name: 车次核心信息展示
+        functional_description: |
+          - 车次号：如 "G21"，点击触发 `showStopStation`（记录停靠点）。
+          - 特征标签：显示：“智”（智能动车组）、“复”（复兴号）、“静”（静音车厢）。
+          - 查看票价：点击车次旁的蓝色小放大镜图标（b标签）可查看实时票价。
+        ui_description: |
+          参考图片路径: requirements/assets/1.车票查询与展示/1.4.1.png
+        scenarios:
+          - name: 查看停靠详情
+            steps:
+              - action: 点击车次号 "G21"
+                expectation: 弹出浮层显示该车次的完整时刻表（当前为代码占位逻辑）。
       - id: REQ-1-4-2
-        name: 按历时排序
-        functional_description: "[待填写]"
-        scenarios: []
-
+        name: 时钟与历时展示
+        functional_description: |
+          - 出发/到达时间采用较大字体。
+          - 跨天标记：根据后端 `arrival_day_offset` 指示显示“当日到达”或“次日到达”。
+        ui_description: |
+          参考图片路径: requirements/assets/1.车票查询与展示/1.4.2.png
       - id: REQ-1-4-3
-        name: 按票价排序
-        functional_description: "[待填写]"
-        scenarios: []
+        name: 席别与余票显示逻辑
+        functional_description: |
+          - “有”：绿字显示。
+          - “数字”：直接显示（如 "5"）。
+          - “无”：灰色文本。
+          - 候补：显示候补，且右侧带橙色加号图标（icon-add-fill）。
+        ui_description: |
+          参考图片路径: requirements/assets/1.车票查询与展示/1.4.3.png
+      - id: REQ-1-4-4
+        name: 预订操作
+        functional_description: "点击“预订”按钮，将购票参数（日期、车次、站名等）通过 URL Query 传递至订单页。"
+        ui_description: |
+          参考图片路径: requirements/assets/1.车票查询与展示/1.4.4.png
+          蓝色长方形按钮，鼠标悬停时显示点击手势。
+        scenarios:
+          - name: 发起预订
+            steps:
+              - action: 选择 G21 车次并点击“预订”
+                expectation: 浏览器跳转至 `/order/confirm?trainNo=G21&...` 页面。
+
+  # ------------------------------------------
+  # REQ-1-5: 列表排序逻辑
+  # ------------------------------------------
+  - id: REQ-1-5
+    name: 列表排序逻辑
+    functional_description: |
+      前端排序：
+      - 时间排序：对 "14:30" 类字符串排序。
+      - 历时排序：转化为总分钟数后升序/降序。
+    ui_description: |
+      参考图片路径: requirements/assets/1.车票查询与展示/1.5.png
+      被选中的排序列，橙色箭头显示排序状态。
+    scenarios:
+      - name: 逆序查看最晚车次
+        steps:
+          - action: 点击表头“出发时间”页签
+            expectation: 箭头由向上变为向下，列表首行显示时间最晚（如 22:30）的车次。
+
+  # ------------------------------------------
+  # REQ-1-6: API 同步与交互
+  # ------------------------------------------
+  - id: REQ-1-6
+    name: API 同步与交互
+    functional_description: |
+      - 响应式监听：URL 改变时刷新。
+      - 异常消息提示：Ant Design Toast 提醒。
+    ui_description: |
+    scenarios: []
+
+  # ------------------------------------------
+  # REQ-1-7: 数据安全性与鲁棒性
+  # ------------------------------------------
+  - id: REQ-1-7
+    name: 数据安全性与鲁棒性
+    functional_description: |
+      - 空结果：显示暂无信息。
+      - 加载中：显示 LOADING。
+    ui_description: |
+    scenarios:
+      - name: 搜索无效路由
+        steps:
+          - action: 搜索一个不存在车站的组合（如“南极”到“上海”）
+            expectation: 界面在 Loading 消失后，不报错，而是显示一行“暂无车次信息”。
+
+  # ------------------------------------------
+  # REQ-1-8: 用户体验与交互细节
+  # ------------------------------------------
+  - id: REQ-1-8
+    name: 用户体验与交互细节
+    functional_description: |
+      - 全局点击拦截机制：确保弹出层唯一性。
+      - 坐标对齐逻辑。
+    ui_description: |
+    scenarios:
+      - name: 自动关闭浮层
+        steps:
+          - action: 点击出发地弹出“城市选择器”
+          - action: 然后点击页面最侧边的空白处（即 `wrapper` 之外）
+            expectation: 城市选择器自动隐藏。

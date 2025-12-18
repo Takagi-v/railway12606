@@ -1,177 +1,137 @@
 # ============================================
-# REQ-4: 乘客管理
+# REQ-4: 乘客管理系统
 # 负责人: [待填写]
 # 关联前端: frontend/src/views/user/PassengerPage.vue
 # 关联后端: backend/app/api/v1/endpoints/passengers.py
 # ============================================
 
 id: REQ-4
-name: 乘客管理
+name: 乘客管理系统
 functional_description: |
-  [待填写] 管理常用乘客信息，支持增删改查。
+  该模块允许用户管理常用的乘车人信息。包含查看乘车人列表、新增、修改、以及单个或批量删除操作。
+  核心逻辑：
+  - 用户本人信息会自动同步为“默认乘客”，且不可删除。
+  - 乘车人信息包含敏感数据剥离（姓名、证件号、手机号掩码）。
+  - 有购票记录的乘车人受系统保护，禁止物理删除。
+  - 包含证件类型校验与重复性校验。
 ui_description: |
   参考图片路径: requirements/assets/4.乘客管理/4.png
-scenarios: []
+  - 采用 12306 经典个人中心布局，左侧为导航，右侧为管理面板。
+  - 列表采用表格展示，表头为浅灰色背景（#f8f8f8）。
+  - 核验状态以图标形式展示在表格中。
+scenarios:
+  - name: 管理常用乘车人
+    steps:
+      - action: 进入“乘车人管理”页面
+        expectation: 列表显示当前账号下所有乘车人，第一行显示“本人”。
+      - action: 在搜索框输入“张三”并点击查询
+        expectation: 列表即时过滤，仅显示姓名包含“张三”的人员。
 
 children:
   # ------------------------------------------
-  # REQ-4-1: 乘客列表
+  # REQ-4-1: 乘车人列表展示
   # ------------------------------------------
   - id: REQ-4-1
-    name: 乘客列表
+    name: 乘车人列表展示
     functional_description: |
-      [待填写] 展示用户所有常用乘客。
+      展示所有已保存的乘车人数据。
+      - 排序规则：默认乘客（is_default=true）置顶，其余按创建时间升序排列。
+      - 数据脱敏：
+        - 证件号：保留前 4 位和后 3 位，中间 10 位掩码（*）。
+        - 手机号：前缀加 (+86)，保留前 3 位和后 4 位，中间 4 位掩码（*）。
+      - 核验状态：
+        - 人像图标：前端根据 `status` 显示是否通过身份核验。
+        - 手机图标：根据 `phoneVerified` 显示是否通过手机核验。
     ui_description: |
       参考图片路径: requirements/assets/4.乘客管理/4.1.png
-      [待填写] 列表/卡片布局
-    scenarios: []
+      本人条目姓名后方带蓝色“本人”标签。
     children:
       - id: REQ-4-1-1
-        name: 乘客卡片/行
-        functional_description: "[待填写] 姓名、证件类型、证件号（脱敏）、手机号、验证状态"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-4-1-2
-        name: 验证状态标识
-        functional_description: "[待填写] 已验证/未验证"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-4-1-3
-        name: 操作按钮
-        functional_description: "[待填写] 编辑、删除"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-4-1-4
-        name: 空状态展示
-        functional_description: "[待填写] 暂无乘客，请添加"
-        ui_description: "[待填写]"
-        scenarios: []
+        name: 列表分页与搜索
+        functional_description: "每页显示 10 条数据，支持按姓名模糊搜索（前端过滤）。"
+        scenarios:
+          - name: 搜索不存在的乘客
+            steps:
+              - action: 输入“不存在的名字”点击查询
+                expectation: 表格显示居中的“暂无乘车人”提示。
 
   # ------------------------------------------
-  # REQ-4-2: 添加乘客
+  # REQ-4-2: 新增乘车人
   # ------------------------------------------
   - id: REQ-4-2
-    name: 添加乘客
+    name: 新增乘车人
     functional_description: |
-      [待填写] 添加新的常用乘客。
+      提供对话框表单用于添加新成员。
+      - 表单校验规则：
+        - 姓名：必填，不低于 2 个字符。
+        - 证件类型：下拉选择（身份证、港澳通行证、台胞证、护照）。
+        - 证件号码：必填，需符合基本格式。
+        - 手机号：必填，必须为 11 位数字。
+        - 旅客类型：下拉选择（成人、学生、儿童）。
+      - 重复性检查：系统会比对“证件类型+证件号码”，若已存在则拦截并提示。
     ui_description: |
       参考图片路径: requirements/assets/4.乘客管理/4.2.png
+      弹窗标题“新增乘车人”，提交按钮为橙色（#FF8200）。
     scenarios:
-      - name: 正常添加
-        steps: []
-      - name: 异常-证件号已存在
-        steps: []
-    children:
-      - id: REQ-4-2-1
-        name: 添加乘客按钮
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-4-2-2
-        name: 姓名输入
-        functional_description: "[待填写] 2-10个中文字符"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-4-2-3
-        name: 证件类型选择
-        functional_description: "[待填写] 居民身份证/护照/其他"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-4-2-4
-        name: 证件号码输入
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-4-2-5
-        name: 手机号输入
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-4-2-6
-        name: 旅客类型选择
-        functional_description: "[待填写] 成人/学生/儿童"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-4-2-7
-        name: 保存按钮
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-4-2-8
-        name: 取消按钮
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+      - name: 成功添加乘车人
+        steps:
+          - action: 点击“添加”按钮
+          - action: 输入姓名“李四”，证件号“110101199001011234”，手机号“13800138000”
+          - action: 点击“确定”
+            expectation: 弹窗关闭，提示“添加成功”，列表刷新。
+      - name: 校验失败测试
+        steps:
+          - action: 手机号输入“12345”点击确定
+            expectation: 页面上方弹出错误消息“请填写11位手机号”，弹窗不关闭。
 
   # ------------------------------------------
-  # REQ-4-3: 编辑乘客
+  # REQ-4-3: 修改乘车人信息
   # ------------------------------------------
   - id: REQ-4-3
-    name: 编辑乘客
+    name: 修改乘车人信息
     functional_description: |
-      [待填写] 修改已有乘客信息。
+      点击操作列的编辑图标，回填数据至表单进行修改。
+      - 特殊限制：不支持修改默认乘客（本人）的信息。
     ui_description: |
       参考图片路径: requirements/assets/4.乘客管理/4.3.png
+      表单回填当前所选乘客的所有信息，证件号显示处于可编辑状态。
     scenarios:
-      - name: 正常编辑
-        steps: []
-    children:
-      - id: REQ-4-3-1
-        name: 编辑按钮
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-4-3-2
-        name: 编辑表单
-        functional_description: "[待填写] 预填充现有信息"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-4-3-3
-        name: 保存修改
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+      - name: 修改联系电话
+        steps:
+          - action: 点击李四行的编辑图标
+          - action: 修改手机号并确定
+            expectation: 列表显示的手机号对应更新。
 
   # ------------------------------------------
-  # REQ-4-4: 删除乘客
+  # REQ-4-4: 删除与批量删除
   # ------------------------------------------
   - id: REQ-4-4
-    name: 删除乘客
+    name: 删除与批量删除
     functional_description: |
-      [待填写] 删除已有乘客。
-    ui_description: "[待填写]"
+      - 单个删除：点击行末尾的删除图标。
+      - 批量删除：勾选多行后点击顶部的“批量删除”。
+      - 安全约束：
+        1. “本人”所在的行，多选框置灰禁用，操作列显示“默认乘客”文字，禁止删除。
+        2. 后端校验：若乘车人已有购票记录（订单关联），删除请求将被拦截并返回“已有购票记录，无法删除”。
+    ui_description: |
+      参考图片路径: requirements/assets/4.乘客管理/4.4.png
+      批量删除按钮背景色为白色，带红色删除图标。
     scenarios:
-      - name: 正常删除
-        steps: []
-      - name: 异常-有未完成订单
-        steps: []
-    children:
-      - id: REQ-4-4-1
-        name: 删除按钮
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+      - name: 批量删除测试
+        steps:
+          - action: 勾选两个非本人乘客
+          - action: 点击“批量删除”
+            expectation: 弹出确认（或直接删除），列表对应条目消失。
+      - name: 保护逻辑测试
+        steps:
+          - action: 尝试勾选“本人”列的复选框
+            expectation: 无法勾选，点击无效。
 
-      - id: REQ-4-4-2
-        name: 删除确认弹窗
-        functional_description: "[待填写] 确定要删除该乘客吗？"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-4-4-3
-        name: 不可删除提示
-        functional_description: "[待填写] 乘客有未完成订单，无法删除"
-        ui_description: "[待填写]"
-        scenarios: []
+  # ------------------------------------------
+  # REQ-4-5: 后端数据同步逻辑 (Sync)
+  # ------------------------------------------
+  - id: REQ-4-5
+    name: 后端数据同步逻辑
+    functional_description: |
+      系统启动时（onMounted）会静默调用 `/sync-default` 接口。
+      逻辑：如果数据库中尚无当前用户的默认乘客记录，则自动抓取 User 表中的真实姓名、证件、电话创建一条 `is_default=true` 的乘客记录。
