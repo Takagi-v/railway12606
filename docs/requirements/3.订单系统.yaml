@@ -1,17 +1,38 @@
 # ============================================
 # REQ-3: 订单系统
 # 负责人: [待填写]
-# 关联前端: frontend/src/views/order/, frontend/src/views/user/OrderPage.vue
+# 关联前端: frontend/src/views/order/OrderConfirm.vue, frontend/src/views/order/OrderDetail.vue, frontend/src/views/order/OrderSuccess.vue, frontend/src/views/user/OrderPage.vue
 # 关联后端: backend/app/api/v1/endpoints/orders.py
 # ============================================
 
 id: REQ-3
 name: 订单系统
 functional_description: |
-  [待填写] 订单创建、支付、管理、退票等完整订单生命周期。
+  订单系统覆盖了从用户确认购票意向开始，到订单创建、支付、查看详情、以及后续的改签、退票等全生命周期管理。
+  核心业务流程包括：
+  - 订单创建：在确认页选择乘客、席别，提交后锁定座位（45分钟）。
+  - 订单支付：模拟支付流程，支持一键支付，支付成功后状态流转为“已支付”。
+  - 订单查询：支持按状态（未出行、历史订单）、日期、关键词筛选查询。
+  - 售后服务：支持对已支付订单进行整单或分乘客退票，自动计算退款金额。
 ui_description: |
-  [待填写]
-scenarios: []
+  整体界面风格遵循 12306 官方设计规范。
+  - 确认页：采用分块布局（列车信息、乘客选择、提交栏）。
+  - 详情页：采用 Tab 切换结构（订单跟踪、退款详情等），顶部展示进度或状态。
+  - 列表页：采用折叠卡片式表格，清晰展示复杂的多乘客订单结构。
+scenarios:
+  - name: 完整购票支付流程
+    steps:
+      - action: 用户从车票查询页点击“预订”进入订单确认页。
+      - action: 选择两位乘客并确认席别，点击提交订单。
+      - action: 系统创建订单并跳转至支付页。
+      - action: 用户完成支付操作。
+      - expectation: 系统显示“支付成功”，并提供查看订单详情入口。
+  - name: 购票后改签/退票流程
+    steps:
+      - action: 用户进入“未出行订单”列表。
+      - action: 找到目标订单，点击“退票”。
+      - action: 选择其中一位乘客进行部分退票。
+      - expectation: 订单状态更新为“部分退票”，界面显示退款金额，剩余乘客车票依然有效。
 
 children:
   # ------------------------------------------
@@ -20,58 +41,99 @@ children:
   - id: REQ-3-1
     name: 订单确认页
     functional_description: |
-      [待填写] 确认购票信息，选择乘客，提交订单。
+      用户从车票查询页点击“预订”后进入此页面。
+      核心功能：
+      1. 展示所选车次详细信息（日期、车次、起止站、时刻）。
+      2. 提供乘客选择器，支持从常用联系人中勾选或新增乘客。
+      3. 席别与票种选择，实时计算预估票价。
+      4. 提交订单：调用后端创建接口，成功后跳转至支付或提示页。
     ui_description: |
-      参考图片路径: requirements/assets/3.订单系统/3.1.png
+      参考图片路径: requirements/assets/3.订单系统/3.1.0.png
+      页面宽度 1200px 居中。
+      顶部为 12306 标准 Header。
+      主体分为三个卡片区域：“列车信息”、“乘客信息”、“提交订单栏”。
     scenarios:
       - name: 正常提交订单
-        steps: []
+        steps:
+          - action: 进入页面，核对车次信息无误。
+          - action: 在“乘客信息”区域勾选“张三”和“李四”。
+          - action: 系统自动在下方生成两行座位/票种选择行。
+          - action: 点击“提交订单”按钮。
+          - expectation: 弹出核对对话框（或直接跳转），提示订单创建成功，进入待支付状态。
       - name: 异常-未选择乘客
-        steps: []
+        steps:
+          - action: 不勾选任何乘客，直接点击“提交订单”。
+          - expectation: 系统提示“请至少选择一位乘客”。
       - name: 异常-余票不足
-        steps: []
+        steps:
+          - action: 选择乘客后提交，但后端返回“余票不足”。
+          - expectation: 页面顶部弹出错误提示，保留在当前页，允许用户修改席别。
     children:
       - id: REQ-3-1-1
         name: 车次信息展示
-        functional_description: "[待填写] 车次号、出发/到达站、日期时间、历时"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "展示车次号（G1234）、出发/到达站、日期（2023-12-12）、出发/到达时间及历时。数据只读，不可修改。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.1.1.png
+          位于页面顶部，蓝色背景或带边框的卡片。
+          重点突出日期和车次号。
+        scenarios:
+          - name: 校验车次信息
+            steps:
+              - action: 用户进入确认页。
+              - expectation: 显示的车次、时间与前一页选择的完全一致。
 
       - id: REQ-3-1-2
         name: 乘客选择
-        functional_description: "[待填写] 从已有乘客列表中选择，支持多选"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "展示当前用户的常用联系人列表（复选框）。支持姓名搜索过滤。勾选后自动添加到下方的票种/席别选择列表。"
+        ui_description:  |
+          参考图片路径: requirements/assets/3.订单系统/3.1.2.png
+          带图标“受让人”标识。
+          列表项包含复选框和姓名。
+          提供“输入乘客姓名”搜索框。
+        scenarios:
+          - name: 搜索并添加乘客
+            steps:
+              - action: 在搜索框输入“王五”。
+              - expectation: 列表仅显示包含“王五”的联系人。
+              - action: 勾选该联系人。
+              - expectation: 下方新增一行该乘客的选座信息。
 
       - id: REQ-3-1-3
         name: 票种选择
-        functional_description: "[待填写] 成人票/学生票/儿童票"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "针对每一位已选乘客，提供下拉框选择票种：成人票、学生票、儿童票、残疾军人票。默认选中成人票。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.1.3.png
+          位于动态生成的乘客行中。
+        scenarios:
+          - name: 切换儿童票
+            steps:
+              - action: 针对某位乘客，将票种从“成人票”切换为“儿童票”。
+              - expectation: 右侧显示的票价相应减少（通常为半价）。
 
       - id: REQ-3-1-4
         name: 席别选择
-        functional_description: "[待填写] 一等座/二等座/软卧/硬卧"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "针对每一位已选乘客，提供下拉框选择席别（二等座、一等座等）。默认选中查询页预选的席别。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.1.4.png
+          显示席别名称和对应价格（如：二等座 ¥553.0）。
+        scenarios:
+          - name: 统一修改席别
+            steps:
+              - action: 将第一位乘客的席别改为“一等座”。
+              - expectation: 该行票价更新，总价同步更新。
 
       - id: REQ-3-1-5
-        name: 订单金额汇总
-        functional_description: "[待填写] 显示乘客数量、各席别价格、总价"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-3-1-6
         name: 提交订单按钮
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "位于页面底部。点击触发表单校验（人数、联系方式等），校验通过后发送 Create Order 请求。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.1.5.png
+          橙色大按钮，显示“提交订单”。
+        scenarios:
+          - name: 提交时校验
+            steps:
+              - action: 页面加载完成，直接点击提交。
+              - expectation: 若未选乘客，提示错误；若信息完整，进入提交Loading状态。
 
-      - id: REQ-3-1-7
-        name: 添加乘客入口
-        functional_description: "[待填写] 快速跳转到添加乘客页"
-        ui_description: "[待填写]"
-        scenarios: []
 
   # ------------------------------------------
   # REQ-3-2: 订单详情页
@@ -79,46 +141,96 @@ children:
   - id: REQ-3-2
     name: 订单详情页
     functional_description: |
-      [待填写] 展示订单完整信息，提供操作入口。
+      展示单个订单的完整信息。
+      功能点：
+      1. 订单状态栏：显示订单号、下单时间、当前状态。
+      2. 订单跟踪：时间轴展示创建、支付、退票等关键节点。
+      3. 详细信息：车次时刻、乘客列表（含席位号）、票价明细。
+      4. 附加服务入口：保险、餐饮、儿童票添加。
     ui_description: |
-      参考图片路径: requirements/assets/3.订单系统/3.2.png
-    scenarios: []
+      参考图片路径: requirements/assets/3.订单系统/3.2.0.png
+      左侧/顶部为面包屑导航：个人中心 > 订单详情。
+      主体内容包含 Tab 页签：订单跟踪、退款详情、保险等。
+    scenarios:
+      - name: 查看待支付订单详情
+        steps:
+          - action: 进入待支付订单的详情页。
+          - expectation: 状态栏显示“待支付”，且有醒目的“去支付”按钮和倒计时。
+      - name: 查看已退票订单详情
+        steps:
+          - action: 进入已退票订单的详情页。
+          - expectation: 状态栏显示“已退票”，且“退款详情”Tab可见并包含退款记录。
     children:
       - id: REQ-3-2-1
         name: 订单编号展示
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "显示22位订单号（如 202312120001...）和订票日期。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.2.1.png
+          位于“订单跟踪”Tab 的顶部区域。
+        scenarios:
+          - name: 复制订单号
+            steps:
+              - action: 用户查看订单编号。
+              - expectation: 编号清晰可见，支持鼠标选中复制。
 
       - id: REQ-3-2-2
         name: 订单状态展示
-        functional_description: "[待填写] 待支付/已支付/已取消/已退票/已完成"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "根据后端状态显示：待支付、已支付、已取消、已退票、部分退票。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.2.2.png
+          通常在列表或详情头部高亮显示。
+        scenarios:
+          - name: 状态同步
+            steps:
+              - action: 在详情页停留时订单超时取消。
+              - expectation: 刷新页面后状态变为“已取消”。
 
       - id: REQ-3-2-3
         name: 车次详细信息
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "展示出发/到达站、车次、发车/到达时间。类似车票的样式布局。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.2.3.png
+        scenarios:
+          - name: 确认行程时间
+            steps:
+              - action: 查看车次信息区域。
+              - expectation: 清晰展示发车日期和具体时间点。
 
       - id: REQ-3-2-4
         name: 乘客列表
-        functional_description: "[待填写] 姓名、证件、席别、座位号、票价、退票状态"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "列表展示该订单下的所有乘客。字段：姓名、证件类型/号码（脱敏）、票种、席别、车厢/座位号、票价、状态（已支付/已退票）。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.2.4.png
+          表格形式。
+        scenarios:
+          - name: 查看座位号
+            steps:
+              - action: 支付成功后查看详情。
+              - expectation: 乘客列表显示具体的车厢号和座位号（如 05车12A号）。
 
       - id: REQ-3-2-5
         name: 价格明细
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "展示订单总价，以及各乘客的分项价格。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.2.5.png
+          橙色字体突出显示总金额。
+        scenarios:
+          - name: 核对总价
+            steps:
+              - action: 查看价格区域。
+              - expectation: 总价等于所有乘客票价之和。
 
       - id: REQ-3-2-6
         name: 订单时间线
-        functional_description: "[待填写] 创建时间、支付时间、取消时间等"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "以时间轴形式展示订单操作记录：[2023-12-12 10:00] 订单创建 -> [2023-12-12 10:05] 支付成功。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.2.4.png
+          垂直时间轴，最新状态在最上或最下。
+        scenarios:
+          - name: 追踪订单历史
+            steps:
+              - action: 切换到“订单跟踪”Tab。
+              - expectation: 按时间顺序列出所有关键操作记录。
 
   # ------------------------------------------
   # REQ-3-3: 订单支付
@@ -126,38 +238,70 @@ children:
   - id: REQ-3-3
     name: 订单支付
     functional_description: |
-      [待填写] 模拟支付流程（一键支付）。
+      用户在订单创建成功后，或在“未完成订单”列表中点击“支付”。
+      目前为模拟支付：点击确认即视为支付成功。
+      包含 45 分钟倒计时检查。
     ui_description: |
       参考图片路径: requirements/assets/3.订单系统/3.3.png
+      可以是独立的支付页，或模态弹窗。
     scenarios:
       - name: 正常支付
-        steps: []
+        steps:
+          - action: 在订单列表点击“支付”按钮。
+          - action: 弹出支付确认框（或跳转）。
+          - action: 点击“确认支付”。
+          - expectation: 后端更新状态为“已支付”，跳转至“交易成功”页面。
       - name: 异常-订单已超时
-        steps: []
+        steps:
+          - action: 尝试支付一个超过 45 分钟未支付的订单。
+          - expectation: 系统提示“订单已超时取消”，禁止支付。
     children:
       - id: REQ-3-3-1
         name: 支付倒计时
-        functional_description: "[待填写] 45分钟支付倒计时"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "显示剩余支付时间（如 44:59）。倒计时结束时自动刷新状态为已取消。"
+        ui_description: "红色倒计时文本，醒目提示。"
+        scenarios:
+          - name: 倒计时结束
+            steps:
+              - action: 在支付页停留直到倒计时归零。
+              - expectation: 页面自动跳转或弹出提示“订单已超时”，返回订单列表。
 
       - id: REQ-3-3-2
         name: 支付按钮
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "触发支付流程。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.3.1.png
+          橙色按钮。
+        scenarios:
+          - name: 点击支付
+            steps:
+              - action: 点击“立即支付”。
+              - expectation: 弹出具体的支付方式选择或确认弹窗。
 
       - id: REQ-3-3-3
         name: 支付确认弹窗
-        functional_description: "[待填写] 一键支付确认"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "模拟银行/第三方支付界面。包含金额确认。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.3.2.png
+        scenarios:
+          - name: 确认金额
+            steps:
+              - action: 在弹窗中核对显示的支付金额。
+              - expectation: 金额与订单总价一致。
 
       - id: REQ-3-3-4
         name: 支付成功页
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "支付完成后展示。显示“交易已成功”，展示订单号、乘车温馨提示、二维码等。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.3.3.png
+          包含绿色对勾图标，大号成功提示语。
+          提供“继续购票”和“查询订单详情”按钮。
+        scenarios:
+          - name: 支付后引导
+            steps:
+              - action: 支付成功后进入成功页。
+              - action: 点击“查询订单详情”。
+              - expectation: 跳转至该订单的详情页面。
 
   # ------------------------------------------
   # REQ-3-4: 取消订单
@@ -165,23 +309,43 @@ children:
   - id: REQ-3-4
     name: 取消订单
     functional_description: |
-      [待填写] 取消待支付状态的订单。
-    ui_description: "[待填写]"
+      针对“待支付”状态的订单。
+      用户主动取消后，释放锁定的座位，订单状态变为“已取消”。
+    ui_description: "在订单列表或详情页提供“取消订单”按钮。"
     scenarios:
       - name: 正常取消
-        steps: []
+        steps:
+          - action: 在“未完成订单”列表找到目标订单。
+          - action: 点击“取消订单”。
+          - action: 确认弹窗点击“确定”。
+          - expectation: 订单从“未完成”列表移除（或状态更新），座位释放。
     children:
       - id: REQ-3-4-1
         name: 取消按钮
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "仅在 OrderStatus.PENDING 状态下可见。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.4.1.png
+          灰色或次级样式的按钮。
+        scenarios:
+          - name: 按钮可见性
+            steps:
+              - action: 查看待支付订单。
+              - expectation: 按钮可见。
+              - action: 查看已支付订单。
+              - expectation: 按钮不可见。
 
       - id: REQ-3-4-2
         name: 取消确认弹窗
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "防止误操作，提示“您确定要取消该订单吗？取消后座位将不予保留。”"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.4.2.png
+        scenarios:
+          - name: 取消确认
+            steps:
+              - action: 点击取消按钮。
+              - expectation: 弹出确认框。
+              - action: 点击“取消”（不执行）。
+              - expectation: 弹窗关闭，订单状态不变。
 
   # ------------------------------------------
   # REQ-3-5: 退票功能
@@ -189,44 +353,79 @@ children:
   - id: REQ-3-5
     name: 退票功能
     functional_description: |
-      [待填写] 对已支付订单进行退票（支持部分退票）。
+      针对“已支付”状态的订单。支持部分退票（选择特定乘客）或整单退票。
+      退票后座位释放为“可售”，退款金额按规则计算（当前模拟扣除 5% 手续费）。
     ui_description: |
       参考图片路径: requirements/assets/3.订单系统/3.5.png
+      在订单详情页或列表页提供“退票”入口。
     scenarios:
       - name: 全部退票
-        steps: []
+        steps:
+          - action: 选择一个包含 2 名乘客的已支付订单。
+          - action: 点击“退票”。
+          - action: 在弹出的乘客选择框中全选（或默认全选）。
+          - action: 点击“确认退票”。
+          - expectation: 订单状态变为“已退票”，显示退款金额。
       - name: 部分退票
-        steps: []
+        steps:
+          - action: 选择一个包含 2 名乘客的已支付订单。
+          - action: 点击“退票”，仅勾选其中一人。
+          - action: 点击“确认退票”。
+          - expectation: 订单状态变为“部分退票”，被退票乘客状态更新为“已退票”。
     children:
       - id: REQ-3-5-1
         name: 退票按钮
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "仅在 OrderStatus.PAID 或 PARTIALLY_REFUNDED 状态下可见。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.5.1.png
+        scenarios:
+          - name: 按钮状态
+            steps:
+              - action: 查看未出行的已支付订单。
+              - expectation: “退票”按钮可用。
+              - action: 查看已过期的历史订单。
+              - expectation: “退票”按钮不可见或禁用。
 
       - id: REQ-3-5-2
         name: 退票乘客选择
-        functional_description: "[待填写] 选择要退票的乘客"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "弹窗列出可退票的乘客（未退票状态）。用户勾选需要退票的人员。"
+        ui_description: "复选框列表。"
+        scenarios:
+          - name: 排除已退票乘客
+            steps:
+              - action: 对一个部分退票的订单再次点击退票。
+              - expectation: 列表中仅显示剩余未退票的乘客，已退票乘客不可选或不显示。
 
       - id: REQ-3-5-3
         name: 退票手续费展示
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "在确认退票前，根据退票规则（如开车前时间）预计算并展示手续费。"
+        ui_description: "提示文本：预计退还 xx 元，手续费 xx 元。"
+        scenarios:
+          - name: 费率展示
+            steps:
+              - action: 勾选退票乘客。
+              - expectation: 实时显示扣除的手续费和预计退款总额。
 
       - id: REQ-3-5-4
         name: 退款金额展示
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "退票成功后，显示实际退款金额。"
+        ui_description: "成功提示框中包含金额信息。"
+        scenarios:
+          - name: 退款反馈
+            steps:
+              - action: 提交退票申请。
+              - expectation: 弹出成功提示，告知“退款xx元已提交银行处理”。
 
       - id: REQ-3-5-5
         name: 退票确认弹窗
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "最终确认操作，提示不可撤销。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.5.4.png
+        scenarios:
+          - name: 二次确认
+            steps:
+              - action: 点击“办理退票”。
+              - expectation: 弹出警示框提示操作不可逆。
 
   # ------------------------------------------
   # REQ-3-6: 订单列表页（个人中心）
@@ -234,55 +433,64 @@ children:
   - id: REQ-3-6
     name: 订单列表页
     functional_description: |
-      [待填写] 个人中心的订单管理列表。
+      个人中心的订单管理入口。
+      提供多维度筛选和分类查看功能。
     ui_description: |
-      参考图片路径: requirements/assets/3.订单系统/3.6.png
-    scenarios: []
+      参考图片路径: requirements/assets/3.订单系统/3.6.0.png
+      页面包含 Tabs 切换和搜索栏。
+      订单以卡片列表形式展示，每个订单包含表头（日期、订单号）和表体（车次、乘客）。
+    scenarios:
+      - name: 默认展示
+        steps:
+          - action: 进入订单中心。
+          - expectation: 默认选中“未完成订单”Tab（如有），或“未出行订单”。
+      - name: 搜索订单
+        steps:
+          - action: 在搜索框输入订单号后四位。
+          - action: 点击查询。
+          - expectation: 列表过滤显示匹配的订单。
     children:
       - id: REQ-3-6-1
         name: 订单筛选Tab
-        functional_description: "[待填写] 未出行/历史订单/全部"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "分为：未完成订单（待支付）、未出行订单（已支付但未发车）、历史订单（已完成/已退票/已取消）。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.6.1.png
+          顶部水平导航条。
+        scenarios:
+          - name: 切换至历史订单
+            steps:
+              - action: 点击“历史订单”Tab。
+              - expectation: 列表刷新，显示已过期或已完成的订单。
 
       - id: REQ-3-6-2
         name: 订单卡片
-        functional_description: "[待填写] 订单号、状态、车次、乘客、价格、时间"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "展示单条订单摘要。支持折叠/展开详细信息。显示：车次（北京南->上海虹桥）、发车时间、总价、状态。"
+        ui_description: |
+          参考图片路径: requirements/assets/3.订单系统/3.6.2.png
+          包含“折叠/展开”按钮。
+          支持多乘客显示。
+        scenarios:
+          - name: 展开详情
+            steps:
+              - action: 点击订单卡片上的“展开”或下拉箭头。
+              - expectation: 卡片高度增加，显示所有乘客的具体席位和票价信息。
 
       - id: REQ-3-6-3
         name: 订单操作按钮
-        functional_description: "[待填写] 根据状态显示：支付/取消/查看/退票"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "根据订单状态动态显示按钮组合：\n- 待支付：支付、取消\n- 已支付：改签、变更到站、退票、详情\n- 已完成/退票：详情"
+        ui_description: "位于卡片右侧或底部。"
+        scenarios:
+          - name: 操作入口检查
+            steps:
+              - action: 浏览不同状态的订单。
+              - expectation: 待支付订单显示“去支付”，已支付订单显示“改签/退票”。
 
       - id: REQ-3-6-4
         name: 空状态展示
-        functional_description: "[待填写] 暂无订单"
-        ui_description: "[待填写]"
-        scenarios: []
-
-  # ------------------------------------------
-  # REQ-3-7: 订单超时处理
-  # ------------------------------------------
-  - id: REQ-3-7
-    name: 订单超时处理
-    functional_description: |
-      [待填写] 订单超过45分钟未支付自动取消。
-    ui_description: "[待填写]"
-    scenarios:
-      - name: 自动取消
-        steps: []
-    children:
-      - id: REQ-3-7-1
-        name: 超时提示
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-3-7-2
-        name: 座位自动释放
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
+        functional_description: "当查询结果为空时，展示“暂无订单”提示及图标。"
+        ui_description: "居中显示的插画和文字。"
+        scenarios:
+          - name: 无订单显示
+            steps:
+              - action: 切换到一个没有任何记录的Tab（如未完成订单）。
+              - expectation: 列表区域显示“您暂时没有未完成的订单”及占位图。
