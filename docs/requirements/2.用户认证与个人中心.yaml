@@ -1,16 +1,41 @@
 # ============================================
 # REQ-2: 用户认证与个人中心
 # 负责人: [待填写]
-# 关联前端: frontend/src/views/auth/, frontend/src/views/user/
-# 关联后端: backend/app/api/v1/endpoints/auth.py, users.py
+# 关联前端: 
+#   - frontend/src/views/auth/LoginPage.vue (登录页)
+#   - frontend/src/views/auth/RegisterPage.vue (注册页)
+#   - frontend/src/views/auth/ForgotPasswordPage.vue (找回密码)
+#   - frontend/src/views/auth/VerifyCodePage.vue (验证码验证)
+#   - frontend/src/views/auth/NewPasswordPage.vue (重置密码)
+#   - frontend/src/views/auth/DonePage.vue (操作完成)
+#   - frontend/src/views/user/ProfilePage.vue (个人中心)
+#   - frontend/src/components/Header12306.vue (顶部导航)
+#   - frontend/src/components/LoginFooter.vue (底部版权)
+#   - frontend/src/api/auth.js (认证接口封装)
+#   - frontend/src/stores/user.js (用户状态管理)
+# 关联后端: 
+#   - backend/app/api/v1/endpoints/auth.py (认证核心逻辑)
+#   - backend/app/api/v1/endpoints/users.py (用户信息管理)
+#   - backend/app/api/v1/endpoints/password_recovery.py (密码找回流程)
+#   - backend/app/models/user.py (用户数据模型)
+#   - backend/app/schemas/user.py (用户数据验证)
+#   - backend/app/schemas/password_recovery.py (找回密码数据验证)
+#   - backend/app/core/security.py (JWT与加密工具)
+#   - backend/app/core/validators.py (输入校验)
 # ============================================
 
 id: REQ-2
 name: 用户认证与个人中心
 functional_description: |
-  [待填写] 用户注册、登录、找回密码及个人信息管理功能。
+  包含用户注册、登录、退出、找回密码以及个人信息查看与修改功能。
+  支持用户名/手机号/邮箱登录，支持短信验证码验证。
+  个人中心支持查看基本信息、编辑联系方式和修改优惠类型。
 ui_description: |
-  [待填写]
+    整体风格简洁明快，采用12306经典蓝白色调。
+    登录页包含全屏轮播背景图。
+    注册页采用卡片式布局，带步骤引导和实时校验反馈。
+    个人中心采用左侧菜单右侧内容的布局。
+    注册页面和个人中心页面需要添加顶部Logo栏和底部版权信息。
 scenarios: []
 
 children:
@@ -20,52 +45,54 @@ children:
   - id: REQ-2-1
     name: 用户登录
     functional_description: |
-      [待填写] 用户通过用户名/手机号和密码登录系统。
+      用户通过账号密码或扫码方式登录系统。
+      支持用户名、邮箱、手机号作为登录账号。
+      连续登录失败3次或特定错误码触发图形验证码。
+      支持短信验证码二次验证（可选流程）。
     ui_description: |
       参考图片路径: requirements/assets/2.用户认证与个人中心/2.1.png
-      [待填写] 登录表单布局
+      页面包含顶部Logo栏、中部全屏轮播背景、右侧悬浮登录卡片、底部版权信息。
+      登录卡片包含“账号登录”和“扫码登录”两个Tab页签。
     scenarios:
-      - name: 正常登录
-        steps: []
-      - name: 异常-密码错误
-        steps: []
-      - name: 异常-验证码错误
-        steps: []
+      - name: 正常账号登录
+        steps:
+          - 用户输入用户名/邮箱/手机号
+          - 用户输入密码
+          - 点击“登录”按钮
+          - 系统验证通过，跳转至首页或来源页
+      - name: 登录失败-触发验证码
+        steps:
+          - 用户输入错误密码超过3次
+          - 系统显示图形验证码输入框
+          - 用户需输入正确的验证码才能继续尝试登录
+      - name: 扫码登录（UI展示）
+        steps:
+          - 用户切换至“扫码登录”Tab
+          - 显示二维码（模拟加载动画和过期倒计时）
+          - 提示“请使用12306手机客户端扫码登录”
     children:
       - id: REQ-2-1-1
-        name: 用户名/手机号输入
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
+        name: 登录表单
+        functional_description: |
+          包含用户名、密码输入框，以及“登录”按钮。
+          输入框带图标前缀。
+          密码输入框不支持明文显示切换。
+          包含“注册12306账号”和“忘记密码”链接。
+        ui_description: |
+          参考图片路径: requirements/assets/2.用户认证与个人中心/2.1.1_login_form.png
+          使用 Ant Design Vue 表单组件。
+          用户名输入框 placeholder: "用户名/邮箱/手机号"。
+          密码输入框 placeholder: "密码"。
         scenarios: []
 
       - id: REQ-2-1-2
-        name: 密码输入
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-1-3
-        name: 图形验证码
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-1-4
-        name: 登录按钮
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-1-5
-        name: 注册入口链接
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-1-6
-        name: 忘记密码链接
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
+        name: 短信验证码弹窗
+        functional_description: |
+          弹窗要求输入证件号后4位和短信验证码。
+          提供“获取验证码”按钮，带60秒倒计时。
+        ui_description: |
+          参考图片路径: requirements/assets/2.用户认证与个人中心/2.1.2_sms_modal.png
+          Modal 弹窗，标题“选择验证方式”，子标题“短信验证”。
         scenarios: []
 
   # ------------------------------------------
@@ -74,75 +101,57 @@ children:
   - id: REQ-2-2
     name: 用户注册
     functional_description: |
-      [待填写] 新用户注册账号。
+      新用户填写详细信息注册账号。
+      注册成功后自动分配“user”角色，并创建默认乘车人记录。
     ui_description: |
-      参考图片路径: requirements/assets/2.用户认证与个人中心/2.2.png
+      参考图片路径: requirements/assets/2.用户认证与个人中心/2.2_register_page.png
+      页面包含顶部蓝色导航条、Logo栏、面包屑导航、主体注册卡片。
+      注册卡片标题栏为深蓝色背景，白色文字。
     scenarios:
-      - name: 正常注册
-        steps: []
-      - name: 异常-用户名已存在
-        steps: []
-      - name: 异常-密码格式不符
-        steps: []
+      - name: 正常注册流程
+        steps:
+          - 用户填写所有必填字段
+          - 勾选“我已阅读并同意《用户服务条款》和《隐私政策》”
+          - 点击“下一步”
+          - 系统校验通过，提示注册成功并跳转登录页
+      - name: 字段校验失败
+        steps:
+          - 用户名已存在/格式错误 -> 显示红色错误提示
+          - 密码强度不足 -> 实时强度条显示“弱”
+          - 两次密码不一致 -> 失去焦点时提示错误
     children:
       - id: REQ-2-2-1
-        name: 用户类型选择
-        functional_description: "[待填写] 成人/学生"
-        ui_description: "[待填写]"
+        name: 账户信息输入
+        functional_description: |
+          - **用户名**: 必填，6-30位字母、数字或“_”，字母开头。不可修改。
+          - **密码**: 必填，6-20位，必须包含字母和数字。
+          - **确认密码**: 必须与密码一致。
+          - **密码强度条**: 根据输入实时计算（弱/中/强/很强），四色进度条展示。
+        ui_description: |
+          参考图片路径: requirements/assets/2.用户认证与个人中心/2.2.1_account_info.png
+          密码强度条位于密码框下方。
         scenarios: []
 
       - id: REQ-2-2-2
-        name: 登录名输入
-        functional_description: "[待填写] 6-30位，仅数字或字母"
-        ui_description: "[待填写]"
+        name: 个人信息输入
+        functional_description: |
+          - **证件类型**: 下拉选择（居民身份证、港澳居民居住证、台湾居民居住证、护照等）。
+          - **姓名**: 必填，2-20位中文。
+          - **证件号码**: 必填，根据证件类型正则校验（身份证18位）。
+          - **优惠(待)类型**: 下拉选择（成人、儿童、学生、残疾军人）。
+        ui_description: |
+          参考图片路径: requirements/assets/2.用户认证与个人中心/2.2.2_personal_info.png
+          表单采用水平布局，Label右对齐。
         scenarios: []
 
       - id: REQ-2-2-3
-        name: 邮箱输入
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-2-4
-        name: 真实姓名输入
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-2-5
-        name: 证件类型选择
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-2-6
-        name: 证件号码输入
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-2-7
-        name: 手机号输入
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-2-8
-        name: 密码设置
-        functional_description: "[待填写] 6-20位，包含字母和数字"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-2-9
-        name: 确认密码
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-2-10
-        name: 注册按钮
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
+        name: 联系方式输入
+        functional_description: |
+          - **邮箱**: 必填，Email格式校验。
+          - **手机号**: 必填，支持区号选择（+86, +852, +853, +886），默认+86。
+        ui_description: |
+          参考图片路径: requirements/assets/2.用户认证与个人中心/2.2.3_contact_info.png
+          手机号输入框为组合型，左侧选择区号，右侧输入号码。
         scenarios: []
 
   # ------------------------------------------
@@ -151,34 +160,12 @@ children:
   - id: REQ-2-3
     name: 找回密码
     functional_description: |
-      [待填写] 用户通过验证方式重置密码。
+      通过验证身份信息重置密码。
+      目前实现为模拟发送重置链接。
     ui_description: |
-      参考图片路径: requirements/assets/2.用户认证与个人中心/2.3.png
+      参考图片路径: requirements/assets/2.用户认证与个人中心/2.3_forgot_password.png
+      通常为模态框或独立页面。
     scenarios: []
-    children:
-      - id: REQ-2-3-1
-        name: 输入账号信息
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-3-2
-        name: 验证码验证
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-3-3
-        name: 设置新密码
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
-
-      - id: REQ-2-3-4
-        name: 完成页面
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
-        scenarios: []
 
   # ------------------------------------------
   # REQ-2-4: 个人信息管理
@@ -186,31 +173,56 @@ children:
   - id: REQ-2-4
     name: 个人信息管理
     functional_description: |
-      [待填写] 查看和编辑个人信息。
+      用户登录后查看和修改个人资料。
+      分为“基本信息”、“联系方式”、“附加信息”三个模块。
+      支持查看模式和编辑模式切换。
     ui_description: |
-      参考图片路径: requirements/assets/2.用户认证与个人中心/2.4.png
+      参考图片路径: requirements/assets/2.用户认证与个人中心/2.4_profile_page.png
+      左侧菜单，右侧内容区。
+      内容区包含欢迎页（默认）和信息详情页。
     scenarios:
-      - name: 查看个人信息
-        steps: []
-      - name: 编辑个人信息
-        steps: []
+      - name: 查看欢迎页
+        steps:
+          - 登录后进入个人中心
+          - 显示欢迎语（根据时间段变化：上午好/下午好等）
+          - 显示安全提示和二维码
+      - name: 修改联系方式
+        steps:
+          - 点击“联系方式”栏的“编辑”按钮
+          - 输入新的手机号或邮箱
+          - 点击“保存”
+          - 系统提示保存成功，状态切换回查看模式
     children:
       - id: REQ-2-4-1
-        name: 基本信息展示
-        functional_description: "[待填写] 用户名、真实姓名、证件信息（部分隐藏）"
-        ui_description: "[待填写]"
+        name: 基本信息模块
+        functional_description: |
+          **展示**: 用户名、姓名、国家/地区（固定中国）、证件类型、证件号码（脱敏显示）、核验状态。
+          **编辑**: 仅允许修改“姓名”（real_name）。用户名、证件信息不可修改。
+        ui_description: |
+          参考图片路径: requirements/assets/2.用户认证与个人中心/2.4.1_basic_info.png
+          字段前带红色星号表示必填。
+          编辑模式下，不可改字段显示为纯文本，可改字段显示为输入框。
         scenarios: []
 
       - id: REQ-2-4-2
-        name: 联系方式编辑
-        functional_description: "[待填写] 手机号、邮箱（可编辑）"
-        ui_description: "[待填写]"
+        name: 联系方式模块
+        functional_description: |
+          **展示**: 手机号（脱敏）、邮箱。显示“已通过核验”状态。
+          **编辑**: 允许修改手机号和邮箱。修改手机号会有提示“(修改后需重新核验)”。
+        ui_description: |
+          参考图片路径: requirements/assets/2.用户认证与个人中心/2.4.2_contact_info.png
+          使用虚线分隔不同模块。
         scenarios: []
 
       - id: REQ-2-4-3
-        name: 编辑/保存/取消按钮
-        functional_description: "[待填写]"
-        ui_description: "[待填写]"
+        name: 附加信息模块
+        functional_description: |
+          **展示**: 优惠(待)类型。
+          **编辑**: 下拉选择（成人/儿童/学生/残疾军人）。
+        ui_description: |
+          参考图片路径: requirements/assets/2.用户认证与个人中心/2.4.3_additional_info.png
+          编辑状态下显示下拉菜单。
+          保存时将数字值映射回后端枚举类型。
         scenarios: []
 
   # ------------------------------------------
@@ -219,11 +231,11 @@ children:
   - id: REQ-2-5
     name: 退出登录
     functional_description: |
-      [待填写] 用户退出当前登录状态。
-    ui_description: "[待填写]"
-    scenarios:
-      - name: 正常退出
-        steps: []
+      清除本地 Token 和用户状态。
+      调用后端 Logout 接口（可选，因JWT无状态）。
+      跳转回首页或登录页。
+      用户点击导航栏下拉菜单中的“退出登录”按钮触发。
+    scenarios: []
 
   # ------------------------------------------
   # REQ-2-6: 导航栏用户状态
@@ -231,25 +243,69 @@ children:
   - id: REQ-2-6
     name: 导航栏用户状态
     functional_description: |
-      [待填写] 顶部导航栏显示用户登录状态、用户名、下拉菜单。
-    ui_description: |
-      参考图片路径: requirements/assets/2.用户认证与个人中心/2.6.png
+      全局 Header 组件根据 `userStore.isAuthenticated` 状态切换显示。
     scenarios: []
     children:
       - id: REQ-2-6-1
         name: 未登录状态
-        functional_description: "[待填写] 显示登录/注册入口"
-        ui_description: "[待填写]"
+        functional_description: "显示“登录”和“注册”链接。"
+        ui_description: |
+          参考图片路径: requirements/assets/2.用户认证与个人中心/2.6.1_header_unauth.png
+          位于 Header 右侧。
         scenarios: []
 
       - id: REQ-2-6-2
         name: 已登录状态
-        functional_description: "[待填写] 显示用户名、个人中心入口"
-        ui_description: "[待填写]"
+        functional_description: |
+          显示“欢迎您，[用户名]” 或 “[姓名]”。
+          提供“我的12306”下拉菜单，包含“火车票订单”、“本人车票”、“我的餐饮”、“我的保险”、“个人中心”、“账户安全”、“退出登录”等选项。
+        ui_description: |
+          参考图片路径: requirements/assets/2.用户认证与个人中心/2.6.2_header_auth.png
+          鼠标悬停显示下拉菜单。
         scenarios: []
 
-      - id: REQ-2-6-3
-        name: 用户下拉菜单
-        functional_description: "[待填写] 个人中心、订单、退出登录"
-        ui_description: "[待填写]"
-        scenarios: []
+api_endpoints:
+  - method: POST
+    path: /auth/login
+    description: 用户登录，返回 Access Token
+  - method: POST
+    path: /auth/register
+    description: 用户注册
+  - method: POST
+    path: /auth/login/verify-code
+    description: 发送登录验证码
+  - method: GET
+    path: /users/profile
+    description: 获取当前用户信息
+  - method: PUT
+    path: /users/profile
+    description: 更新当前用户信息
+
+data_structure:
+  User:
+    description: 用户实体
+    fields:
+      - name: username
+        type: string
+        description: 登录名，唯一
+      - name: password
+        type: string
+        description: 加密后的密码
+      - name: real_name
+        type: string
+        description: 真实姓名
+      - name: id_type
+        type: string
+        description: 证件类型枚举
+      - name: id_number
+        type: string
+        description: 证件号码，唯一
+      - name: phone
+        type: string
+        description: 手机号
+      - name: email
+        type: string
+        description: 邮箱
+      - name: user_type
+        type: string
+        description: 用户类型（成人/儿童/学生/残疾军人）
