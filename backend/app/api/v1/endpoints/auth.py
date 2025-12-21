@@ -87,7 +87,9 @@ def _sync_default_passenger(db: Session, user: User):
         
         passenger_type_map = {
             "成人": PassengerType.ADULT,
-            "学生": PassengerType.STUDENT
+            "学生": PassengerType.STUDENT,
+            "儿童": PassengerType.CHILD,
+            "残疾军人": PassengerType.DISABILITY_SOLDIER
         }
         passenger_type = passenger_type_map.get(user_type_val, PassengerType.ADULT)
         
