@@ -83,7 +83,19 @@ children:
           使用 Ant Design Vue 表单组件。
           用户名输入框 placeholder: "用户名/邮箱/手机号"。
           密码输入框 placeholder: "密码"。
-        scenarios: []
+        scenarios:
+          - name: 字段为空校验
+            steps:
+              - action: 未输入任何内容，直接点击“登录”按钮
+              - expectation: 用户名输入框下显示红色错误提示“请输入用户名/邮箱/手机号”，密码框显示“请输入密码”。
+          - name: 输入格式错误
+            steps:
+              - action: 输入无效的用户名（如特殊字符）或过短的密码
+              - expectation: 失去焦点或点击登录时，显示相应的格式错误提示。
+          - name: 提交登录请求
+            steps:
+              - action: 输入有效的用户名和密码，点击“登录”按钮
+              - expectation: 按钮进入 loading 状态，若需验证码则弹出验证码窗口，否则直接调用登录接口。
 
       - id: REQ-2-1-2
         name: 短信验证码弹窗
@@ -93,7 +105,15 @@ children:
         ui_description: |
           参考图片路径: requirements/assets/2.用户认证与个人中心/2.1.2_sms_modal.png
           Modal 弹窗，标题“选择验证方式”，子标题“短信验证”。
-        scenarios: []
+        scenarios:
+          - name: 获取短信验证码
+            steps:
+              - action: 输入证件号后4位，点击“获取验证码”
+              - expectation: 后端验证通过后发送验证码，按钮进入60秒倒计时状态。
+          - name: 确认验证
+            steps:
+              - action: 输入收到的6位验证码，点击“确定”
+              - expectation: 系统提交登录请求（含用户名、密码、证件号后4位、短信验证码），验证通过后跳转。
 
   # ------------------------------------------
   # REQ-2-2: 用户注册
@@ -130,7 +150,15 @@ children:
         ui_description: |
           参考图片路径: requirements/assets/2.用户认证与个人中心/2.2.1_account_info.png
           密码强度条位于密码框下方。
-        scenarios: []
+        scenarios:
+          - name: 密码强度校验
+            steps:
+              - action: 输入纯数字或纯字母密码
+              - expectation: 提示“密码必须包含字母和数字”，强度条显示低等级。
+          - name: 密码一致性校验
+            steps:
+              - action: 确认密码与密码不一致，输入框失去焦点
+              - expectation: 显示错误提示“两次输入密码不一致”。
 
       - id: REQ-2-2-2
         name: 个人信息输入
@@ -142,7 +170,11 @@ children:
         ui_description: |
           参考图片路径: requirements/assets/2.用户认证与个人中心/2.2.2_personal_info.png
           表单采用水平布局，Label右对齐。
-        scenarios: []
+        scenarios:
+          - name: 身份证格式校验
+            steps:
+              - action: 选择“居民身份证”，输入错误的号码（如长度不对或校验位错误）
+              - expectation: 显示错误提示“请输入正确的身份证号码”。
 
       - id: REQ-2-2-3
         name: 联系方式输入
@@ -152,7 +184,11 @@ children:
         ui_description: |
           参考图片路径: requirements/assets/2.用户认证与个人中心/2.2.3_contact_info.png
           手机号输入框为组合型，左侧选择区号，右侧输入号码。
-        scenarios: []
+        scenarios:
+          - name: 手机号格式校验
+            steps:
+              - action: 输入非 1 开头的手机号或长度不足
+              - expectation: 显示错误提示“请输入正确的手机号”。
 
   # ------------------------------------------
   # REQ-2-3: 找回密码
@@ -165,7 +201,15 @@ children:
     ui_description: |
       参考图片路径: requirements/assets/2.用户认证与个人中心/2.3_forgot_password.png
       通常为模态框或独立页面。
-    scenarios: []
+    scenarios:
+      - name: 鼠标悬停
+        steps:
+          - action: 鼠标移动到 Header 上的“我的12306”
+          - expectation: 自动展开下拉菜单，显示“火车票订单”、“个人中心”等选项。
+      - name: 状态切换
+        steps:
+          - action: 用户登录成功后重定向回首页
+          - expectation: Header 右侧由“登录/注册”变为显示用户名。
 
   # ------------------------------------------
   # REQ-2-4: 个人信息管理
@@ -223,7 +267,11 @@ children:
           参考图片路径: requirements/assets/2.用户认证与个人中心/2.4.3_additional_info.png
           编辑状态下显示下拉菜单。
           保存时将数字值映射回后端枚举类型。
-        scenarios: []
+        scenarios:
+          - name: 修改优惠类型
+            steps:
+              - action: 点击“编辑”，从下拉菜单选择新的类型（如“学生”）
+              - expectation: 点击保存后，后端枚举值更新，界面显示新的类型名称。
 
   # ------------------------------------------
   # REQ-2-5: 退出登录
@@ -244,7 +292,17 @@ children:
     name: 导航栏用户状态
     functional_description: |
       全局 Header 组件根据 `userStore.isAuthenticated` 状态切换显示。
-    scenarios: []
+    ui_description: |
+      参考图片路径: requirements/assets/2.用户认证与个人中心/2.6.png
+    scenarios:
+      - name: 鼠标悬停
+        steps:
+          - action: 鼠标移动到 Header 上的“我的12306”
+          - expectation: 自动展开下拉菜单，显示“火车票订单”、“个人中心”等选项。
+      - name: 状态切换
+        steps:
+          - action: 用户登录成功后重定向回首页
+          - expectation: Header 右侧由“登录/注册”变为显示用户名。
     children:
       - id: REQ-2-6-1
         name: 未登录状态
